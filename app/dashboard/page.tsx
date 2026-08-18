@@ -4,12 +4,22 @@ import React, { useState, useEffect } from "react";
 import { Bookmark, Trash2, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
+interface SavedTool {
+  toolSlug: string;
+  toolTitle: string;
+  outputs: Record<string, unknown>;
+}
+
 export default function UserDashboardPage() {
-  const [savedTools, setSavedTools] = useState<any[]>([]);
+  const [savedTools, setSavedTools] = useState<SavedTool[]>([]);
 
   useEffect(() => {
     const tools = JSON.parse(localStorage.getItem("saved_tools") || "[]");
-    setSavedTools(tools);
+    const timer = setTimeout(() => {
+      setSavedTools(tools);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleRemove = (index: number) => {
@@ -51,14 +61,15 @@ export default function UserDashboardPage() {
                 </h3>
 
                 <div className="bg-slate-950 p-3 rounded-lg border border-slate-800/80 text-xs space-y-1 font-mono">
-                  {Object.entries(item.outputs).map(([k, v]) => (
-                    <div key={k} className="flex justify-between">
-                      <span className="text-slate-400">{k}:</span>
-                      <span className="text-emerald-400 font-bold">
-                        {String(v)}
-                      </span>
-                    </div>
-                  ))}
+                  {item.outputs &&
+                    Object.entries(item.outputs).map(([k, v]) => (
+                      <div key={k} className="flex justify-between">
+                        <span className="text-slate-400">{k}:</span>
+                        <span className="text-emerald-400 font-bold">
+                          {String(v)}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </div>
 

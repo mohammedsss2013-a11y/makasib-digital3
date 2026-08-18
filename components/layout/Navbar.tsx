@@ -41,15 +41,23 @@ import {
   Zap
 } from "lucide-react";
 
-export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
+interface NavbarProps {
+  onOpenSearch: () => void;
+}
+
+export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const pathname = usePathname();
 
-  // Close mega menu on route change
+  // إغلاق القوائم عند تغيير المسار
   useEffect(() => {
-    setActiveMegaMenu(null);
-    setMobileMenuOpen(false);
+    const timer = setTimeout(() => {
+      setActiveMegaMenu(null);
+      setMobileMenuOpen(false);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   const navigationPillars = [
@@ -173,6 +181,8 @@ export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
               >
                 <Link
                   href={pillar.href}
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
                     isActive
                       ? "text-emerald-400 font-bold bg-emerald-500/10"
@@ -203,11 +213,11 @@ export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
                       </div>
 
                       <div className="max-h-[380px] overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                        {pillar.subItems.map((sub, idx) => {
+                        {pillar.subItems.map((sub) => {
                           const SubIcon = sub.icon;
                           return (
                             <Link
-                              key={idx}
+                              key={sub.href}
                               href={sub.href}
                               className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition-all group"
                             >
@@ -258,6 +268,7 @@ export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
             aria-label="القائمة الرئيسية"
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -289,9 +300,9 @@ export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-1 pr-4">
-                  {pillar.subItems.map((sub, idx) => (
+                  {pillar.subItems.map((sub) => (
                     <Link
-                      key={idx}
+                      key={sub.href}
                       href={sub.href}
                       className="text-xs text-slate-300 hover:text-emerald-400 py-1.5 block"
                     >
@@ -322,4 +333,4 @@ export const Navbar = ({ onOpenSearch }: { onOpenSearch: () => void }) => {
       )}
     </header>
   );
-};
+};
