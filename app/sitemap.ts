@@ -1,0 +1,62 @@
+import { MetadataRoute } from "next";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://makasib.digital";
+
+  const paths = [
+    "",
+    "/finance",
+    "/finance/freelancing",
+    "/finance/ecommerce",
+    "/finance/marketing",
+    "/finance/content-economy",
+    "/finance/crypto",
+    "/finance/ai-business",
+    "/finance/hardware",
+    "/tech",
+    "/tech/ai-apps",
+    "/tech/cybersecurity",
+    "/tech/cloud-remote",
+    "/tech/infra",
+    "/tech/iot-emerging",
+    "/media",
+    "/media/creation",
+    "/media/news",
+    "/media/podcasting",
+    "/media/streaming",
+    "/media/gaming",
+    "/digital-lifestyle",
+    "/digital-lifestyle/life-management",
+    "/digital-lifestyle/health",
+    "/digital-lifestyle/psychology",
+    "/digital-lifestyle/learning",
+    "/digital-lifestyle/culture",
+    "/digital-lifestyle/philosophy",
+    "/community",
+    "/community/consultations",
+    "/community/tool-results",
+    "/community/topics",
+    "/community/directory",
+    "/dashboard",
+    "/dashboard/analytics",
+    "/dashboard/tools",
+    "/dashboard/bookmarks",
+    "/dashboard/export",
+    "/dashboard/posts",
+    "/dashboard/settings",
+    "/about",
+    "/privacy",
+    "/terms",
+    "/disclaimer",
+    "/faq",
+    "/contact",
+    "/sitemap",
+  ];
+
+  return paths.map((path) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: path === "" ? "daily" : "weekly",
+    priority: path === "" ? 1.0 : path.split("/").length === 2 ? 0.8 : 0.6,
+  }));
+}
