@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -49,6 +49,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const pathname = usePathname();
+  const navigationRef = useRef<HTMLElement>(null);
 
   // إغلاق القوائم عند تغيير المسار
   useEffect(() => {
@@ -59,6 +60,24 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
     return () => clearTimeout(timer);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (navigationRef.current && !navigationRef.current.contains(event.target as Node)) {
+        setActiveMegaMenu(null);
+      }
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActiveMegaMenu(null);
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   const navigationPillars = [
     {
@@ -157,7 +176,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
         </div>
 
         {/* روابط الملاحة الرئيسية مع Mega Dropdown */}
-        <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300 relative">
+        <nav ref={navigationRef} className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300 relative">
           <Link
             href="/"
             className={`px-3 py-2 rounded-lg transition-colors ${
@@ -216,21 +235,13 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                         {pillar.subItems.map((sub) => {
                           const SubIcon = sub.icon;
                           return (
-                            <Link
-                              key={sub.href}
-                              href={sub.href}
-                              className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition-all group"
-                            >
+                            <Link key={sub.href} href={sub.href} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition-all group">
                               <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center text-slate-300 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors shrink-0 mt-0.5">
                                 <SubIcon className="w-4 h-4" />
                               </div>
                               <div>
-                                <h4 className="text-xs font-bold text-slate-200 group-hover:text-emerald-400 transition-colors">
-                                  {sub.title}
-                                </h4>
-                                <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">
-                                  {sub.desc}
-                                </p>
+                                <h4 className="text-xs font-bold text-slate-200 group-hover:text-emerald-400 transition-colors">{sub.title}</h4>
+                                <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{sub.desc}</p>
                               </div>
                             </Link>
                           );
@@ -288,28 +299,38 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
           {navigationPillars.map((pillar) => {
             const Icon = pillar.icon;
+            const isOpen = activeMegaMenu === pillar.id;
             return (
               <div key={pillar.id} className="space-y-2 border-b border-slate-800/80 pb-3">
-                <div className="flex items-center justify-between text-xs font-bold text-emerald-400 px-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveMegaMenu(isOpen ? null : pillar.id)}
+                  aria-expanded={isOpen}
+                  className="w-full flex items-center justify-between text-xs font-bold text-emerald-400 px-2"
+                >
                   <span className="flex items-center gap-2">
                     <Icon className="w-4 h-4" />
                     {pillar.title}
                   </span>
-                  <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                    {pillar.badge}
+                  <span className="flex items-center gap-2">
+                    <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                      {pillar.badge}
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                   </span>
-                </div>
-                <div className="grid grid-cols-1 gap-1 pr-4">
-                  {pillar.subItems.map((sub) => (
-                    <Link
-                      key={sub.href}
-                      href={sub.href}
-                      className="text-xs text-slate-300 hover:text-emerald-400 py-1.5 block"
-                    >
-                      • {sub.title}
+                </button>
+                {isOpen && (
+                  <div className="grid grid-cols-1 gap-1 pr-4">
+                    <Link href={pillar.href} className="text-xs font-bold text-slate-200 hover:text-emerald-400 py-1.5 block">
+                      • الصفحة الرئيسية للقسم
                     </Link>
-                  ))}
-                </div>
+                    {pillar.subItems.map((sub) => (
+                      <Link key={sub.href} href={sub.href} className="text-xs text-slate-300 hover:text-emerald-400 py-1.5 block">
+                        • {sub.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}

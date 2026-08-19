@@ -49,7 +49,7 @@ export default function PricingGuideArticlePage() {
       </section>
 
       {/* Embedded Tool 1 */}
-      <section className="my-8">
+      <section id="pricing-calculator" className="scroll-mt-24 my-8">
         <div className="bg-slate-900/50 border border-emerald-500/30 p-2 rounded-2xl">
           <FreelancePricingCalculator />
         </div>
@@ -66,7 +66,7 @@ export default function PricingGuideArticlePage() {
       </section>
 
       {/* Embedded Tool 2 */}
-      <section className="my-8">
+      <section id="contract-generator" className="scroll-mt-24 my-8">
         <div className="bg-slate-900/50 border border-emerald-500/30 p-2 rounded-2xl">
           <ContractGenerator />
         </div>

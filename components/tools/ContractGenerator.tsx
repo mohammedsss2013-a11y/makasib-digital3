@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useId } from "react";
-import { FileText, Copy, Check, Download, Bookmark, ShieldCheck } from "lucide-react";
+import React, { useEffect, useState, useId } from "react";
+import { FileText, Copy, Check, Download, Bookmark, ShieldCheck, BookOpen, Expand, Minimize2 } from "lucide-react";
+import { recordToolUsage } from "@/config/toolsRegistry";
+import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
 
 export const ContractGenerator = () => {
   const [freelancerName, setFreelancerName] = useState("أحمد علي");
@@ -12,6 +14,12 @@ export const ContractGenerator = () => {
   const [deliveryDays, setDeliveryDays] = useState(14);
   const [copied, setCopied] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
+  useEffect(() => {
+    recordToolUsage("contract-generator");
+  }, []);
 
   // Generate unique IDs for form elements
   const freelancerId = useId();
@@ -74,7 +82,7 @@ export const ContractGenerator = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 dir-rtl text-slate-100 shadow-xl">
+    <div className={`${isFocusMode ? "fixed inset-0 z-40 overflow-y-auto rounded-none" : ""} bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 dir-rtl text-slate-100 shadow-xl`}>
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-3">
@@ -87,6 +95,13 @@ export const ContractGenerator = () => {
           </div>
         </div>
 
+        <div className="flex items-center gap-2">
+        <button onClick={() => setIsGuideOpen(true)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors" title="قراءة الدليل الإجرائي" aria-label="قراءة الدليل الإجرائي">
+          <BookOpen className="w-3.5 h-3.5" />
+        </button>
+        <button onClick={() => setIsFocusMode((value) => !value)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors" title={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"} aria-label={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"}>
+          {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Expand className="w-3.5 h-3.5" />}
+        </button>
         <button
           onClick={handleSave}
           className="p-2 px-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500 hover:text-slate-950 transition-all text-xs font-bold flex items-center gap-1.5"
@@ -94,7 +109,17 @@ export const ContractGenerator = () => {
           {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
           <span>{isSaved ? "تم الحفظ بـ لوحتي" : "حفظ العقد"}</span>
         </button>
+        </div>
       </div>
+
+      <ArticleDrawer isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} articleTitle="صياغة عقد عمل حر يحمي نطاق المشروع" articleHref="/finance/freelancing/pricing-guide#contract-generator">
+        <p>العقد الجيد يحول الاتفاق الشفهي إلى نطاق عمل قابل للقياس، ودفعات واضحة، وحدود تمنع تمدد المشروع دون مقابل.</p>
+        <ul>
+          <li>اكتب مخرجات المشروع بلغة قابلة للتحقق، لا بعبارات عامة.</li>
+          <li>حدد الدفعة المقدمة وموعد التسليم وشروط التعديلات.</li>
+          <li>اربط انتقال الملكية الفكرية بسداد كامل المستحقات.</li>
+        </ul>
+      </ArticleDrawer>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

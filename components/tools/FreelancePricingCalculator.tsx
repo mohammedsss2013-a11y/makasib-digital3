@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useId } from "react";
-import { DollarSign, Clock, Calculator, Bookmark, Check, Copy, Percent, Sparkles } from "lucide-react";
+import React, { useEffect, useState, useId } from "react";
+import { DollarSign, Clock, Calculator, Bookmark, Check, Copy, Expand, Minimize2, BookOpen, Sparkles } from "lucide-react";
+import { recordToolUsage } from "@/config/toolsRegistry";
+import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
 
 export const FreelancePricingCalculator = () => {
   const [targetIncome, setTargetIncome] = useState<number>(2500);
@@ -11,6 +13,12 @@ export const FreelancePricingCalculator = () => {
   const [taxReserve, setTaxReserve] = useState<number>(15); // % reserve
   const [isSaved, setIsSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
+  useEffect(() => {
+    recordToolUsage("freelance-pricing");
+  }, []);
 
   // Generate unique IDs for form elements
   const incomeId = useId();
@@ -56,7 +64,7 @@ export const FreelancePricingCalculator = () => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 dir-rtl text-slate-100 shadow-xl">
+    <div className={`${isFocusMode ? "fixed inset-0 z-40 overflow-y-auto rounded-none" : ""} bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 dir-rtl text-slate-100 shadow-xl`}>
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-3">
@@ -68,7 +76,13 @@ export const FreelancePricingCalculator = () => {
             <p className="text-xs text-slate-400">احسب سعر ساعتك المستهدف بناءً على مصاريفك وأهدافك الصافية.</p>
           </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsGuideOpen(true)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors text-xs flex items-center gap-1.5" title="قراءة الدليل الإجرائي">
+            <BookOpen className="w-3.5 h-3.5" /><span className="hidden sm:inline">اقرأ الدليل</span>
+          </button>
+          <button onClick={() => setIsFocusMode((value) => !value)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors" title={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"}>
+            {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Expand className="w-3.5 h-3.5" />}
+          </button>
           <button
             onClick={handleCopy}
             className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-xs flex items-center gap-1.5"
@@ -86,6 +100,14 @@ export const FreelancePricingCalculator = () => {
           </button>
         </div>
       </div>
+      <ArticleDrawer isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} articleTitle="هندسة تسعير الخدمات: الخروج من فخ التخمين" articleHref="/finance/freelancing/pricing-guide">
+        <p>السعر المستدام لا يبدأ من متوسط السوق، بل من هدفك الصافي وتكاليفك وساعاتك القابلة للفوترة.</p>
+        <ul>
+          <li>احسب المصاريف الثابتة والاحتياطي قبل تحديد السعر.</li>
+          <li>افصل ساعات الإدارة والتسويق عن ساعات التنفيذ المدفوعة.</li>
+          <li>استخدم السعر الموصى به كنقطة تفاوض، والحد الأدنى كخط حماية.</li>
+        </ul>
+      </ArticleDrawer>
 
       {/* Grid Inputs & Results */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

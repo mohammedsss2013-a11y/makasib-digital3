@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Briefcase, Calculator, FileText, ArrowLeft, ShieldCheck, Clock } from "lucide-react";
+import { Briefcase, Calculator, FileText, ArrowLeft, ShieldCheck, Clock, Zap } from "lucide-react";
 
 export default function FreelancingPage() {
   return (
@@ -74,6 +74,15 @@ export default function FreelancingPage() {
           الدلائل التكتيكية في العمل الحر
         </h2>
         <div className="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
+              <Zap className="h-3.5 w-3.5" /> يحتوي على أداة حية: حاسبة تسعير العقود
+            </span>
+            <div className="flex items-center gap-3 text-xs">
+              <Link href="/finance/freelancing/pricing-guide" className="text-slate-300 hover:text-white">اقرأ المقال</Link>
+              <Link href="/finance/freelancing/pricing-guide#pricing-calculator" className="inline-flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300">قفز إلى الأداة <ArrowLeft className="h-3.5 w-3.5" /></Link>
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
               <span className="text-xs text-emerald-400 font-semibold">استراتيجية #1</span>
