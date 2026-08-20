@@ -4,6 +4,7 @@ import React, { useEffect, useState, useId } from "react";
 import { DollarSign, Clock, Calculator, Bookmark, Check, Copy, Expand, Minimize2, BookOpen, Sparkles } from "lucide-react";
 import { recordToolUsage } from "@/config/toolsRegistry";
 import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
+import { saveToolResult } from "@/utils/savedTools";
 
 export const FreelancePricingCalculator = () => {
   const [targetIncome, setTargetIncome] = useState<number>(2500);
@@ -34,25 +35,24 @@ export const FreelancePricingCalculator = () => {
   const hourlyRateRecommended = billableHoursMonth > 0 ? Math.ceil(totalMonthlyTarget / billableHoursMonth) : 0;
   const hourlyRateMinimum = billableHoursMonth > 0 ? Math.ceil((targetIncome + fixedExpenses) / billableHoursMonth) : 0;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-      const existing = JSON.parse(localStorage.getItem("saved_tools") || "[]");
-      const newItem = {
+      const { error } = await saveToolResult({
         toolSlug: "pricing-guide",
         toolTitle: "حاسبة تسعير خدمات العمل الحر",
+        category: "finance",
         inputs: { targetIncome, fixedExpenses, hoursPerWeek, adminRatio, taxReserve },
         outputs: {
           "سعر الساعة الموصى به": `${hourlyRateRecommended} $`,
           "سعر الساعة الأدنى": `${hourlyRateMinimum} $`,
           "ساعات العمل المستهدفة": `${Math.round(billableHoursMonth)} ساعة/شهر`
         },
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem("saved_tools", JSON.stringify([newItem, ...existing]));
+      });
+      if (error) throw error;
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error("تعذر حفظ النتيجة", error);
     }
   };
 

@@ -108,7 +108,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            نفّذ واحسب نفقاتك، أمانك، وتفاعلاتك فوراً داخل الصفحة مع دلائل إجرائية تطبيقية صُممت للبيئة الرقمية. اضغط <kbd className="bg-slate-850 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Cmd+K</kbd> أو <kbd className="bg-slate-850 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Ctrl+K</kbd> لتجربة الملاحة والبحث الفوري.
+            نفّذ واحسب نفقاتك، أمانك، وتفاعلاتك فوراً داخل الصفحة مع دلائل إجرائية تطبيقية صُممت للبيئة الرقمية. اضغط <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Cmd+K</kbd> أو <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Ctrl+K</kbd> لتجربة الملاحة والبحث الفوري.
           </p>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
@@ -220,14 +220,14 @@ export default function HomePage() {
                 <Link
                   key={idx}
                   href={tool.path}
-                  className="bg-slate-900/30 border border-slate-850 p-4 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all flex flex-col justify-between space-y-2"
+                  className="bg-slate-900/30 border border-slate-800 p-4 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all flex flex-col justify-between space-y-2"
                 >
                   <div className="space-y-1">
                     <span className="text-[10px] text-emerald-400 font-semibold">{tool.sector}</span>
                     <h4 className="text-xs font-bold text-white group-hover:text-emerald-400">{tool.title}</h4>
                     <p className="text-[11px] text-slate-400 leading-relaxed">{tool.desc}</p>
                   </div>
-                  <div className="text-[10px] text-slate-500 flex items-center gap-1 pt-1.5 border-t border-slate-850">
+                  <div className="text-[10px] text-slate-500 flex items-center gap-1 pt-1.5 border-t border-slate-800">
                     <span>احسب الآن</span>
                     <ArrowLeft className="w-3 h-3 text-slate-500" />
                   </div>
@@ -246,7 +246,7 @@ export default function HomePage() {
                 <Link
                   key={idx}
                   href={art.path}
-                  className="bg-slate-900/30 border border-slate-850 p-5 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all space-y-2"
+                  className="bg-slate-900/30 border border-slate-800 p-5 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all space-y-2"
                 >
                   <span className="text-[10px] bg-slate-950 text-emerald-400 px-2 py-0.5 rounded border border-slate-800">{art.category}</span>
                   <h4 className="text-xs font-bold text-white">{art.title}</h4>
@@ -266,7 +266,7 @@ export default function HomePage() {
           <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-5 space-y-4">
             
             <div className="space-y-3">
-              <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-850 space-y-1.5">
+              <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-emerald-400 font-semibold">أحمد التميمي</span>
                   <span className="text-slate-500">قبل 3 ساعات</span>
@@ -275,7 +275,7 @@ export default function HomePage() {
                 <p className="text-[10px] text-slate-400 line-clamp-2">شاركت صيغة ردي المبني على العقد المستخرج من المنصة، وقد تم قبول اعتذاري برقي.</p>
               </div>
 
-              <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-850 space-y-1.5">
+              <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="text-emerald-400 font-semibold">خالد الرويلي</span>
                   <span className="text-slate-500">أمس</span>

@@ -18,12 +18,16 @@ import {
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { getRecentTools, TOOLS_REGISTRY, type ToolItem } from "@/config/toolsRegistry";
+import { createClient } from "@/utils/supabase/client";
 
 interface SavedTool {
+  id: string;
+  category: string;
   toolSlug: string;
   toolTitle: string;
+  inputs: Record<string, unknown>;
   outputs: Record<string, unknown>;
-  savedAt?: string;
+  createdAt: string;
 }
 
 const CATEGORY_FILTERS = [
@@ -40,30 +44,51 @@ const ICONS: Record<string, LucideIcon> = {
   ShieldCheck,
 };
 
-const readStorage = <T,>(key: string, fallback: T): T => {
-  try {
-    return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)) as T;
-  } catch {
-    return fallback;
-  }
-};
+const supabase = createClient();
 
 export default function UserDashboardPage() {
   const [savedTools, setSavedTools] = useState<SavedTool[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [recentIds, setRecentIds] = useState<string[]>([]);
+  const [savedToolsError, setSavedToolsError] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<(typeof CATEGORY_FILTERS)[number]["id"]>("all");
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setSavedTools(readStorage<SavedTool[]>("saved_tools", []));
-      setFavoriteIds(readStorage<string[]>("favorite_tools", []));
-      setRecentIds(readStorage<string[]>("recent_tools", []));
-    }, 0);
+    async function loadDashboard() {
+      const [{ data: savedData, error }, { data: authData }] = await Promise.all([
+        supabase
+          .from("saved_tools")
+          .select("id, category, tool_slug, tool_title, inputs, outputs, created_at")
+          .order("created_at", { ascending: false }),
+        supabase.auth.getUser(),
+      ]);
 
-    return () => clearTimeout(timer);
+      if (error || !authData.user) {
+        setSavedToolsError("تعذر تحميل النتائج المحفوظة حاليًا.");
+      } else {
+        setSavedTools(savedData?.map((item) => ({
+          id: item.id,
+          category: item.category,
+          toolSlug: item.tool_slug,
+          toolTitle: item.tool_title,
+          inputs: item.inputs as Record<string, unknown>,
+          outputs: item.outputs as Record<string, unknown>,
+          createdAt: item.created_at,
+        })) ?? []);
+      }
+
+      try {
+        setFavoriteIds(JSON.parse(localStorage.getItem("favorite_tools") || "[]") as string[]);
+        setRecentIds(JSON.parse(localStorage.getItem("recent_tools") || "[]") as string[]);
+      } catch {
+        setFavoriteIds([]);
+        setRecentIds([]);
+      }
+    }
+
+    loadDashboard();
   }, []);
 
   const recentlyUsedTools = useMemo(() => {
@@ -96,10 +121,13 @@ export default function UserDashboardPage() {
     setRecentIds(updated);
   };
 
-  const handleRemove = (index: number) => {
-    const updated = savedTools.filter((_, i) => i !== index);
-    localStorage.setItem("saved_tools", JSON.stringify(updated));
-    setSavedTools(updated);
+  const handleRemove = async (id: string) => {
+    const { error } = await supabase.from("saved_tools").delete().eq("id", id);
+    if (error) {
+      setSavedToolsError("تعذر حذف النتيجة المحفوظة.");
+      return;
+    }
+    setSavedTools((currentTools) => currentTools.filter((item) => item.id !== id));
   };
 
   const copySavedTool = async (item: SavedTool, index: number) => {
@@ -177,7 +205,7 @@ export default function UserDashboardPage() {
         {savedTools.length > 0 ? (
           savedTools.map((item, idx) => (
             <div
-              key={idx}
+              key={item.id}
               className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4 flex flex-col justify-between"
             >
               <div>
@@ -186,7 +214,8 @@ export default function UserDashboardPage() {
                     {item.toolSlug}
                   </span>
                   <button
-                    onClick={() => handleRemove(idx)}
+                    onClick={() => handleRemove(item.id)}
+                    aria-label={`حذف ${item.toolTitle}`}
                     className="text-slate-500 hover:text-red-400 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -230,6 +259,7 @@ export default function UserDashboardPage() {
           </div>
         )}
       </div>
+      {savedToolsError && <p role="alert" className="text-sm text-red-400">{savedToolsError}</p>}
       </section>
     </div>
   );

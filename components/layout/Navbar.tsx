@@ -38,7 +38,8 @@ import {
   MessageSquare,
   BarChart,
   UserCheck,
-  Zap
+  Zap,
+  LogIn
 } from "lucide-react";
 
 interface NavbarProps {
@@ -274,6 +275,14 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             <span className="hidden md:inline">لوحة التشغيل</span>
           </Link>
 
+          <Link
+            href="/login"
+            className="border border-slate-700 hover:border-emerald-400 hover:text-emerald-400 text-slate-200 font-bold text-xs px-3.5 py-2.5 rounded-xl flex items-center gap-2 transition-all"
+          >
+            <LogIn className="w-4 h-4" />
+            <span className="hidden md:inline">تسجيل الدخول</span>
+          </Link>
+
           {/* زر القائمة للشاشات الصغيرة */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -336,6 +345,13 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
           })}
 
           <div className="pt-2 border-t border-slate-800 flex flex-col gap-2">
+            <Link
+              href="/login"
+              className="w-full border border-slate-700 text-slate-200 font-bold text-xs p-3 rounded-xl text-center flex items-center justify-center gap-2 hover:border-emerald-400 hover:text-emerald-400"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>تسجيل الدخول</span>
+            </Link>
             <Link
               href="/dashboard"
               className="w-full bg-emerald-400 text-slate-950 font-bold text-xs p-3 rounded-xl text-center flex items-center justify-center gap-2"

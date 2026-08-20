@@ -4,6 +4,7 @@ import React, { useEffect, useState, useId } from "react";
 import { FileText, Copy, Check, Download, Bookmark, ShieldCheck, BookOpen, Expand, Minimize2 } from "lucide-react";
 import { recordToolUsage } from "@/config/toolsRegistry";
 import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
+import { saveToolResult } from "@/utils/savedTools";
 
 export const ContractGenerator = () => {
   const [freelancerName, setFreelancerName] = useState("أحمد علي");
@@ -59,25 +60,24 @@ export const ContractGenerator = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
-      const existing = JSON.parse(localStorage.getItem("saved_tools") || "[]");
-      const newItem = {
+      const { error } = await saveToolResult({
         toolSlug: "contract-generator",
         toolTitle: `عقد: ${projectTitle}`,
+        category: "finance",
         inputs: { freelancerName, clientName, projectTitle, totalFee, advancePercent, deliveryDays },
         outputs: {
           "الطرفان": `${freelancerName} / ${clientName}`,
           "القيمة": `${totalFee} $`,
           "الدفعة الأولى": `${advanceAmount} $`
         },
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem("saved_tools", JSON.stringify([newItem, ...existing]));
+      });
+      if (error) throw error;
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 3000);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error("تعذر حفظ العقد", error);
     }
   };
 
