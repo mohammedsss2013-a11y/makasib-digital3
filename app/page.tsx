@@ -5,16 +5,12 @@ import {
   Cpu,
   Tv,
   Brain,
-  Users,
   ArrowLeft,
   Sparkles,
-  Search,
   MessageSquare,
   FileText,
-  Calculator,
-  ShieldCheck,
-  TrendingDown,
-  ExternalLink
+  ExternalLink,
+  LayoutDashboard
 } from "lucide-react";
 
 export default function HomePage() {
@@ -41,19 +37,18 @@ export default function HomePage() {
       badge: "5 أقسام"
     },
     {
-      title: "رقميون (أسلوب الحياة)",
+      title: "رقميون - أسلوب الحياة",
       description: "إدارة الحياة الرقمية، الصحة النفسية والوقاية من الاحتراق الرقمي.",
       icon: Brain,
       href: "/digital-lifestyle",
       badge: "6 أقسام"
     },
-    {
-      title: "مجتمع مكاسب",
-      description: "مشاركة نتائج الأدوات والاستشارات المباشرة مع المطورين والأقران.",
-      icon: Users,
-      href: "/community",
-      badge: "تفاعلي"
-    },
+  ];
+
+  const quickMap = [
+    { title: "أقسام المدونة الأربعة", description: "استكشف المقالات والأدلة حسب المجال.", href: "#pillars", icon: FileText },
+    { title: "مجتمع مكاسب", description: "شارك تجاربك وناقش الفرص الرقمية.", href: "/community", icon: MessageSquare },
+    { title: "لوحة الأدوات", description: "استخدم الحاسبات وراجع أدواتك التفاعلية.", href: "/dashboard/tools", icon: LayoutDashboard },
   ];
 
   const trendingTools = [
@@ -113,10 +108,10 @@ export default function HomePage() {
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
             <Link
-              href="/sitemap"
+              href="/dashboard/tools"
               className="bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
             >
-              <span>خريطة المنصة التفاعلية</span>
+              <span>لوحة أدواتي</span>
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <Link
@@ -162,18 +157,18 @@ export default function HomePage() {
       </section>
 
       {/* قطاعات المنظومة الخمسة */}
-      <section className="space-y-6">
+      <section id="pillars" className="space-y-6 scroll-mt-28">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">
-            المنظومة المعرفية (The 5 Core Pillars)
+            أقسام المدونة الرئيسية
           </h2>
-          <Link href="/sitemap" className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5">
-            <span>استعراض شجرة الملاحة كاملة</span>
+          <Link href="/dashboard/tools" className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5">
+            <span>فتح لوحة أدواتي</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {sectors.map((sec, idx) => {
             const Icon = sec.icon;
             return (
@@ -200,6 +195,22 @@ export default function HomePage() {
                 </span>
               </Link>
             );
+          })}
+        </div>
+      </section>
+
+      <section aria-labelledby="site-map-title" className="space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 id="site-map-title" className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">خريطة الوصول السريع</h2>
+            <p className="mt-2 text-xs text-slate-500">كل ما تحتاجه بعد اختيار القسم، مرتب في مسارات قصيرة وواضحة.</p>
+          </div>
+          <Link href="/dashboard/tools" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">فتح لوحة الأدوات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" /></Link>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {quickMap.map((item) => {
+            const Icon = item.icon;
+            return <Link key={item.href} href={item.href} className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-emerald-500/40 hover:bg-slate-900/70"><Icon className="mb-4 h-5 w-5 text-emerald-400" /><h3 className="text-sm font-bold text-white group-hover:text-emerald-300">{item.title}</h3><p className="mt-2 text-xs leading-6 text-slate-400">{item.description}</p></Link>;
           })}
         </div>
       </section>

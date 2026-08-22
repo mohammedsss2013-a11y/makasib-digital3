@@ -5,8 +5,21 @@ import { NavbarWrapper } from "@/components/layout/NavbarWrapper";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://makasib.digital"),
   title: "مكاسب رقمية | منصة الأدوات التفاعلية والدلائل الإجرائية",
   description: "أدوات تفاعلية حية لتطوير الأعمال والتكنولوجيا والنمط الرقمي.",
+  openGraph: {
+    type: "website",
+    locale: "ar_SA",
+    siteName: "مكاسب رقمية",
+    title: "مكاسب رقمية | منصة الأدوات التفاعلية والدلائل الإجرائية",
+    description: "أدوات تفاعلية حية لتطوير الأعمال والتكنولوجيا والنمط الرقمي.",
+  },
+  twitter: {
+    card: "summary",
+    title: "مكاسب رقمية",
+    description: "منصة الأدوات التفاعلية والدلائل الإجرائية.",
+  },
 };
 
 export default function RootLayout({

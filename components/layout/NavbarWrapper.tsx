@@ -18,6 +18,12 @@ export const NavbarWrapper = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const openSearch = () => setIsSearchOpen(true);
+    window.addEventListener("open-site-search", openSearch);
+    return () => window.removeEventListener("open-site-search", openSearch);
+  }, []);
+
   return (
     <>
       <Navbar onOpenSearch={() => setIsSearchOpen(true)} />

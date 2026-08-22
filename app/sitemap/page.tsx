@@ -8,14 +8,8 @@ import {
   Brain,
   Users,
   LayoutDashboard,
-  Shield,
-  FileText,
-  HelpCircle,
-  Mail,
   ArrowLeft,
-  Sparkles,
-  Search,
-  CheckCircle2
+  Sparkles
 } from "lucide-react";
 
 export default function SitemapPage() {
@@ -114,20 +108,6 @@ export default function SitemapPage() {
         { title: "إعدادات الحساب والأمان والربط (Settings & Integrations)", href: "/dashboard/settings", desc: "الملف الشخصي، الأمان والربط الخارجي" },
       ]
     },
-    {
-      sectionNumber: "4",
-      sectionTitle: "الصفحات الأساسية والقانونية (Legal & Corporate System)",
-      icon: Shield,
-      badge: "6 صفحات قانونية",
-      items: [
-        { title: "من نحن (About Us)", href: "/about", desc: "رؤية ورسالة مكاسب رقمية" },
-        { title: "سياسة الخصوصية (Privacy Policy - AdSense & GDPR Ready)", href: "/privacy", desc: "معايير الخصوصية وحماية البيانات" },
-        { title: "شروط الاستخدام (Terms of Service)", href: "/terms", desc: "الشروط والأحكام المنظمة للاستخدام" },
-        { title: "إخلاء المسؤولية (Disclaimer)", href: "/disclaimer", desc: "إخلاء المسؤولية المالية والقانونية" },
-        { title: "مركز المساعدة والأسئلة الشائعة (FAQ Hub)", href: "/faq", desc: "الإجابات الفورية على تساؤلات المستخدمين" },
-        { title: "اتصل بنا (Contact Us & Support)", href: "/contact", desc: "قنوات الاتصال والدعم الفني" },
-      ]
-    }
   ];
 
   return (

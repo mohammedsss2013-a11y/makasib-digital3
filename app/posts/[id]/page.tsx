@@ -4,17 +4,18 @@ import { createClient } from '@/utils/supabase/server';
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function SinglePostPage({ params }: PostPageProps) {
+  const { id } = await params;
   const supabase = await createClient();
   const { data: post } = await supabase
     .from('posts')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!post) {

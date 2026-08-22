@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { CategoryArticlesClient } from "@/components/articles/CategoryArticlesClient";
 import { Cpu, ShieldCheck, KeyRound, Calculator, Check, Bookmark } from "lucide-react";
 
 export default function TechSectorPage() {
@@ -27,6 +28,8 @@ export default function TechSectorPage() {
 
   const pwdInfo = calculatePasswordStrength(password);
   const totalApiCost = ((tokenCount / 1000000) * costPerMillion).toFixed(3);
+
+  return <CategoryArticlesClient category="التكنولوجيا والابتكار" categoryLabel="التكنولوجيا والابتكار" description="تحليلات وأدلة حول الذكاء الاصطناعي والأمن السيبراني والسحابة وتقنيات المستقبل." subcategorySection="tech" />;
 
   return (
     <div className="space-y-12 py-4 dir-rtl">

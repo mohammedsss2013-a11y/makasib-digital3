@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { CategoryArticlesClient } from "@/components/articles/CategoryArticlesClient";
 import { Brain, HeartPulse, Clock, Sparkles } from "lucide-react";
 
 export default function DigitalLifestylePage() {
@@ -16,6 +17,8 @@ export default function DigitalLifestylePage() {
   };
 
   const status = getWellnessScore(screenHours, sleepHours);
+
+  return <CategoryArticlesClient category="رقميون - أسلوب الحياة" categoryLabel="رقميون - أسلوب الحياة" description="رؤى وأدلة لبناء علاقة أكثر توازنًا وإنتاجية ووعيًا مع العالم الرقمي." subcategorySection="lifestyle" />;
 
   return (
     <div className="space-y-12 py-4 dir-rtl">

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { CategoryArticlesClient } from "@/components/articles/CategoryArticlesClient";
 import { Tv, Share2, Heart, MessageSquare, TrendingUp, BarChart3 } from "lucide-react";
 
 export default function MediaSectorPage() {
@@ -19,6 +20,8 @@ export default function MediaSectorPage() {
   };
 
   const rating = getEngagementRating(Number(engagementRate));
+
+  return <CategoryArticlesClient category="الإعلام الجديد" categoryLabel="الإعلام الجديد" description="مقالات عن صناعة المحتوى والبث والتفاعل والاقتصاد الجديد للإعلام الرقمي." subcategorySection="media" />;
 
   return (
     <div className="space-y-12 py-4 dir-rtl">

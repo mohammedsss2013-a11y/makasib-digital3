@@ -15,5 +15,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  if (!user.email_confirmed_at) {
+    await supabase.auth.signOut();
+    redirect("/login?error=email-unconfirmed");
+  }
+
   return children;
 }
