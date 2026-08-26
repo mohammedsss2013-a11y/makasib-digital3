@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ArrowLeft, BookOpen, Database, RefreshCw } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
@@ -8,9 +9,11 @@ interface CategoryArticlesProps {
   category: string;
   categoryLabel: string;
   description: string;
-  accent?: "emerald" | "blue" | "rose" | "amber";
-  subcategorySection?: "finance";
+    accent?: "emerald" | "blue" | "rose" | "amber";
+  subcategorySection?: "finance" | "tech" | "media" | "lifestyle" | "community";
+  interactiveTools?: ReactNode;
 }
+
 
 const accentStyles = {
   emerald: "border-emerald-500/30 text-emerald-300 bg-emerald-500/10",
@@ -19,7 +22,7 @@ const accentStyles = {
   amber: "border-amber-500/30 text-amber-300 bg-amber-500/10",
 };
 
-export async function CategoryArticles({ category, categoryLabel, description, accent = "emerald", subcategorySection }: CategoryArticlesProps) {
+export async function CategoryArticles({ category, categoryLabel, description, accent = "emerald", subcategorySection, interactiveTools }: CategoryArticlesProps) {
   const supabase = await createClient();
   const { data: posts, error } = await supabase
     .from("posts")
@@ -47,6 +50,8 @@ export async function CategoryArticles({ category, categoryLabel, description, a
       </header>
 
       {subcategorySection && <SubcategoryLinks section={subcategorySection} />}
+
+      {interactiveTools}
 
       {error ? (
         <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center text-sm text-red-300">

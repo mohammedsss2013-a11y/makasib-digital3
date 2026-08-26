@@ -1,10 +1,9 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
+import { toolsService } from "@/services/tools.service";
+import type { SavedToolRecord } from "@/types/tools";
 
-const supabase = createClient();
-
-interface SaveToolResult {
+export interface SaveToolResult {
   toolSlug: string;
   toolTitle: string;
   category: string;
@@ -13,22 +12,17 @@ interface SaveToolResult {
 }
 
 export async function saveToolResult(result: SaveToolResult) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: new Error("يجب تسجيل الدخول لحفظ النتيجة") };
+  try {
+    const record: SavedToolRecord = {
+      tool_slug: result.toolSlug,
+      tool_title: result.toolTitle,
+      category: result.category,
+      inputs: result.inputs,
+      outputs: result.outputs,
+    };
+    return await toolsService.saveToolCalculation(record);
+  } catch (error) {
+    return { data: null, error: error as Error };
   }
-
-  const { error } = await supabase.from("saved_tools").insert({
-    user_id: user.id,
-    category: result.category,
-    tool_slug: result.toolSlug,
-    tool_title: result.toolTitle,
-    inputs: result.inputs,
-    outputs: result.outputs,
-  });
-
-  return { error };
 }
+

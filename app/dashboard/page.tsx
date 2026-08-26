@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BarChart3, Bookmark, ChevronLeft, LayoutDashboard, Settings, Wrench } from "lucide-react";
+import { BarChart3, Bookmark, ChevronLeft, Clock3, LayoutDashboard, Settings, Wrench } from "lucide-react";
+import { getDashboardData } from "@/utils/dashboard";
 
 const dashboardLinks = [
   {
@@ -28,7 +29,11 @@ const dashboardLinks = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const { user, profile, savedTools } = await getDashboardData();
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "مستخدم مكاسب";
+  const lastSaved = savedTools[0];
+
   return (
     <div className="space-y-8 py-6 dir-rtl">
       <section className="rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-8 shadow-2xl sm:p-10">
@@ -38,8 +43,14 @@ export default function DashboardPage() {
         </div>
         <h1 className="text-2xl font-black leading-tight text-white sm:text-4xl">مساحتك الشخصية</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300">
-          أدر حسابك وراجع نشاطك وإعداداتك من مكان واحد. الأدوات الرقمية لها لوحة مستقلة.
+          أهلًا {displayName}، أدر حسابك وراجع نتائجك المحفوظة من مكان واحد.
         </p>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-3" aria-label="ملخص الحساب">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"><span className="text-xs text-slate-400">النتائج المحفوظة</span><strong className="mt-2 block text-3xl font-black text-emerald-400">{savedTools.length}</strong></div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"><span className="text-xs text-slate-400">آخر أداة محفوظة</span><strong className="mt-2 block truncate text-sm font-bold text-white">{lastSaved?.tool_title || "لا توجد نتائج بعد"}</strong></div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"><span className="text-xs text-slate-400">آخر نشاط</span><strong className="mt-2 flex items-center gap-2 text-sm font-bold text-white">{lastSaved ? <><Clock3 className="h-4 w-4 text-emerald-400" />{new Date(lastSaved.created_at).toLocaleDateString("ar-EG")}</> : "ابدأ باستخدام أدواتك"}</strong></div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2">
@@ -62,6 +73,11 @@ export default function DashboardPage() {
             </Link>
           );
         })}
+      </section>
+
+      <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+        <div className="flex items-center justify-between gap-3"><h2 className="text-base font-bold text-white">آخر النتائج المحفوظة</h2><Link href="/dashboard/bookmarks" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">عرض الكل</Link></div>
+        {savedTools.length ? <div className="mt-4 grid gap-3 sm:grid-cols-2">{savedTools.slice(0, 4).map((tool) => <Link key={tool.id} href="/dashboard/bookmarks" className="rounded-xl border border-slate-800 bg-slate-950 p-4 hover:border-emerald-500/40"><p className="text-sm font-bold text-white">{tool.tool_title}</p><p className="mt-1 text-xs text-slate-500">{new Date(tool.created_at).toLocaleDateString("ar-EG")}</p></Link>)}</div> : <p className="mt-4 rounded-xl border border-dashed border-slate-700 p-6 text-center text-sm text-slate-400">لم تحفظ أي نتيجة بعد. ابدأ من لوحة الأدوات.</p>}
       </section>
     </div>
   );

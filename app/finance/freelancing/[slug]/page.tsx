@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { FreelancePricingCalculator } from "@/components/tools/FreelancePricingCalculator";
-import { ContractGenerator } from "@/components/tools/ContractGenerator";
+import { FreelancePricingCalculator } from "@/components/tools/calculators/FreelancePricingCalculator";
+import { ContractGenerator } from "@/components/tools/generators/ContractGenerator";
 import { Clock, User, MessageSquare } from "lucide-react";
 
 export default function PricingGuideArticlePage() {

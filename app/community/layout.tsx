@@ -31,11 +31,17 @@ const communityTabs = [
   },
 ];
 
-export default function CommunityLayout({ children }: { children: React.ReactNode }) {
+export default function CommunityLayout({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  modal?: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (
-    <div className="dir-rtl mx-auto max-w-7xl py-2">
+    <div className="dir-rtl mx-auto max-w-7xl py-2 relative">
       <header className="mb-8 border-b border-slate-800 pb-5">
         <div className="mb-5 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
@@ -75,6 +81,7 @@ export default function CommunityLayout({ children }: { children: React.ReactNod
       </header>
 
       <main>{children}</main>
+      {modal}
     </div>
   );
 }

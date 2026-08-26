@@ -1,7 +1,25 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock3, UserRound } from "lucide-react";
 import { notFound } from "next/navigation";
-import { ARTICLES_DATA, getArticle } from "@/data/articles";
+import { articlesService } from "@/services/articles.service";
+import { sanitizeHtml } from "@/utils/sanitizeHtml";
+
+// 1. تحديد مدة إعادة التوليد الدوري (كل ساعة = 3600 ثانية)
+export const revalidate = 3600;
+
+// 2. السماح بتوليد الصفحات غير المُنشأة مسبقاً عند أول طلب (On-Demand ISR)
+export const dynamicParams = true;
+
+// 3. إنشاء المسارات الثابتة أثناء عملية الـ Build
+export async function generateStaticParams() {
+  const articles = await articlesService.getAllSlugPaths();
+
+  return articles.map((article) => ({
+    category: article.category,
+    subcategory: article.subcategory,
+    slug: article.slug,
+  }));
+}
 
 interface ArticlePageProps {
   params: Promise<{
@@ -11,24 +29,18 @@ interface ArticlePageProps {
   }>;
 }
 
-export function generateStaticParams() {
-  return ARTICLES_DATA.map(({ categorySlug, subcategorySlug, slug }) => ({
-    category: categorySlug,
-    subcategory: subcategorySlug,
-    slug,
-  }));
-}
-
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { category, subcategory, slug } = await params;
-  const article = getArticle(category, subcategory, slug);
+  const article = await articlesService.getBySlug(category, subcategory, slug);
 
-  if (!article) notFound();
+  if (!article) {
+    notFound();
+  }
 
   const paragraphs = article.content.split("\n\n");
 
   return (
-    <article className="mx-auto max-w-4xl py-6 dir-rtl">
+    <article className="mx-auto max-w-4xl py-6 dir-rtl" dir="rtl">
       <nav aria-label="مسار المقال" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <Link href="/" className="hover:text-emerald-300">الرئيسية</Link>
         <ArrowRight className="h-3.5 w-3.5 rotate-180" />
@@ -60,7 +72,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </ol>
             );
           }
-          return <p key={index} className="leading-9">{paragraph}</p>;
+          return (
+            <div
+              key={index}
+              className="leading-9"
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(paragraph) }}
+            />
+          );
         })}
       </div>
 

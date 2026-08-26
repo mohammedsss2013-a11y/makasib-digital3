@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@5/overview/schema.json",
+  "ignore": [
+    "scripts/**"
+  ],
+  "ignoreDependencies": [
+    "@faker-js/faker",
+    "@next/bundle-analyzer",
+    "autoprefixer",
+    "axios",
+    "dotenv",
+    "pg"
+  ]
+}

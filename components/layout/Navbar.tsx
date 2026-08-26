@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { BriefcaseBusiness, Cpu, Home, LayoutDashboard, LogIn, Menu, Radio, Search, Sparkles, Users, Wrench, X } from "lucide-react";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { BriefcaseBusiness, Cpu, Home, LayoutDashboard, LogIn, LogOut, Menu, Radio, Search, Sparkles, UserCircle, Users, Wrench, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
+import { createClient } from "@/utils/supabase/client";
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -21,13 +22,34 @@ const navLinks = [
 
 export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null));
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUserEmail(null);
+    router.refresh();
+  }
 
   const isActive = (href: string) =>
     href === "/" ? pathname === href : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#0d1615]/95 text-white backdrop-blur-xl dir-rtl">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-800/70 bg-slate-950/90 text-white backdrop-blur-xl dir-rtl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3">
           <BrandLogo />
@@ -74,14 +96,37 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
               <Wrench className="h-4 w-4" />
               <span className="hidden sm:inline">لوحة أدواتي</span>
             </Link>
-            <Link
-              href="/login"
-              className="flex items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2.5 text-xs font-bold text-slate-200 transition-colors hover:border-emerald-500/70 hover:text-emerald-300 sm:px-4 sm:text-sm"
-              title="تسجيل الدخول"
-            >
-              <LogIn className="h-4 w-4" />
-              <span className="hidden sm:inline">تسجيل الدخول</span>
-            </Link>
+            {userEmail ? (
+              <>
+                <Link
+                  href="/dashboard/settings"
+                  className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2.5 text-xs font-bold text-emerald-300 transition-colors hover:border-emerald-400/60 hover:bg-emerald-400/15 sm:px-4 sm:text-sm"
+                  title="ملفي الشخصي"
+                >
+                  <UserCircle className="h-4 w-4" />
+                  <span className="hidden max-w-32 truncate sm:inline">{userEmail}</span>
+                  <span className="sm:hidden">ملفي</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2.5 text-slate-300 transition-colors hover:border-red-400/60 hover:text-red-300"
+                  title="تسجيل الخروج"
+                  aria-label="تسجيل الخروج"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2.5 text-xs font-bold text-slate-200 transition-colors hover:border-emerald-500/70 hover:text-emerald-300 sm:px-4 sm:text-sm"
+                title="تسجيل الدخول"
+              >
+                <LogIn className="h-4 w-4" />
+                <span className="hidden sm:inline">تسجيل الدخول</span>
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => setMobileMenuOpen((open) => !open)}
@@ -110,7 +155,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
       </div>
 
       {mobileMenuOpen && (
-        <nav aria-label="التصفح الرئيسي" className="border-t border-white/5 bg-[#0b1211] px-4 py-3 lg:hidden">
+        <nav aria-label="التصفح الرئيسي" className="border-t border-slate-800/70 bg-slate-950/95 px-4 py-3 lg:hidden">
           <div className="mx-auto grid max-w-7xl gap-1 sm:grid-cols-2">
             {navLinks.map((link) => (
               <Link

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
+    "@hookform/resolvers": "^5.9.1",
+    "@next/bundle-analyzer": "^16.3.2",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
     "autoprefixer": "^10.5.4",
@@ -23,7 +25,9 @@
     "postcss": "^8.5.26",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "tailwind-merge": "^3.6.0"
+    "react-hook-form": "^7.86.0",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -34,6 +38,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "unlighthouse": "^0.18.0"
   }
 }

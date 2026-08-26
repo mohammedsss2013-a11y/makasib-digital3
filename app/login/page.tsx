@@ -1,37 +1,42 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, LogIn, ShieldCheck, Sparkles } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("error") === "email-unconfirmed") {
-      setErrorMessage("أكد بريدك الإلكتروني من الرسالة المرسلة إليك قبل دخول لوحة التحكم.");
-    }
-  }, []);
+  // حساب رسالة الخطأ مباشرةً من URL بدون useEffect أو useState
+  const urlError =
+    searchParams.get("error") === "email-unconfirmed"
+      ? "أكد بريدك الإلكتروني من الرسالة المرسلة إليك قبل دخول لوحة التحكم."
+      : "";
+
+  // رسالة الخطأ النهائية: خطأ URL أو خطأ النموذج
+  const errorMessage = urlError || formError;
+
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setErrorMessage("");
+    setFormError("");
     setSuccessMessage("");
 
     if (isSignUp && password !== confirmPassword) {
-      setErrorMessage("كلمتا المرور غير متطابقتين.");
+      setFormError("كلمتا المرور غير متطابقتين.");
       return;
     }
 
@@ -41,7 +46,7 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        setErrorMessage("تعذر إنشاء الحساب. تأكد من البريد الإلكتروني وحاول مرة أخرى.");
+        setFormError("تعذر إنشاء الحساب. تأكد من البريد الإلكتروني وحاول مرة أخرى.");
         setIsSubmitting(false);
         return;
       }
@@ -61,7 +66,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      setErrorMessage("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+      setFormError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
       setIsSubmitting(false);
       return;
     }
@@ -71,7 +76,7 @@ export default function LoginPage() {
   }
 
   async function handleOAuth(provider: "google" | "facebook") {
-    setErrorMessage("");
+    setFormError("");
     setSuccessMessage("");
     setIsSubmitting(true);
 
@@ -83,14 +88,14 @@ export default function LoginPage() {
     });
 
     if (error) {
-      setErrorMessage("تعذر بدء التسجيل عبر هذا المزود. حاول مرة أخرى.");
+      setFormError("تعذر بدء التسجيل عبر هذا المزود. حاول مرة أخرى.");
       setIsSubmitting(false);
     }
   }
 
   function switchMode() {
     setIsSignUp((currentMode) => !currentMode);
-    setErrorMessage("");
+    setFormError("");
     setSuccessMessage("");
     setPassword("");
     setConfirmPassword("");
@@ -262,5 +267,13 @@ export default function LoginPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-sm text-slate-400">جارٍ التحميل...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

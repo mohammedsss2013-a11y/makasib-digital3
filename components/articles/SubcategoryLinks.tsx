@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, ListTree } from "lucide-react";
 
-export interface SubcategoryLink {
+interface SubcategoryLink {
   title: string;
   href: string;
   description: string;

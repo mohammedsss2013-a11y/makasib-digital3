@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { sanitizeHtml } from '@/utils/sanitizeHtml';
 
+// التوليد الثابت مع التحديث الدوري (ISR) كل ساعة
+export const revalidate = 3600;
+export const dynamicParams = true;
+
 interface PostPageProps {
   params: Promise<{
     id: string;
