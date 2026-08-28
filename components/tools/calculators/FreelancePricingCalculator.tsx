@@ -111,7 +111,7 @@ export const FreelancePricingCalculator = () => {
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-            <Calculator className="w-5 h-5" />
+            <Calculator className="w-5 h-5" aria-hidden="true" />
           </div>
           <div>
             <h3 className="text-lg font-black text-white">حاسبة تسعير الخدمات ومعدل الساعة</h3>
@@ -120,17 +120,17 @@ export const FreelancePricingCalculator = () => {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setIsGuideOpen(true)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors text-xs flex items-center gap-1.5" title="قراءة الدليل الإجرائي">
-            <BookOpen className="w-3.5 h-3.5" /><span className="hidden sm:inline">اقرأ الدليل</span>
+            <BookOpen className="w-3.5 h-3.5" aria-hidden="true" /><span className="hidden sm:inline">اقرأ الدليل</span>
           </button>
           <button onClick={() => setIsFocusMode((value) => !value)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors" title={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"}>
-            {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Expand className="w-3.5 h-3.5" />}
+            {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" aria-hidden="true" /> : <Expand className="w-3.5 h-3.5" aria-hidden="true" />}
           </button>
           <button
             onClick={handleCopy}
             className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-xs flex items-center gap-1.5"
             title="نسخ ملخص النتيجة"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
             <span>{copied ? "تم النسخ" : "نسخ"}</span>
           </button>
           <button
@@ -138,7 +138,7 @@ export const FreelancePricingCalculator = () => {
             disabled={isSubmitting}
             className="p-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-all text-xs font-bold flex items-center gap-1.5 disabled:opacity-50"
           >
-            {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+            {isSaved ? <Check className="w-3.5 h-3.5" aria-hidden="true" /> : <Bookmark className="w-3.5 h-3.5" aria-hidden="true" />}
             <span>{isSaved ? "تم الحفظ بـ لوحتي" : "حفظ النتيجة"}</span>
           </button>
         </div>

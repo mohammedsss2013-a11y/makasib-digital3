@@ -3,7 +3,7 @@ import { ArrowRight, Compass } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-[55vh] items-center justify-center py-12" dir="rtl">
+    <div className="flex min-h-[55vh] items-center justify-center py-12" dir="rtl">
       <section className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900/80 p-8 text-center shadow-2xl">
         <Compass className="mx-auto mb-4 h-12 w-12 text-emerald-400" />
         <p className="text-sm font-bold text-emerald-400">404</p>
@@ -13,6 +13,6 @@ export default function NotFound() {
           العودة إلى الرئيسية <ArrowRight className="h-4 w-4" />
         </Link>
       </section>
-    </main>
+    </div>
   );
 }

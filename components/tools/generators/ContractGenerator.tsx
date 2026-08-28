@@ -95,7 +95,7 @@ export const ContractGenerator = () => {
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
-            <ShieldCheck className="w-5 h-5" />
+            <ShieldCheck className="w-5 h-5" aria-hidden="true" />
           </div>
           <div>
             <h3 className="text-lg font-black text-white">مولد عقود العمل الحر المباشر</h3>
@@ -105,17 +105,17 @@ export const ContractGenerator = () => {
 
         <div className="flex items-center gap-2">
           <button onClick={() => setIsGuideOpen(true)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors" title="قراءة الدليل الإجرائي" aria-label="قراءة الدليل الإجرائي">
-            <BookOpen className="w-3.5 h-3.5" />
+            <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
           <button onClick={() => setIsFocusMode((value) => !value)} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors" title={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"} aria-label={isFocusMode ? "إغلاق وضع التركيز" : "وضع التركيز"}>
-            {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Expand className="w-3.5 h-3.5" />}
+            {isFocusMode ? <Minimize2 className="w-3.5 h-3.5" aria-hidden="true" /> : <Expand className="w-3.5 h-3.5" aria-hidden="true" />}
           </button>
           <button
             onClick={handleSubmit(onSubmit)}
             disabled={isSubmitting}
             className="p-2 px-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500 hover:text-slate-950 transition-all text-xs font-bold flex items-center gap-1.5 disabled:opacity-50"
           >
-            {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+            {isSaved ? <Check className="w-3.5 h-3.5" aria-hidden="true" /> : <Bookmark className="w-3.5 h-3.5" aria-hidden="true" />}
             <span>{isSaved ? "تم الحفظ بـ لوحتي" : "حفظ العقد"}</span>
           </button>
         </div>

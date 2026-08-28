@@ -16,6 +16,15 @@ export interface Database {
           content: string
           category: string | null
           subcategory: string | null
+          image_url: string | null
+          slug: string | null
+          description: string | null
+          image_alt: string | null
+          article_type: string
+          tool_slug: string | null
+          status: string
+          published_at: string | null
+          updated_at: string
           created_at: string
         }
         Insert: {
@@ -24,6 +33,15 @@ export interface Database {
           content: string
           category?: string | null
           subcategory?: string | null
+          image_url?: string | null
+          slug?: string | null
+          description?: string | null
+          image_alt?: string | null
+          article_type?: string
+          tool_slug?: string | null
+          status?: string
+          published_at?: string | null
+          updated_at?: string
           created_at?: string
         }
         Update: {
@@ -32,6 +50,15 @@ export interface Database {
           content?: string
           category?: string | null
           subcategory?: string | null
+          image_url?: string | null
+          slug?: string | null
+          description?: string | null
+          image_alt?: string | null
+          article_type?: string
+          tool_slug?: string | null
+          status?: string
+          published_at?: string | null
+          updated_at?: string
           created_at?: string
         }
         Relationships: []

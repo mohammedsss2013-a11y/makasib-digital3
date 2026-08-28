@@ -1,7 +1,7 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { notFound, redirect } from 'next/navigation';
+import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
-import { sanitizeHtml } from '@/utils/sanitizeHtml';
+import { getArticlePath } from '@/lib/articlePaths';
 
 // التوليد الثابت مع التحديث الدوري (ISR) كل ساعة
 export const revalidate = 3600;
@@ -13,44 +13,39 @@ interface PostPageProps {
   }>;
 }
 
-export default async function SinglePostPage({ params }: PostPageProps) {
-  const { id } = await params;
+async function getPost(id: string) {
   const supabase = await createClient();
-  const { data: post } = await supabase
+  const { data } = await supabase
     .from('posts')
-    .select('*')
+    .select('id, title, content, category, subcategory, image_url, slug, created_at')
     .eq('id', id)
     .single();
+  return data;
+}
 
-  if (!post) {
-    notFound();
-  }
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const post = await getPost(id);
+  if (!post) return { title: 'المقال غير موجود | مكاسب رقمية' };
 
-  return (
-    <article className="max-w-4xl mx-auto py-4 dir-rtl" dir="rtl">
-      <Link href="/posts" className="inline-flex text-sm text-emerald-400 hover:text-emerald-300 mb-6">
-        العودة إلى المقالات
-      </Link>
-      <div className="flex gap-2 mb-4">
-        <span className="bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-sm px-3 py-1 rounded-full">
-          {post.category}
-        </span>
-        {post.subcategory && (
-          <span className="bg-slate-900 text-slate-400 border border-slate-800 text-sm px-3 py-1 rounded-full">
-            {post.subcategory}
-          </span>
-        )}
-      </div>
+  return {
+    title: `${post.title} | مكاسب رقمية`,
+    description: post.content.replace(/<[^>]*>/g, '').slice(0, 155),
+    alternates: { canonical: getArticlePath(post) },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.content.replace(/<[^>]*>/g, '').slice(0, 155),
+      images: post.image_url ? [{ url: post.image_url, alt: post.title }] : undefined,
+    },
+  };
+}
 
-      <h1 className="text-4xl font-black mb-3 text-white">{post.title}</h1>
-      <p className="text-sm text-slate-500 mb-8">
-        تاريخ النشر: {new Date(post.created_at).toLocaleDateString('ar-EG')}
-      </p>
-      
-      <div 
-        className="prose prose-lg prose-invert max-w-none text-slate-300 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
-      />
-    </article>
-  );
+export default async function SinglePostPage({ params }: PostPageProps) {
+  const { id } = await params;
+  const post = await getPost(id);
+
+  if (!post) return notFound();
+
+  redirect(getArticlePath(post));
 }

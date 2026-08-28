@@ -45,7 +45,7 @@ export default function CommunityLayout({
       <header className="mb-8 border-b border-slate-800 pb-5">
         <div className="mb-5 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
-            <Users className="h-5 w-5" />
+            <Users className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>
             <p className="text-xs font-bold text-emerald-400">مجتمع مكاسب التفاعلي</p>
@@ -70,7 +70,7 @@ export default function CommunityLayout({
                 }`}
               >
                 <div className="mb-2 flex items-center gap-2">
-                  <Icon className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-slate-500 group-hover:text-emerald-400"}`} />
+                  <Icon aria-hidden="true" className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-slate-500 group-hover:text-emerald-400"}`} />
                   <span className="text-sm font-bold">{tab.name}</span>
                 </div>
                 <p className="text-xs text-slate-500">{tab.desc}</p>
@@ -80,7 +80,7 @@ export default function CommunityLayout({
         </nav>
       </header>
 
-      <main>{children}</main>
+      <div>{children}</div>
       {modal}
     </div>
   );

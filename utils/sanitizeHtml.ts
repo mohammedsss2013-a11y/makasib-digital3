@@ -28,7 +28,7 @@ function isSafeUrl(value: string) {
   return /^(https?:\/\/|\/|#)/i.test(value.trim());
 }
 
-function sanitizeAttributes(tagName: string, rawAttributes: string) {
+function sanitizeAttributes(tagName: string, rawAttributes: string, imageIndex?: number) {
   const attributes: string[] = [];
   let match: RegExpExecArray | null;
 
@@ -40,6 +40,10 @@ function sanitizeAttributes(tagName: string, rawAttributes: string) {
       attributes.push(`${name}="${escapeAttribute(value)}"`);
     }
 
+    if ((name === "width" || name === "height") && /^\d+$/.test(value)) {
+      attributes.push(`${name}="${value}"`);
+    }
+
     if ((name === "src" || name === "href") && isSafeUrl(value)) {
       attributes.push(`${name}="${escapeAttribute(value)}"`);
     }
@@ -49,10 +53,18 @@ function sanitizeAttributes(tagName: string, rawAttributes: string) {
     attributes.push('rel="noopener noreferrer"');
   }
 
+  if (tagName === "img" && imageIndex !== undefined) {
+    attributes.push(`loading="${imageIndex === 0 ? "eager" : "lazy"}"`);
+    attributes.push('decoding="async"');
+    if (imageIndex === 0) attributes.push('fetchpriority="high"');
+  }
+
   return attributes.length ? ` ${attributes.join(" ")}` : "";
 }
 
-export function sanitizeHtml(html: string) {
+export function sanitizeHtml(html: string, prioritizeImages = false) {
+  let imageIndex = 0;
+
   return html
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<\/?(?:script|style|iframe|object|embed|form|input|button|textarea|select)[^>]*>/gi, "")
@@ -61,6 +73,14 @@ export function sanitizeHtml(html: string) {
       if (!allowedTags.has(tagName)) return "";
       if (wholeTag.startsWith("</")) return `</${tagName}>`;
       const selfClosing = /\/\s*>$/.test(wholeTag) || tagName === "br" || tagName === "img";
-      return `<${tagName}${sanitizeAttributes(tagName, rawAttributes)}${selfClosing ? " />" : ">"}`;
+      const currentImageIndex = tagName === "img" && prioritizeImages ? imageIndex++ : undefined;
+      return `<${tagName}${sanitizeAttributes(tagName, rawAttributes, currentImageIndex)}${selfClosing ? " />" : ">"}`;
     });
+}
+
+export function getHtmlExcerpt(html: string) {
+  return sanitizeHtml(html)
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }

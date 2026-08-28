@@ -7,10 +7,11 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, LogIn, ShieldCheck, Sparkles } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
+const supabase = createClient();
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -102,7 +103,7 @@ function LoginForm() {
   }
 
   return (
-    <main className="relative flex min-h-[calc(100vh-13rem)] items-center justify-center overflow-hidden py-8 sm:py-14" dir="rtl">
+    <div className="relative flex min-h-[calc(100vh-13rem)] items-center justify-center overflow-hidden py-8 sm:py-14" dir="rtl">
       <div className="pointer-events-none absolute -left-24 top-10 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl" />
 
@@ -211,13 +212,13 @@ function LoginForm() {
             )}
 
             {errorMessage && (
-              <p role="alert" className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm leading-6 text-red-300">
+              <p role="alert" aria-live="assertive" className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm leading-6 text-red-300">
                 {errorMessage}
               </p>
             )}
 
             {successMessage && (
-              <p role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm leading-6 text-emerald-200">
+              <p role="status" aria-live="polite" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm leading-6 text-emerald-200">
                 {successMessage}
               </p>
             )}
@@ -266,7 +267,7 @@ function LoginForm() {
           </p>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 

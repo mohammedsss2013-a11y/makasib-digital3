@@ -1,8 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
+import type { Metadata } from "next";
 import { ArrowRight, BookOpen, Clock3, UserRound } from "lucide-react";
 import { notFound } from "next/navigation";
 import { articlesService } from "@/services/articles.service";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
+import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
 
 // 1. تحديد مدة إعادة التوليد الدوري (كل ساعة = 3600 ثانية)
 export const revalidate = 3600;
@@ -27,6 +30,24 @@ interface ArticlePageProps {
     subcategory: string;
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { category, subcategory, slug } = await params;
+  const article = await articlesService.getBySlug(category, subcategory, slug);
+  if (!article) return { title: "المقال غير موجود | مكاسب رقمية" };
+
+  return {
+    title: `${article.title} | مكاسب رقمية`,
+    description: article.description,
+    alternates: { canonical: `/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}` },
+    openGraph: {
+      type: "article",
+      title: article.title,
+      description: article.description,
+      images: [{ url: article.coverImage, alt: article.coverImageAlt }],
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -60,6 +81,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-emerald-400" />{article.readTime}</span>
           <time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</time>
         </div>
+        <div className="relative mt-6 aspect-[16/7] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+          <Image src={article.coverImage} alt={article.coverImageAlt} fill priority sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
+        </div>
       </header>
 
       <div className="prose prose-invert prose-emerald mt-10 max-w-none text-slate-300">
@@ -81,6 +105,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           );
         })}
       </div>
+
+      {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
+        <div className="mt-12 border-t border-slate-800 pt-10">
+          <SectionInteractiveTools section="finance" />
+        </div>
+      )}
 
       <div className="mt-12 border-t border-slate-800 pt-6">
         <Link href={`/articles/${article.categorySlug}/${article.subcategorySlug}`} className="inline-flex items-center gap-2 text-sm font-bold text-emerald-300 hover:text-emerald-200">

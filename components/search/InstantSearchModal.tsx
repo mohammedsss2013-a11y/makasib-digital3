@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Search, X, ArrowLeft, Wrench, FileText, LayoutDashboard, Shield, Users, Compass, Cpu, TrendingUp, Tv, Brain } from "lucide-react";
 import Link from "next/link";
 
@@ -12,15 +12,44 @@ export const InstantSearchModal = ({
   onClose: () => void;
 }) => {
   const [query, setQuery] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    if (!isOpen) return;
+
+    const previousFocus = document.activeElement as HTMLElement | null;
+    inputRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href]'
+        )
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
-    if (isOpen) {
-      window.addEventListener("keydown", handleEscape);
-    }
-    return () => window.removeEventListener("keydown", handleEscape);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -95,11 +124,21 @@ export const InstantSearchModal = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden dir-rtl">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="site-search-title"
+        className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden dir-rtl"
+      >
         <div className="flex items-center px-4 border-b border-slate-800">
-          <Search className="w-5 h-5 text-emerald-400" />
+          <Search className="w-5 h-5 text-emerald-400" aria-hidden="true" />
+          <h2 id="site-search-title" className="sr-only">البحث في الموقع</h2>
           <input
+            ref={inputRef}
             type="text"
+            id="site-search-input"
+            aria-label="ابحث في الموقع"
             placeholder="ابحث عن أداة، حاسبة، قسم، أو استشارة... (مثال: تسعير، ذكاء، أمان، عقود)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -107,10 +146,12 @@ export const InstantSearchModal = ({
             className="w-full bg-transparent p-4 text-sm text-white placeholder-slate-500 focus:outline-none"
           />
           <button
+            type="button"
             onClick={onClose}
+            aria-label="إغلاق البحث"
             className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 

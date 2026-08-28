@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { ArrowLeft, BookOpen, Database, RefreshCw } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
-import { sanitizeHtml } from "@/utils/sanitizeHtml";
+import { getHtmlExcerpt } from "@/utils/sanitizeHtml";
 import { SubcategoryLinks } from "@/components/articles/SubcategoryLinks";
+import { getArticlePath } from "@/lib/articlePaths";
 
 interface CategoryArticlesProps {
   category: string;
@@ -26,8 +28,9 @@ export async function CategoryArticles({ category, categoryLabel, description, a
   const supabase = await createClient();
   const { data: posts, error } = await supabase
     .from("posts")
-    .select("id, title, content, category, subcategory, created_at")
+    .select("id, title, content, category, subcategory, image_url, slug, created_at, status")
     .eq("category", category)
+    .eq("status", "published")
     .order("created_at", { ascending: false });
 
   const style = accentStyles[accent];
@@ -61,21 +64,24 @@ export async function CategoryArticles({ category, categoryLabel, description, a
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <article key={post.id} className="group flex min-h-72 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50">
+              <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+                <Image src={post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80"} alt={post.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
               <div>
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">
                   {post.subcategory && <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{post.subcategory}</span>}
                   <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">مقال جديد</span>
                 </div>
                 <h2 className="text-xl font-bold leading-8 text-white transition-colors group-hover:text-emerald-300">
-                  <Link href={`/posts/${post.id}`} className="hover:text-emerald-300">
+                  <Link href={getArticlePath(post)} className="hover:text-emerald-300">
                     {post.title}
                   </Link>
                 </h2>
-                <div className="prose prose-invert mt-3 line-clamp-3 max-w-none text-sm leading-7 text-slate-400" dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
+                <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{getHtmlExcerpt(post.content)}</p>
               </div>
               <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-4 text-xs text-slate-500">
                 <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ar-EG")}</time>
-                <Link href={`/posts/${post.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
+                <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
               </div>
             </article>
           ))}

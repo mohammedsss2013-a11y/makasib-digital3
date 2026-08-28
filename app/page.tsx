@@ -14,8 +14,15 @@ import {
 } from "lucide-react";
 import { FreelancingCalculator } from "@/components/tools/calculators/FreelancingCalculator";
 import { HomeSearchButton } from "@/components/search/HomeSearchButton";
+import { createClient } from "@/utils/supabase/server";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: communityPosts } = await supabase
+    .from("community_posts")
+    .select("id, title, content, created_at")
+    .order("created_at", { ascending: false })
+    .range(0, 1);
   const sectors = [
     {
       title: "المال والأعمال",
@@ -48,9 +55,9 @@ export default function HomePage() {
   ];
 
   const quickMap = [
-    { title: "أقسام المدونة الأربعة", description: "استكشف المقالات والأدلة حسب المجال.", href: "#pillars", icon: FileText },
-    { title: "مجتمع مكاسب", description: "شارك تجاربك وناقش الفرص الرقمية.", href: "/community", icon: MessageSquare },
-    { title: "لوحة الأدوات", description: "استخدم الحاسبات وراجع أدواتك التفاعلية.", href: "/dashboard/tools", icon: LayoutDashboard },
+    { title: "الأدوات الرقمية", description: "ابدأ بحاسبة عملية واختر المجال المناسب لاحتياجك.", href: "/tools", icon: LayoutDashboard },
+    { title: "المكتبة المعرفية", description: "اقرأ الأدلة والمقالات العملية حسب المجال.", href: "/posts", icon: FileText },
+    { title: "مجتمع مكاسب", description: "شارك تجربتك وناقش الفرص الرقمية مع المجتمع.", href: "/community", icon: MessageSquare },
   ];
 
   const trendingTools = [
@@ -79,13 +86,13 @@ export default function HomePage() {
       title: "من نظام الساعة إلى نظام القيمة: المعادلة الذهبية",
       category: "الأعمال الحرة",
       desc: "كيف ترفع أرباحك بتقديم تسعير مبني على العوائد بدلاً من حساب الساعات.",
-      path: "/finance/freelancing"
+      path: "/articles/finance/freelancing/value-pricing-freelancing"
     },
     {
       title: "الوقاية من الاحتراق الرقمي (Digital Burnout)",
       category: "الصحة الرقمية",
       desc: "خطوات عملية لبناء عادة فصل الشاشات واستعادة التركيز الإبداعي العالي.",
-      path: "/digital-lifestyle/health"
+      path: "/articles/tech/ai/practical-ai-tools-2026"
     }
   ];
 
@@ -93,28 +100,28 @@ export default function HomePage() {
     <div className="space-y-16 py-4 dir-rtl">
       
       {/* القسم الرئيسي - Hero Section & Interactive Demo */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800/80 p-8 sm:p-12 text-center md:text-right flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
+      <section aria-labelledby="home-hero-title" className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800/80 p-8 sm:p-12 text-center md:text-right flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
         <div className="max-w-xl space-y-6 z-10">
           <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
             <span>المنظومة المعرفية والأدوات التفاعلية الشاملة</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
-            أدوات تفاعلية حية بدلاً من <span className="text-emerald-400">النصوص الجامدة</span>
+          <h1 id="home-hero-title" className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
+            ابدأ بخطوة رقمية أوضح مع <span className="text-emerald-400">أداة عملية</span>
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            نفّذ واحسب نفقاتك، أمانك، وتفاعلاتك فوراً داخل الصفحة مع دلائل إجرائية تطبيقية صُممت للبيئة الرقمية. اضغط <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Cmd+K</kbd> أو <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 font-mono text-[10px] text-white">Ctrl+K</kbd> لتجربة الملاحة والبحث الفوري.
+            أهلاً بك في المنصة الرقمية للتطوير والابتكار. استكشف الأدوات التفاعلية، احسب قيمتك السوقية، وابنِ مستقبلك المهني بحلول ذكية وصناعة محتوى متقدمة.
           </p>
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
             <Link
-              href="/dashboard/tools"
+              href="/tools"
               className="bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
             >
-              <span>لوحة أدواتي</span>
-              <ArrowLeft className="w-4 h-4" />
+              <span>استكشف الأدوات</span>
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             </Link>
             <Link
               href="/community"
@@ -136,9 +143,9 @@ export default function HomePage() {
             <h2 id="site-map-title" className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">خريطة الوصول السريع</h2>
             <p className="mt-2 text-xs text-slate-500">كل ما تحتاجه بعد اختيار القسم، مرتب في مسارات قصيرة وواضحة.</p>
           </div>
-          <Link href="/dashboard/tools" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">فتح لوحة الأدوات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" /></Link>
+          <Link href="/tools" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">استكشاف الأدوات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /></Link>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {quickMap.map((item) => {
             const Icon = item.icon;
             return <Link key={item.href} href={item.href} className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-emerald-500/40 hover:bg-slate-900/70"><Icon className="mb-4 h-5 w-5 text-emerald-400" /><h3 className="text-sm font-bold text-white group-hover:text-emerald-300">{item.title}</h3><p className="mt-2 text-xs leading-6 text-slate-400">{item.description}</p></Link>;
@@ -168,9 +175,9 @@ export default function HomePage() {
       <section id="pillars" className="space-y-6 scroll-mt-28">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">أقسام المدونة الرئيسية</h2>
-          <Link href="/dashboard/tools" className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5">
-            <span>فتح لوحة أدواتي</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+          <Link href="/tools" className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5">
+            <span>استكشف الأدوات</span>
+            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -203,8 +210,13 @@ export default function HomePage() {
         <h2 className="text-lg font-bold text-white border-r-4 border-emerald-500 pr-3">مجتمع مكاسب (Highlights)</h2>
         <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-5 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5"><div className="flex items-center justify-between text-[10px]"><span className="text-emerald-400 font-semibold">أحمد التميمي</span><span className="text-slate-500">قبل 3 ساعات</span></div><h4 className="text-[11px] font-bold text-white">كيف أصيغ ردًا احترافيًا لرفض ميزانية متدنية؟</h4><p className="text-[10px] text-slate-400 line-clamp-2">شاركت صيغة ردي المبني على العقد المستخرج من المنصة، وقد تم قبول اعتذاري برقي.</p></div>
-            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5"><div className="flex items-center justify-between text-[10px]"><span className="text-emerald-400 font-semibold">خالد الرويلي</span><span className="text-slate-500">أمس</span></div><h4 className="text-[11px] font-bold text-white">حساب تكلفة 100 مليون توكين لـ DeepSeek V3</h4><p className="text-[10px] text-slate-400 line-clamp-2">قمت بمقارنة دقيقة مع GPT-4o والوفورات مذهلة وتصل لـ 80% في ميزانية التشغيل.</p></div>
+            {communityPosts?.length ? communityPosts.map((post) => (
+              <article key={post.id} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                <div className="flex items-center justify-between text-[10px]"><span className="text-emerald-400 font-semibold">منشور من المجتمع</span><time className="text-slate-500" dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ar-EG")}</time></div>
+                <h3 className="text-[11px] font-bold text-white">{post.title}</h3>
+                <p className="text-[10px] text-slate-400 line-clamp-2">{post.content}</p>
+              </article>
+            )) : <p className="col-span-full rounded-xl border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">ستظهر هنا أحدث تجارب المجتمع بعد نشرها.</p>}
           </div>
           <Link href="/community" className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-semibold text-xs py-2.5 rounded-xl block text-center transition-colors">انتقل لساحة الاستشارات والمجتمع</Link>
         </div>

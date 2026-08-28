@@ -6,9 +6,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { category, subcategory, slug, secret } = body;
 
-    // التحقق من مفتاح الحماية عند الاستدعاء من الويب هوك (اختياري)
-    if (secret && process.env.REVALIDATION_SECRET && secret !== process.env.REVALIDATION_SECRET) {
+    const configuredSecret = process.env.REVALIDATION_SECRET;
+    if (!configuredSecret || secret !== configuredSecret) {
       return NextResponse.json({ message: "Invalid secret token" }, { status: 401 });
+    }
+
+    if (
+      (category !== undefined && typeof category !== "string") ||
+      (subcategory !== undefined && typeof subcategory !== "string") ||
+      (slug !== undefined && typeof slug !== "string") ||
+      (typeof category === "string" && category.length > 100) ||
+      (typeof subcategory === "string" && subcategory.length > 100) ||
+      (typeof slug === "string" && slug.length > 150)
+    ) {
+      return NextResponse.json({ message: "Invalid revalidation payload" }, { status: 400 });
     }
 
     if (category && subcategory && slug) {

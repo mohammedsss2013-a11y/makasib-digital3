@@ -9,7 +9,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   }, [error]);
 
   return (
-    <main className="flex min-h-[55vh] items-center justify-center py-12" dir="rtl">
+    <div className="flex min-h-[55vh] items-center justify-center py-12" dir="rtl">
       <section className="w-full max-w-lg rounded-3xl border border-red-500/20 bg-slate-900/80 p-8 text-center shadow-2xl">
         <AlertTriangle className="mx-auto mb-4 h-10 w-10 text-amber-300" />
         <h1 className="text-2xl font-black text-white">حدث خطأ غير متوقع</h1>
@@ -18,6 +18,6 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           <RefreshCw className="h-4 w-4" /> إعادة المحاولة
         </button>
       </section>
-    </main>
+    </div>
   );
 }

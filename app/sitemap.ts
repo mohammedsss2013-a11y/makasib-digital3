@@ -1,5 +1,7 @@
 import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
+import { ARTICLES_DATA } from "@/data/articles";
+import { getArticlePath } from "@/lib/articlePaths";
 
 export const revalidate = 3600;
 
@@ -53,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "";
   const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
   const { data: posts } = supabase
-    ? await supabase.from("posts").select("id, created_at").order("created_at", { ascending: false })
+    ? await supabase.from("posts").select("id, slug, category, subcategory, created_at, status").eq("status", "published").order("created_at", { ascending: false })
     : { data: [] };
 
   const staticEntries: MetadataRoute.Sitemap = paths.map((path) => ({
@@ -63,8 +65,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1.0 : path.split("/").length === 2 ? 0.8 : 0.6,
   }));
 
+  const localEntries = ARTICLES_DATA.map((article) => ({
+    url: `${baseUrl}/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`,
+    lastModified: new Date(article.publishedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
   const postEntries = (posts || []).map((post) => ({
-    url: `${baseUrl}/posts/${post.id}`,
+    url: `${baseUrl}${getArticlePath(post)}`,
     lastModified: post.created_at ? new Date(post.created_at) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.7,

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import type { Metadata } from "next";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { getArticlesBySubcategory } from "@/data/articles";
 
@@ -24,6 +26,16 @@ const ARTICLES_PATHS = [
   { category: "tech", subcategory: "ai" },
   { category: "finance", subcategory: "freelancing" },
 ];
+
+export async function generateMetadata({ params }: SubcategoryPageProps): Promise<Metadata> {
+  const { category, subcategory } = await params;
+  const article = getArticlesBySubcategory(category, subcategory)[0];
+  return {
+    title: `${article?.subcategoryLabel ?? subcategory} | مكاسب رقمية`,
+    description: "أدلة ومقالات عملية تساعدك على اتخاذ خطوة رقمية أوضح.",
+    alternates: { canonical: `/articles/${category}/${subcategory}` },
+  };
+}
 
 export default async function SubcategoryPage({ params }: SubcategoryPageProps) {
   const { category, subcategory } = await params;
@@ -56,6 +68,9 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
               href={`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`}
               className="group flex min-h-64 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50 hover:bg-slate-900"
             >
+              <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+                <Image src={article.coverImage} alt={article.coverImageAlt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
               <div>
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">
                   <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">{article.categoryLabel}</span>

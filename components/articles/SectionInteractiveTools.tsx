@@ -12,7 +12,7 @@ function ToolPanel({ title, description, icon: Icon, children }: { title: string
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-lg shadow-black/10">
       <div className="mb-5 flex items-center gap-3 border-b border-slate-800 pb-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
           <h3 className="text-base font-bold text-white">{title}</h3>
@@ -89,5 +89,5 @@ export function SectionInteractiveTools({ section }: { section: Section }) {
   }[section];
   const title = { finance: "أدوات المال والأعمال", tech: "أدوات التكنولوجيا والابتكار", media: "أدوات الإعلام الجديد", lifestyle: "أدوات الحياة الرقمية" }[section];
 
-  return <section className="space-y-5" aria-labelledby={`${section}-interactive-tools`}><div className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-emerald-400" /><div><h2 id={`${section}-interactive-tools`} className="text-xl font-bold text-white">{title}</h2><p className="mt-1 text-xs text-slate-500">شاشات تفاعلية مرتبطة بموضوعات هذا القسم.</p></div></div>{content}</section>;
+  return <section className="space-y-5" aria-labelledby={`${section}-interactive-tools`}><div className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-emerald-400" aria-hidden="true" /><div><h2 id={`${section}-interactive-tools`} className="text-xl font-bold text-white">{title}</h2><p className="mt-1 text-xs text-slate-500">شاشات تفاعلية مرتبطة بموضوعات هذا القسم.</p></div></div>{content}</section>;
 }

@@ -51,7 +51,7 @@ export function SubcategoryLinks({ section }: { section: keyof typeof subcategor
   return (
     <section className="space-y-4" aria-labelledby={`${section}-subcategories`}>
       <div className="flex items-center gap-2">
-        <ListTree className="h-5 w-5 text-emerald-400" />
+        <ListTree className="h-5 w-5 text-emerald-400" aria-hidden="true" />
         <h2 id={`${section}-subcategories`} className="text-lg font-bold text-white">الأقسام الفرعية</h2>
       </div>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -63,7 +63,7 @@ export function SubcategoryLinks({ section }: { section: keyof typeof subcategor
           >
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-sm font-bold leading-6 text-white transition-colors group-hover:text-emerald-300">{item.title}</h3>
-              <ArrowLeft className="mt-1 h-4 w-4 shrink-0 text-slate-600 transition-colors group-hover:text-emerald-300" />
+              <ArrowLeft aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-slate-600 transition-colors group-hover:text-emerald-300" />
             </div>
             <p className="mt-2 text-xs leading-5 text-slate-500">{item.description}</p>
           </Link>

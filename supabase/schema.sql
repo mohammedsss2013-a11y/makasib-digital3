@@ -5,11 +5,29 @@ CREATE TABLE IF NOT EXISTS public.posts (
   content TEXT NOT NULL,
   category TEXT,
   subcategory TEXT,
+  image_url TEXT,
+  slug TEXT,
+  description TEXT,
+  image_alt TEXT,
+  article_type TEXT NOT NULL DEFAULT 'guide',
+  tool_slug TEXT,
+  status TEXT NOT NULL DEFAULT 'published',
+  published_at TIMESTAMP WITH TIME ZONE,
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMEZONE('utc'::text, NOW()),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS category TEXT;
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS subcategory TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS image_alt TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS article_type TEXT NOT NULL DEFAULT 'guide';
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS tool_slug TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'published';
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS published_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMEZONE('utc'::text, NOW());
 ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 CREATE INDEX IF NOT EXISTS idx_posts_created_at ON public.posts(created_at DESC);
 

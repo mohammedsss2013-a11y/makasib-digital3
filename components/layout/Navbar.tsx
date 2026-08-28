@@ -13,6 +13,7 @@ interface NavbarProps {
 
 const navLinks = [
   { name: "الرئيسية", href: "/", icon: Home },
+  { name: "أدوات رقمية", href: "/tools", icon: Wrench },
   { name: "المال والأعمال", href: "/finance", icon: BriefcaseBusiness },
   { name: "التكنولوجيا والابتكار", href: "/tech", icon: Cpu },
   { name: "الإعلام الجديد", href: "/media", icon: Radio },
@@ -133,8 +134,9 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
               className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2.5 text-slate-300 hover:text-white lg:hidden"
               aria-label="القائمة الرئيسية"
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
-              {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {mobileMenuOpen ? <X className="h-4 w-4" aria-hidden="true" /> : <Menu className="h-4 w-4" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -155,7 +157,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
       </div>
 
       {mobileMenuOpen && (
-        <nav aria-label="التصفح الرئيسي" className="border-t border-slate-800/70 bg-slate-950/95 px-4 py-3 lg:hidden">
+        <nav id="mobile-navigation" aria-label="التصفح الرئيسي" className="border-t border-slate-800/70 bg-slate-950/95 px-4 py-3 lg:hidden">
           <div className="mx-auto grid max-w-7xl gap-1 sm:grid-cols-2">
             {navLinks.map((link) => (
               <Link

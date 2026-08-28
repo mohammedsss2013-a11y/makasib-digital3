@@ -1,5 +1,6 @@
 import { ARTICLES_DATA, Article, getArticle } from "@/data/articles";
 import { createClient } from "@/lib/supabase/server";
+import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
 
 export interface ArticleSlugPath {
   category: string;
@@ -21,15 +22,16 @@ export const articlesService = {
       const supabase = await createClient();
       const { data: posts } = await supabase
         .from("posts")
-        .select("id, category, subcategory");
+        .select("id, slug, category, subcategory, status")
+        .eq("status", "published");
 
       if (posts && posts.length > 0) {
         const dbPaths: ArticleSlugPath[] = posts
           .filter((p) => p.category && p.subcategory)
           .map((p) => ({
-            category: p.category as string,
-            subcategory: p.subcategory as string,
-            slug: String(p.id),
+            category: toCategorySlug(p.category),
+            subcategory: toSubcategorySlug(p.category, p.subcategory),
+            slug: p.slug || `post-${p.id}`,
           }));
         return [...localPaths, ...dbPaths];
       }
@@ -48,25 +50,34 @@ export const articlesService = {
     // 2. البحث في قاعدة البيانات Supabase
     try {
       const supabase = await createClient();
-      const { data: post } = await supabase
+      const { data: postBySlug } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("slug", slug)
+        .eq("status", "published")
+        .single();
+      const post = postBySlug || (await supabase
         .from("posts")
         .select("*")
         .eq("id", Number(slug) || 0)
-        .single();
+        .eq("status", "published")
+        .single()).data;
 
       if (post) {
         return {
           id: String(post.id),
-          slug: String(post.id),
+          slug: post.slug || `post-${post.id}`,
           title: post.title,
-          description: post.content.slice(0, 150) + "...",
-          categorySlug: post.category || category,
-          subcategorySlug: post.subcategory || subcategory,
+          description: post.description || post.content.slice(0, 150) + "...",
+          categorySlug: toCategorySlug(post.category) || category,
+          subcategorySlug: toSubcategorySlug(post.category, post.subcategory) || subcategory,
           categoryLabel: post.category || category,
           subcategoryLabel: post.subcategory || subcategory,
           author: "فريق تحرير مكاسب",
           publishedAt: post.created_at,
           readTime: "5 دقائق",
+          coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
+          coverImageAlt: post.title,
           content: post.content,
         };
       }

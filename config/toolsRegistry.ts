@@ -7,6 +7,7 @@ export interface ToolItem {
   description: string;
   category: 'finance' | 'tech' | 'media' | 'digital-lifestyle';
   categoryLabel: string;
+  subcategory: string;
   iconName: string;
   href: string;
   createdAt: string; // ISO Date: "YYYY-MM-DD"
@@ -22,6 +23,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     description: 'إنشاء وتوثيق عقود خدمات برمجية وتصميمية فورية مع تصدير PDF.',
     category: 'finance',
     categoryLabel: 'قطاع المال والأعمال',
+    subcategory: 'العمل الحر والخدمات',
     iconName: 'FileText',
     href: '/finance/freelancing/pricing-guide#contract-generator',
     createdAt: '2026-08-15',
@@ -34,6 +36,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     description: 'حساب سعر الساعة المستهدف بناءً على التكاليف وهامش الربح.',
     category: 'finance',
     categoryLabel: 'قطاع المال والأعمال',
+    subcategory: 'العمل الحر والخدمات',
     iconName: 'Calculator',
     href: '/finance/freelancing/pricing-guide#pricing-calculator',
     createdAt: '2026-08-18',
@@ -46,6 +49,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     description: 'حساب وقت الاختراق التقديري ودرجة التعقيد محلياً.',
     category: 'tech',
     categoryLabel: 'قطاع التكنولوجيا',
+    subcategory: 'الأمن السيبراني',
     iconName: 'ShieldCheck',
     href: '/tech/cybersecurity',
     createdAt: '2026-08-19', // أداة حديثة

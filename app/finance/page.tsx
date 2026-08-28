@@ -1,7 +1,7 @@
 import { CategoryArticles } from "@/components/articles/CategoryArticles";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default function FinanceSectorPage() {
   return (
