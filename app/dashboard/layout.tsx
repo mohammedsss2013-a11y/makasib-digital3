@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
 
 export default async function DashboardLayout({
   children,
@@ -20,5 +21,12 @@ export default async function DashboardLayout({
     redirect("/login?error=email-unconfirmed");
   }
 
-  return children;
+  return (
+    <div className="min-h-screen bg-slate-950 text-white dir-rtl">
+      <DashboardNav />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
+        {children}
+      </div>
+    </div>
+  );
 }

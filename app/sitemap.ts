@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { ARTICLES_DATA } from "@/data/articles";
 import { getArticlePath } from "@/lib/articlePaths";
 
 export const revalidate = 3600;
@@ -16,7 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/finance/marketing",
     "/finance/content-economy",
     "/finance/crypto",
-    "/finance/ai-business",
     "/finance/hardware",
     "/tech",
     "/tech/ai-apps",
@@ -36,7 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/digital-lifestyle/psychology",
     "/digital-lifestyle/learning",
     "/digital-lifestyle/culture",
-    "/digital-lifestyle/philosophy",
     "/community",
     "/community/consultations",
     "/community/tool-results",
@@ -63,13 +60,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: path === "" ? "daily" : "weekly",
     priority: path === "" ? 1.0 : path.split("/").length === 2 ? 0.8 : 0.6,
-  }));
-
-  const localEntries = ARTICLES_DATA.map((article) => ({
-    url: `${baseUrl}/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`,
-    lastModified: new Date(article.publishedAt),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
   }));
 
   const postEntries = (posts || []).map((post) => ({

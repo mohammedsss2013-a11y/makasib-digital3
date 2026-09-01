@@ -31,14 +31,13 @@ export default function SitemapPage() {
       sectionNumber: "2.1",
       sectionTitle: "قطاع المال والأعمال (Finance & Business)",
       icon: TrendingUp,
-      badge: "7 أقسام فرعية",
+      badge: "6 أقسام فرعية",
       items: [
         { title: "العمل الحر وإدارة المشاريع المصغرة (Freelancing)", href: "/finance/freelancing", desc: "حاسبة تسعير الخدمات ومولد العقود المباشرة" },
         { title: "التجارة الإلكترونية والبيع الرقمي (E-Commerce)", href: "/finance/ecommerce", desc: "حاسبة صافي هامش الربح ومقارن العمولات" },
         { title: "التسويق الرقمي وعائد الإعلانات (Digital Marketing)", href: "/finance/marketing", desc: "قياس الـ ROAS والـ CAC ونقطة التعادل" },
         { title: "اقتصاد صناعة المحتوى (Content Economy)", href: "/finance/content-economy", desc: "تسعير الرعايات والعضويات الرقمية" },
         { title: "العملات الرقمية والبلوكشين (Crypto & Web3)", href: "/finance/crypto", desc: "حماية المحافظ والـ Stablecoins" },
-        { title: "الذكاء الاصطناعي في المال والأعمال (AI in Business)", href: "/finance/ai-business", desc: "حاسبة ROI وأتمتة العمليات" },
         { title: "العتاد والإنتاجية المالية (Hardware & Productivity)", href: "/finance/hardware", desc: "حاسبة إهلاك العتاد وتجهيز بيئة العمل" },
       ]
     },
@@ -72,14 +71,13 @@ export default function SitemapPage() {
       sectionNumber: "2.4",
       sectionTitle: "قطاع رقميون - أسلوب الحياة والتفكير (Digital Lifestyle)",
       icon: Brain,
-      badge: "6 أقسام فرعية",
+      badge: "5 أقسام فرعية",
       items: [
         { title: "إدارة الحياة الرقمية والتنظيم (Life Management)", href: "/digital-lifestyle/life-management", desc: "بناء الدماغ الثاني وتنظيم المهام" },
         { title: "الصحة الرقمية والوقاية من الاحتراق (Digital Health)", href: "/digital-lifestyle/health", desc: "اختبار قياس Burnout والتعافي" },
         { title: "علم النفس الرقمي وسلوك الجمهور (Digital Psychology)", href: "/digital-lifestyle/psychology", desc: "هندسة الانتباه والانحيازات المعرفية" },
         { title: "التعليم والتعلم الرقمي المستمر (Continuous Learning)", href: "/digital-lifestyle/learning", desc: "دليل التعلم السريع وخرائط المهارات" },
         { title: "الثقافة الرقمية العابرة للمستقبل (Future Culture)", href: "/digital-lifestyle/culture", desc: "دليل الرحالة الرقمي والبرمجيات المفتوحة" },
-        { title: "الفلسفة الرقمية (Digital Philosophy)", href: "/digital-lifestyle/philosophy", desc: "التقليلية الرقمية وأخلاقيات الـ AI" },
       ]
     },
     {
@@ -95,17 +93,46 @@ export default function SitemapPage() {
       ]
     },
     {
+      sectionNumber: "2.6",
+      sectionTitle: "أدوات رقمية ومنصة المعالجة التفاعلية (Digital Tools Platform)",
+      icon: LayoutDashboard,
+      badge: "منصة الأدوات الأساسية",
+      items: [
+        { title: "صفحة الأدوات الرقمية الرئيسية", href: "/tools", desc: "قائمة شاملة للأدوات المصنفة حسب المجال" },
+        { title: "لوحة أدواتي", href: "/dashboard/tools", desc: "الحاسبات المفضلة والملفات المخزنة" },
+        { title: "أدوات المال والأعمال", href: "/tools?category=finance", desc: "الأدوات المختصة بالتسعير والتسويق والعمليات" },
+        { title: "أدوات التكنولوجيا", href: "/tools?category=tech", desc: "أمان، سحابة، وذكاء اصطناعي" },
+        { title: "أدوات الإعلام", href: "/tools?category=media", desc: "محتوى، بث، وإنتاج رقمية" },
+        { title: "أدوات أسلوب الحياة الرقمي", href: "/tools?category=digital-lifestyle", desc: "إدارة الوقت والمهارات والرفاهية" },
+      ]
+    },
+    {
       sectionNumber: "3",
       sectionTitle: "نظام لوحة تحكم المستخدم (User Personal Operating System)",
       icon: LayoutDashboard,
       badge: "6 أقسام تشغيلية",
       items: [
         { title: "ملخص الأنشطة والإحصائيات الشخصية (Personal Analytics)", href: "/dashboard/analytics", desc: "تتبع الأداء والأنشطة المحسوبة" },
-        { title: "مكتبة الأدوات والحاسبات المحفوظة (Saved Tools & Inputs)", href: "/dashboard/tools", desc: "المدخلات والمخرجات المخزنة" },
+        { title: "لوحة أدواتي", href: "/dashboard/tools", desc: "المدخلات والمخرجات المخزنة" },
         { title: "قائمة المفضلة السريعة (Pinned Bookmarks)", href: "/dashboard/bookmarks", desc: "الأدوات والروابط المفضلة لديك" },
         { title: "إدارة العقود والتقارير المطبوعة (Export Center - PDF/Excel)", href: "/dashboard/export", desc: "تحليل وتصدير المستندات والعقود" },
         { title: "مشاركاتي في مجتمع مكاسب (My Posts & Responses)", href: "/dashboard/posts", desc: "سجل التفاعلات والردود الاستشارية" },
         { title: "إعدادات الحساب والأمان والربط (Settings & Integrations)", href: "/dashboard/settings", desc: "الملف الشخصي، الأمان والربط الخارجي" },
+      ]
+    },
+    {
+      sectionNumber: "4",
+      sectionTitle: "الدعم والصفحات القانونية (Support & Legal Pages)",
+      icon: Sparkles,
+      badge: "معلومات شاملة",
+      items: [
+        { title: "من نحن", href: "/about", desc: "مقدمة ورؤية ومنهجية المنصة" },
+        { title: "الأسئلة الشائعة", href: "/faq", desc: "إجابات سريعة عن التسجيل والاستخدام والدعم" },
+        { title: "سياسة الخصوصية", href: "/privacy", desc: "حماية البيانات والالتزام بمعايير الخصوصية" },
+        { title: "الشروط والأحكام", href: "/terms", desc: "قواعد الاستخدام وحقوق المنصة والمستخدم" },
+        { title: "إخلاء المسؤولية", href: "/disclaimer", desc: "تنبيه عام بشأن المعلومات والاستشارات" },
+        { title: "تواصل معنا", href: "/contact", desc: "للاستفسارات والمقترحات والدعم الفني" },
+        { title: "دليل المنصة العام", href: "/sitemap", desc: "دليل كامل لأقسام المنصة وعلاقاتها" },
       ]
     },
   ];
@@ -116,13 +143,13 @@ export default function SitemapPage() {
       <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800/80 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-4">
         <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
           <Sparkles className="w-4 h-4" />
-          <span>خريطة الموقع التفاعلية الشاملة (Full Sitemap & Navigation)</span>
+          <span>دليل المنصة العام</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight">
-          خريطة الهيكل العام لمنصة <span className="text-emerald-400">مكاسب رقمية</span>
+          دليل المنصة <span className="text-emerald-400">العام</span>
         </h1>
         <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl">
-          استكشف كافة القطاعات والأقسام التكتيكية والأدوات الحية واللوائح التشغيلية الموزعة على الشجرة الهيكلية الشاملة للمنصة.
+          نظرة مختصرة على جميع أقسام المنصة، من الأدوات والخدمات إلى الصفحات القانونية والدعم، لتجد كل ما تحتاجه في مكان واحد.
         </p>
       </div>
 

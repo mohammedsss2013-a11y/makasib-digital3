@@ -1,107 +1,69 @@
-import React from "react";
-import Link from "next/link";
-import { Briefcase, Calculator, FileText, ArrowLeft, ShieldCheck, Clock, Zap } from "lucide-react";
+﻿import Link from "next/link";
+import { ArrowLeft, BriefcaseBusiness, Sparkles } from "lucide-react";
 
-export default function FreelancingPage() {
+export default function Page() {
   return (
-    <div className="space-y-10 py-6 dir-rtl">
-      {/* البانر العلوي */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800/80 rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
-        <div className="max-w-2xl space-y-4 z-10 relative">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
-            <Briefcase className="w-4 h-4" />
-            <span>قطاع المال والأعمال • القسم 2.1</span>
+    <div className="space-y-8 py-6 dir-rtl">
+      <section className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-6 shadow-2xl shadow-slate-950/30 sm:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl space-y-4">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
+              <BriefcaseBusiness className="h-3.5 w-3.5" aria-hidden="true" />
+              قسم المال والأعمال • العمل الحر
+            </span>
+            <h1 className="text-3xl font-black text-white sm:text-4xl">العمل الحر</h1>
+            <p className="text-sm leading-7 text-slate-300 sm:text-base">
+              هذا القسم يركز على بناء مصادر دخل مستقلة، تسعير الخدمات، إدارة المشاريع المصغرة، والعلاقات مع العملاء بطريقة احترافية وآمنة.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight">
-            العمل الحر وإدارة المشاريع المصغرة (Freelancing)
-          </h1>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            منظومة حاسبات التسعير الهندسية، توليد العقود المباشرة لحماية حقوقك، والدلائل الإجرائية لزيادة الدخل وتدفق المشاريع.
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-300">
+            <div className="flex items-center gap-2 text-emerald-300">
+              <Sparkles className="h-4 w-4" />
+              <span className="font-bold">معلومات القسم</span>
+            </div>
+            <p className="mt-2 text-xs leading-6 text-slate-400">
+              الاسم: العمل الحر<br />
+              الفئة: المال والأعمال<br />
+              الهدف: تحسين الربح واستقرار المشاريع الصغيرة
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-5 md:grid-cols-2">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          <p className="text-[10px] font-bold text-emerald-300">ما الذي ستجده هنا</p>
+          <h2 className="mt-3 text-xl font-black text-white">خطة عمل واضحة</h2>
+          <ul className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+            <li>• استراتيجيات تسعير الخدمات بناءً على القيمة وليس الوقت فقط.</li>
+            <li>• أدوات لتنظيم المشاريع وجمع العروض والطلب.</li>
+            <li>• نصائح في العقود، الدفع المقدم، والالتزام بالتسليم.</li>
+          </ul>
+        </div>
+
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+          <p className="text-[10px] font-bold text-emerald-300">الهدف</p>
+          <h2 className="mt-3 text-xl font-black text-white">التنظيم والربح</h2>
+          <p className="mt-4 text-sm leading-7 text-slate-300">
+            يساعد هذا الفرع على بناء نموذج عمل احترافي يسمح لك بالحفاظ على الجودة، زيادة الإيراد، وتقليل النزاعات مع العملاء.
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* الأدوات والحاسبات */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link
-          href="/finance/freelancing/pricing-guide"
-          className="bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all group space-y-4 hover:shadow-xl hover:shadow-emerald-500/5"
-        >
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-400 group-hover:text-slate-950 transition-colors">
-            <Calculator className="w-6 h-6" />
+      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-emerald-300">عرض المقالات</p>
+            <h2 className="mt-1 text-xl font-black text-white">ابدأ من المقالات المرتبطة بهذا الفرع</h2>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
-              <span>حاسبة تسعير الخدمات ومعدل الساعة</span>
-              <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
-            </h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              احسب سعر ساعتك الأدنى والمستهدف بناءً على التكاليف التشغيلية والأرباح المرجوة مع حساب أوقات التوقف.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-2 border-t border-slate-800">
-            <span className="flex items-center gap-1 text-emerald-400"><Clock className="w-3.5 h-3.5" /> أداة تفاعلية حية</span>
-            <span>دليل إجرائي مرفق</span>
-          </div>
-        </Link>
-
-        <Link
-          href="/finance/freelancing/pricing-guide"
-          className="bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all group space-y-4 hover:shadow-xl hover:shadow-emerald-500/5"
-        >
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-400 group-hover:text-slate-950 transition-colors">
-            <FileText className="w-6 h-6" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
-              <span>مولد عقود العمل الحر المباشر</span>
-              <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
-            </h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              أنشئ عقوداً مخصصة مع شروط الدفع والتسليم وحفظ الحقوق الفكرية وطباعتها بصيغة PDF مباشرة.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 text-[11px] text-slate-500 pt-2 border-t border-slate-800">
-            <span className="flex items-center gap-1 text-emerald-400"><ShieldCheck className="w-3.5 h-3.5" /> جاهز للطباعة والشرعنة</span>
-            <span>PDF Export</span>
-          </div>
-        </Link>
-      </div>
-
-      {/* المقالات التكتيكية والدلائل */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">
-          الدلائل التكتيكية في العمل الحر
-        </h2>
-        <div className="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
-              <Zap className="h-3.5 w-3.5" /> يحتوي على أداة حية: حاسبة تسعير العقود
-            </span>
-            <div className="flex items-center gap-3 text-xs">
-              <Link href="/finance/freelancing/pricing-guide" className="text-slate-300 hover:text-white">اقرأ المقال</Link>
-              <Link href="/finance/freelancing/pricing-guide#pricing-calculator" className="inline-flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300">قفز إلى الأداة <ArrowLeft className="h-3.5 w-3.5" /></Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-              <span className="text-xs text-emerald-400 font-semibold">استراتيجية #1</span>
-              <h4 className="text-sm font-bold text-white">الانتقال من نظام الساعة إلى نظام القيمة</h4>
-              <p className="text-[11px] text-slate-400">كيف ترفع دخل مشروعك بفرض تسعير مبني على العائد بدلاً من ساعات العمل.</p>
-            </div>
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-              <span className="text-xs text-emerald-400 font-semibold">استراتيجية #2</span>
-              <h4 className="text-sm font-bold text-white">إدارة العلاقات والاحتفاظ بالعملاء</h4>
-              <p className="text-[11px] text-slate-400">بناء نظام متابعة واشتراكات شهرية متكررة (Retainer Agreements).</p>
-            </div>
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-              <span className="text-xs text-emerald-400 font-semibold">استراتيجية #3</span>
-              <h4 className="text-sm font-bold text-white">الوقاية من تأخر الدفع والمماطلة</h4>
-              <p className="text-[11px] text-slate-400">صياغة بند الدفعة المقدمة 50% وغرامات التأخير في العقود.</p>
-            </div>
-          </div>
+          <Link href="/articles/finance/freelancing" className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-5 py-3 text-xs font-black text-slate-950 transition-colors hover:bg-emerald-300">
+            مشاهدة المقالات
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+

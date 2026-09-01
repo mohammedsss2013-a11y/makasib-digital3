@@ -37,7 +37,7 @@ export const FreelancePricingCalculator = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<FreelancePricingInput, any, FreelancePricingFormData>({
+  } = useForm<FreelancePricingInput, undefined, FreelancePricingFormData>({
     resolver: zodResolver(freelancePricingSchema),
     mode: "onChange",
     defaultValues: {

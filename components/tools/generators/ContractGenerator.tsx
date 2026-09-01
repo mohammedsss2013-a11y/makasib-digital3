@@ -38,7 +38,7 @@ export const ContractGenerator = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<ContractInput, any, ContractFormData>({
+  } = useForm<ContractInput, undefined, ContractFormData>({
     resolver: zodResolver(contractSchema),
     mode: "onChange",
     defaultValues: {

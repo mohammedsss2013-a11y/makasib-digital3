@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, X, ArrowLeft, Wrench, FileText, LayoutDashboard, Shield, Users, Compass, Cpu, TrendingUp, Tv, Brain } from "lucide-react";
+import { Search, X, ArrowLeft, Wrench, FileText, FilePlus2, LayoutDashboard, Shield, Users, Compass, Cpu, TrendingUp, Tv, Brain } from "lucide-react";
 import Link from "next/link";
 
 export const InstantSearchModal = ({
@@ -88,7 +88,6 @@ export const InstantSearchModal = ({
     { type: "article", title: "علم النفس الرقمي وسلوك الجمهور والمتابعين", category: "رقميون - Digital Psychology", path: "/digital-lifestyle/psychology" },
     { type: "article", title: "التعليم والتعلم الرقمي المستمر وتطوير الذات", category: "رقميون - Continuous Learning", path: "/digital-lifestyle/learning" },
     { type: "article", title: "الثقافة الرقمية العابرة للمستقبل والأنماط المعاصرة", category: "رقميون - Future Culture", path: "/digital-lifestyle/culture" },
-    { type: "article", title: "الفلسفة الرقمية وتأثير التكنولوجيا على الإنسان", category: "رقميون - Digital Philosophy", path: "/digital-lifestyle/philosophy" },
 
     // 💬 مجتمع مكاسب
     { type: "community", title: "مجتمع مكاسب الرقمي الرئيسي", category: "المجتمع", path: "/community" },
@@ -100,7 +99,7 @@ export const InstantSearchModal = ({
     // 🛠️ لوحة التحكم OS
     { type: "dashboard", title: "لوحة تحكم المستخدم الشخصية (Personal OS)", category: "لوحة التحكم", path: "/dashboard" },
     { type: "dashboard", title: "ملخص الأنشطة والإحصائيات الشخصية", category: "لوحة التحكم - Personal Analytics", path: "/dashboard/analytics" },
-    { type: "dashboard", title: "مكتبة الأدوات والحاسبات المحفوظة", category: "لوحة التحكم - Saved Tools", path: "/dashboard/tools" },
+    { type: "dashboard", title: "لوحة أدواتي", category: "لوحة التحكم", path: "/dashboard/tools" },
     { type: "dashboard", title: "قائمة المفضلة السريعة (Bookmarks)", category: "لوحة التحكم - Pinned Bookmarks", path: "/dashboard/bookmarks" },
     { type: "dashboard", title: "إدارة العقود والتقارير المطبوعة (PDF/Excel)", category: "لوحة التحكم - Export Center", path: "/dashboard/export" },
     { type: "dashboard", title: "مشاركاتي وتفاعلاتي في مجتمع مكاسب", category: "لوحة التحكم - My Posts", path: "/dashboard/posts" },
@@ -114,8 +113,8 @@ export const InstantSearchModal = ({
     { type: "legal", title: "مركز المساعدة والأسئلة الشائعة (FAQ Hub)", category: "الدعم", path: "/faq" },
     { type: "legal", title: "اتصل بنا ومركز الدعم الفني", category: "الدعم", path: "/contact" },
 
-    // 🗺️ الخريطة الهيكلية
-    { type: "sitemap", title: "خريطة الموقع الشاملة والتفاعلية (Interactive Sitemap)", category: "الخريطة", path: "/sitemap" }
+    // 🗺️ دليل المنصة العام
+    { type: "sitemap", title: "دليل المنصة العام (Interactive Platform Guide)", category: "الدليل العام", path: "/sitemap" }
   ].filter(
     (r) =>
       r.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -168,7 +167,11 @@ export const InstantSearchModal = ({
                   {res.type === "tool" ? (
                     <Wrench className="w-4 h-4 text-emerald-400 shrink-0" />
                   ) : res.type === "dashboard" ? (
-                    <LayoutDashboard className="w-4 h-4 text-teal-400 shrink-0" />
+                    res.path === "/dashboard/tools" ? (
+                      <FilePlus2 className="w-4 h-4 text-teal-400 shrink-0" />
+                    ) : (
+                      <LayoutDashboard className="w-4 h-4 text-teal-400 shrink-0" />
+                    )
                   ) : res.type === "community" ? (
                     <Users className="w-4 h-4 text-blue-400 shrink-0" />
                   ) : res.type === "legal" ? (

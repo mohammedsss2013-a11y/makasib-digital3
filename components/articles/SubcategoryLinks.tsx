@@ -37,7 +37,6 @@ const subcategories: Record<string, SubcategoryLink[]> = {
     { title: "علم النفس الرقمي وسلوك الجمهور", href: "/digital-lifestyle/psychology", description: "هندسة الانتباه والانحيازات المعرفية" },
     { title: "التعليم والتعلم الرقمي المستمر", href: "/digital-lifestyle/learning", description: "دليل التعلم السريع وخرائط المهارات" },
     { title: "الثقافة الرقمية العابرة للمستقبل", href: "/digital-lifestyle/culture", description: "دليل الرحالة الرقمي والبرمجيات المفتوحة" },
-    { title: "الفلسفة الرقمية", href: "/digital-lifestyle/philosophy", description: "التقليلية الرقمية وأخلاقيات الذكاء الاصطناعي" },
   ],
   community: [
     { title: "مساحة الاستشارات والتجريب", href: "/community/consultations", description: "حوارات حية واستشارات فورية" },
@@ -49,11 +48,7 @@ const subcategories: Record<string, SubcategoryLink[]> = {
 
 export function SubcategoryLinks({ section }: { section: keyof typeof subcategories }) {
   return (
-    <section className="space-y-4" aria-labelledby={`${section}-subcategories`}>
-      <div className="flex items-center gap-2">
-        <ListTree className="h-5 w-5 text-emerald-400" aria-hidden="true" />
-        <h2 id={`${section}-subcategories`} className="text-lg font-bold text-white">الأقسام الفرعية</h2>
-      </div>
+    <section className="space-y-4">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {subcategories[section].map((item) => (
           <Link

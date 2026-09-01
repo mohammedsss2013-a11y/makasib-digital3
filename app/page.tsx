@@ -12,7 +12,6 @@ import {
   ExternalLink,
   LayoutDashboard
 } from "lucide-react";
-import { FreelancingCalculator } from "@/components/tools/calculators/FreelancingCalculator";
 import { HomeSearchButton } from "@/components/search/HomeSearchButton";
 import { createClient } from "@/utils/supabase/server";
 
@@ -29,7 +28,7 @@ export default async function HomePage() {
       description: "حاسبات التسعير، التجارة الإلكترونية، والتسويق الرقمي وعائد الإعلانات.",
       icon: TrendingUp,
       href: "/finance",
-      badge: "7 أقسام"
+      badge: "6 أقسام"
     },
     {
       title: "التكنولوجيا والابتكار",
@@ -50,14 +49,15 @@ export default async function HomePage() {
       description: "إدارة الحياة الرقمية، الصحة النفسية والوقاية من الاحتراق الرقمي.",
       icon: Brain,
       href: "/digital-lifestyle",
-      badge: "6 أقسام"
+      badge: "5 أقسام"
     },
   ];
 
   const quickMap = [
-    { title: "الأدوات الرقمية", description: "ابدأ بحاسبة عملية واختر المجال المناسب لاحتياجك.", href: "/tools", icon: LayoutDashboard },
-    { title: "المكتبة المعرفية", description: "اقرأ الأدلة والمقالات العملية حسب المجال.", href: "/posts", icon: FileText },
-    { title: "مجتمع مكاسب", description: "شارك تجربتك وناقش الفرص الرقمية مع المجتمع.", href: "/community", icon: MessageSquare },
+    { title: "الأدوات الرقمية", description: "ابدأ بأداة عملية مناسبة لاحتياجك الحالي.", href: "/tools", icon: LayoutDashboard },
+    { title: "مجتمع مكاسب", description: "شارك خبراتك وتعلم من مجتمع المهنيين الرقميين.", href: "/community", icon: MessageSquare },
+    { title: "من نحن", description: "تعرف على رؤية المنصة وأهدافها العملية.", href: "/about", icon: Sparkles },
+    { title: "دليل المنصة العام", description: "تصفح جميع الأقسام والصفحات الرئيسية.", href: "/sitemap", icon: ExternalLink },
   ];
 
   const trendingTools = [
@@ -86,108 +86,203 @@ export default async function HomePage() {
       title: "من نظام الساعة إلى نظام القيمة: المعادلة الذهبية",
       category: "الأعمال الحرة",
       desc: "كيف ترفع أرباحك بتقديم تسعير مبني على العوائد بدلاً من حساب الساعات.",
-      path: "/articles/finance/freelancing/value-pricing-freelancing"
+      path: "/articles/finance/freelancing/value-pricing-freelancing",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
     },
     {
       title: "الوقاية من الاحتراق الرقمي (Digital Burnout)",
       category: "الصحة الرقمية",
       desc: "خطوات عملية لبناء عادة فصل الشاشات واستعادة التركيز الإبداعي العالي.",
-      path: "/articles/tech/ai/practical-ai-tools-2026"
+      path: "/articles/tech/ai/practical-ai-tools-2026",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80"
     }
   ];
 
   return (
     <div className="space-y-16 py-4 dir-rtl">
-      
-      {/* القسم الرئيسي - Hero Section & Interactive Demo */}
-      <section aria-labelledby="home-hero-title" className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800/80 p-8 sm:p-12 text-center md:text-right flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
-        <div className="max-w-xl space-y-6 z-10">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
-            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>المنظومة المعرفية والأدوات التفاعلية الشاملة</span>
+      <section aria-labelledby="home-hero-title" className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-8 shadow-2xl sm:p-10">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="z-10 max-w-2xl space-y-6 text-center lg:text-right">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-400">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>منصة تمكين رقمي وتوجيه عملي</span>
+            </div>
+
+            <h1 id="home-hero-title" className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
+              طريقك المباشر لتحويل <span className="text-emerald-400">المهارات الرقمية</span> إلى مكاسب حقيقية
+            </h1>
+
+            <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
+              مقالات تطبيقية، أدوات مجانية، ومجتمع يربط بين التعلم والتنفيذ والفرص الرقمية لتساعدك على بناء دخل محترف واستقرار مهني.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2 lg:justify-start">
+              <Link
+                href="/tools"
+                className="flex items-center gap-2 rounded-xl bg-emerald-400 px-6 py-3.5 text-xs font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-300 sm:text-sm"
+              >
+                <span>استكشف الأدوات</span>
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/community"
+                className="rounded-xl border border-slate-700/80 bg-slate-800/80 px-6 py-3.5 text-xs font-semibold text-white transition-colors hover:bg-slate-700 sm:text-sm"
+              >
+                انضم لمجتمع مكاسب
+              </Link>
+              <HomeSearchButton />
+            </div>
           </div>
 
-          <h1 id="home-hero-title" className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
-            ابدأ بخطوة رقمية أوضح مع <span className="text-emerald-400">أداة عملية</span>
-          </h1>
+          <div className="relative z-10">
+            <div className="rounded-3xl border border-slate-800 bg-slate-950/70 p-5 shadow-2xl shadow-emerald-500/5">
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">
+                  أدوات مختارة
+                </span>
+                <span className="text-[10px] text-slate-400">عرض سريع</span>
+              </div>
 
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            أهلاً بك في المنصة الرقمية للتطوير والابتكار. استكشف الأدوات التفاعلية، احسب قيمتك السوقية، وابنِ مستقبلك المهني بحلول ذكية وصناعة محتوى متقدمة.
-          </p>
+              <div className="space-y-3">
+                {[
+                  { title: "حاسبة تسعير الخدمات", detail: "المال والأعمال", href: "/finance/freelancing" },
+                  { title: "فاحص كلمات المرور", detail: "التكنولوجيا", href: "/tech/cybersecurity" },
+                  { title: "قائمة أدوات المنصة", detail: "كل الأدوات", href: "/tools" }
+                ].map((tool) => (
+                  <Link
+                    key={tool.title}
+                    href={tool.href}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-3 transition-colors hover:border-emerald-500/30 hover:bg-slate-900"
+                  >
+                    <div>
+                      <p className="text-sm font-bold text-white">{tool.title}</p>
+                      <p className="text-[10px] text-slate-400">{tool.detail}</p>
+                    </div>
+                    <ArrowLeft className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                  </Link>
+                ))}
+              </div>
 
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
-            <Link
-              href="/tools"
-              className="bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
-            >
-              <span>استكشف الأدوات</span>
-              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/community"
-              className="bg-slate-800/80 hover:bg-slate-700 text-white font-semibold px-6 py-3.5 rounded-xl text-xs sm:text-sm border border-slate-700/80 transition-colors"
-            >
-              انضم لمجتمع مكاسب
-            </Link>
-            <HomeSearchButton />
+              <div className="mt-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] text-emerald-300">بوابة الأدوات</p>
+                    <p className="mt-1 text-sm font-black text-white">تصفح كل الأدوات الرقمية</p>
+                  </div>
+                  <Link
+                    href="/tools"
+                    className="rounded-lg bg-emerald-400 px-3 py-2 text-[11px] font-bold text-slate-950 transition-colors hover:bg-emerald-300"
+                  >
+                    افتح الآن
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* إطار معاينة النافذة المجهزة */}
-        <FreelancingCalculator />
+      <section className="space-y-5">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">محاور المنصة وأدوارها</h2>
+          <span className="text-[11px] text-slate-400">كل محور يخدم هدفاً مختلفاً</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            {
+              title: "الأدوات",
+              description: "أدوات تنفيذ عملية تساعدك على حساب الخيارات، إعداد العروض، وتحويل الفكرة إلى خطة قابلة للتنفيذ.",
+              detail: "تنفيذ ومحاسبة",
+              icon: LayoutDashboard,
+            },
+            {
+              title: "المحتوى",
+              description: "مقالات وتوجيهات عملية تشرح الفكرة، تفتح الطريق، وتساعدك على اتخاذ القرار الصحيح.",
+              detail: "معرفة وتوجيه",
+              icon: FileText,
+            },
+            {
+              title: "المجتمع",
+              description: "مساحة تواصل ومناقشة تُغذي الخبرات وتجعل التعلم أكثر فاعلية من خلال التفاعل الحقيقي.",
+              detail: "تفاعل ومناقشة",
+              icon: MessageSquare,
+            },
+            {
+              title: "المنصة",
+              description: "البنية والهوية والمرجعية التي تجمع كل هذه العناصر في تجربة موحدة ومتماسكة.",
+              detail: "هوية وبنية",
+              icon: Sparkles,
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <div key={item.title} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-emerald-500/40 hover:bg-slate-900/70">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-300">
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <span className="rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-[9px] text-slate-400">{item.detail}</span>
+                </div>
+                <h3 className="mt-4 text-sm font-bold text-white">{item.title}</h3>
+                <p className="mt-2 text-[11px] leading-6 text-slate-400">{item.description}</p>
+              </div>
+            );
+          })}
+        </div>
       </section>
 
       <section aria-labelledby="site-map-title" className="space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 id="site-map-title" className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">خريطة الوصول السريع</h2>
+            <h2 id="site-map-title" className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">خريطة الوصول السريع</h2>
             <p className="mt-2 text-xs text-slate-500">كل ما تحتاجه بعد اختيار القسم، مرتب في مسارات قصيرة وواضحة.</p>
           </div>
-          <Link href="/tools" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">استكشاف الأدوات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /></Link>
+          <Link href="/tools" className="text-xs font-bold text-emerald-300 hover:text-emerald-200">
+            استكشاف الأدوات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {quickMap.map((item) => {
             const Icon = item.icon;
-            return <Link key={item.href} href={item.href} className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-emerald-500/40 hover:bg-slate-900/70"><Icon className="mb-4 h-5 w-5 text-emerald-400" /><h3 className="text-sm font-bold text-white group-hover:text-emerald-300">{item.title}</h3><p className="mt-2 text-xs leading-6 text-slate-400">{item.description}</p></Link>;
+            return (
+              <Link key={item.href} href={item.href} className="group rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition-colors hover:border-emerald-500/40 hover:bg-slate-900/70">
+                <Icon className="mb-4 h-5 w-5 text-emerald-400" />
+                <h3 className="text-sm font-bold text-white group-hover:text-emerald-300">{item.title}</h3>
+                <p className="mt-2 text-xs leading-6 text-slate-400">{item.description}</p>
+              </Link>
+            );
           })}
-        </div>
-      </section>
-
-      <section className="space-y-5">
-        <h2 className="text-lg font-bold text-white border-r-4 border-emerald-500 pr-3">
-          أحدث المقالات والدلائل (Latest Articles)
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {latestArticles.map((art, idx) => (
-            <Link
-              key={idx}
-              href={art.path}
-              className="bg-slate-900/30 border border-slate-800 p-5 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all space-y-2"
-            >
-              <span className="text-[10px] bg-slate-950 text-emerald-400 px-2 py-0.5 rounded border border-slate-800">{art.category}</span>
-              <h4 className="text-xs font-bold text-white">{art.title}</h4>
-              <p className="text-[11px] text-slate-400 leading-relaxed">{art.desc}</p>
-            </Link>
-          ))}
         </div>
       </section>
 
       <section id="pillars" className="space-y-6 scroll-mt-28">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white border-r-4 border-emerald-500 pr-3">أقسام المدونة الرئيسية</h2>
-          <Link href="/tools" className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5">
+          <h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">أقسام المقالات الرئيسية</h2>
+          <Link href="/tools" className="flex items-center gap-1.5 text-xs text-slate-400 transition-colors hover:text-emerald-400">
             <span>استكشف الأدوات</span>
-            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {sectors.map((sec, idx) => {
             const Icon = sec.icon;
             return (
-              <Link key={idx} href={sec.href} className="bg-slate-900/40 border border-slate-800/80 hover:border-emerald-500/40 p-5 rounded-2xl transition-all duration-300 group flex flex-col justify-between items-center text-center space-y-4 hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-1">
-                <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-400 group-hover:text-slate-950 transition-colors shrink-0"><Icon className="w-5 h-5" /></div>
-                <div className="space-y-2"><h3 className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">{sec.title}</h3><p className="text-[11px] text-slate-400 leading-relaxed line-clamp-3">{sec.description}</p></div>
-                <span className="text-[9px] bg-slate-950/80 text-slate-500 px-2 py-0.5 rounded border border-slate-800">{sec.badge}</span>
+              <Link
+                key={idx}
+                href={sec.href}
+                className="group flex flex-col items-center justify-between space-y-4 rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/5"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 transition-colors group-hover:bg-emerald-400 group-hover:text-slate-950">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold text-white transition-colors group-hover:text-emerald-400">{sec.title}</h3>
+                  <p className="line-clamp-3 text-[11px] leading-relaxed text-slate-400">{sec.description}</p>
+                </div>
+                <span className="rounded border border-slate-800 bg-slate-950/80 px-2 py-0.5 text-[9px] text-slate-500">{sec.badge}</span>
               </Link>
             );
           })}
@@ -195,33 +290,25 @@ export default async function HomePage() {
       </section>
 
       <section className="space-y-5">
-        <h2 className="text-lg font-bold text-white border-r-4 border-emerald-500 pr-3">الأدوات الأكثر استخداماً (Trending Tools)</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {trendingTools.map((tool, idx) => (
-            <Link key={idx} href={tool.path} className="bg-slate-900/30 border border-slate-800 p-4 rounded-xl hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all flex flex-col justify-between space-y-2">
-              <div className="space-y-1"><span className="text-[10px] text-emerald-400 font-semibold">{tool.sector}</span><h4 className="text-xs font-bold text-white">{tool.title}</h4><p className="text-[11px] text-slate-400 leading-relaxed">{tool.desc}</p></div>
-              <div className="text-[10px] text-slate-500 flex items-center gap-1 pt-1.5 border-t border-slate-800"><span>احسب الآن</span><ArrowLeft className="w-3 h-3 text-slate-500" /></div>
-            </Link>
-          ))}
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="border-r-4 border-emerald-500 pr-3 text-lg font-bold text-white">ماذا يضيف المجتمع؟</h2>
+          <Link href="/community" className="text-[11px] text-slate-400 transition-colors hover:text-emerald-300">انضم الآن</Link>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-5">
+          {communityPosts?.length ? (
+            <article className="space-y-2 rounded-xl border border-slate-800 bg-slate-950 p-4">
+              <div className="flex items-center justify-between text-[10px]">
+                <span className="font-semibold text-emerald-400">منشور من المجتمع</span>
+                <time className="text-slate-500" dateTime={communityPosts[0].created_at}>{new Date(communityPosts[0].created_at).toLocaleDateString("ar-EG")}</time>
+              </div>
+              <h3 className="text-sm font-bold text-white">{communityPosts[0].title}</h3>
+              <p className="line-clamp-3 text-[11px] leading-6 text-slate-400">{communityPosts[0].content}</p>
+            </article>
+          ) : (
+            <p className="rounded-xl border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">ستظهر هنا أحدث تجارب المجتمع بعد نشرها.</p>
+          )}
         </div>
       </section>
-
-      <section className="space-y-5">
-        <h2 className="text-lg font-bold text-white border-r-4 border-emerald-500 pr-3">مجتمع مكاسب (Highlights)</h2>
-        <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-5 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {communityPosts?.length ? communityPosts.map((post) => (
-              <article key={post.id} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-                <div className="flex items-center justify-between text-[10px]"><span className="text-emerald-400 font-semibold">منشور من المجتمع</span><time className="text-slate-500" dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ar-EG")}</time></div>
-                <h3 className="text-[11px] font-bold text-white">{post.title}</h3>
-                <p className="text-[10px] text-slate-400 line-clamp-2">{post.content}</p>
-              </article>
-            )) : <p className="col-span-full rounded-xl border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">ستظهر هنا أحدث تجارب المجتمع بعد نشرها.</p>}
-          </div>
-          <Link href="/community" className="w-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-semibold text-xs py-2.5 rounded-xl block text-center transition-colors">انتقل لساحة الاستشارات والمجتمع</Link>
-        </div>
-      </section>
-
     </div>
   );
 }

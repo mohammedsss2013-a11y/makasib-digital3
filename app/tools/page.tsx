@@ -1,186 +1,74 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Search, FolderCheck, Calculator, FileText, Cpu, Radio, Users, Sparkles, ArrowLeft, ShieldCheck } from 'lucide-react';
+import {
+  ArrowLeft,
+  FilePlus2,
+  Sparkles,
+  TrendingUp,
+} from 'lucide-react';
 import { TOOLS_REGISTRY } from '@/config/toolsRegistry';
-
-const CATEGORIES = [
-  { id: 'finance', name: 'المال والأعمال', description: 'التسعير، العقود، ونمو المشاريع الرقمية.', icon: Calculator },
-  { id: 'tech', name: 'التكنولوجيا والذكاء الاصطناعي', description: 'الأمان، الذكاء الاصطناعي، والبنية التقنية.', icon: Cpu },
-  { id: 'media', name: 'الإعلام الجديد', description: 'صناعة المحتوى، التفاعل، والنشر الرقمي.', icon: Radio },
-  { id: 'digital-lifestyle', name: 'رقميون ومجتمع مكاسب', description: 'إدارة الحياة الرقمية وتجارب المجتمع.', icon: Users },
-];
-
-const SUBCATEGORIES: Record<string, string[]> = {
-  finance: ['العمل الحر والخدمات', 'التجارة الإلكترونية', 'الذكاء الاصطناعي للأعمال'],
-  tech: ['الأمن السيبراني', 'تطبيقات الذكاء الاصطناعي', 'الحوسبة السحابية', 'البنية التحتية'],
-  media: ['صناعة المحتوى', 'البودكاست', 'البث المباشر'],
-  'digital-lifestyle': ['إدارة الحياة الرقمية', 'الصحة الرقمية', 'مجتمع مكاسب'],
-};
-
-const ICONS: Record<string, typeof Calculator> = { FileText, Calculator, ShieldCheck };
+import { CalculatorWorkspace } from '@/components/dashboard/CalculatorWorkspace';
 
 export default function ToolsWorkspacePage() {
-  const [activeCategory, setActiveCategory] = useState<string>('finance');
-  const [activeSubcategory, setActiveSubcategory] = useState<string>('الكل');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
-  const filteredTools = TOOLS_REGISTRY.filter((tool) => {
-    const matchesCategory = tool.category === activeCategory;
-    const matchesSubcategory = activeSubcategory === 'الكل' || tool.subcategory === activeSubcategory;
-    const query = searchQuery.trim().toLowerCase();
-    const matchesSearch = !query || `${tool.title} ${tool.description} ${tool.categoryLabel}`.toLowerCase().includes(query);
-    return matchesCategory && matchesSubcategory && matchesSearch;
-  }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-10 px-4 sm:px-6 lg:px-8 dir-rtl" dir="rtl">
-      {/* Header Section */}
-      <div className="max-w-7xl mx-auto mb-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 border-b border-slate-800 pb-8">
-          <div>
-            <div className="flex items-center gap-2 text-emerald-400 mb-2">
-              <Sparkles className="w-5 h-5" />
-              <span className="text-sm font-semibold">منصة الأدوات التفاعلية</span>
+    <div className="space-y-8 py-4 dir-rtl" dir="rtl">
+      <section className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl shadow-slate-950/30 sm:p-8">
+        <div className="space-y-5">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            منصة أدوات رقمية
+          </div>
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-3">
+              <h1 className="text-3xl font-black text-white sm:text-4xl">أدوات رقمية تفاعلية</h1>
+              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+                حاسبات ومولدات عملية مصممة لكل قطاع بحيث يمكنك الانتقال من الفكرة إلى القرار في دقائق بدل التشتت.
+              </p>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white">أدوات رقمية</h1>
-            <p className="text-slate-400 mt-2 text-sm sm:text-base">
-              اختر قطاعًا، ثم ابدأ بالأداة التي تساعدك على اتخاذ الخطوة التالية.
-            </p>
+
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
+              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+              {TOOLS_REGISTRY.length} أداة متاحة
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
+              <ArrowLeft className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+              بحث + تصنيف + استخدام فوري
+            </span>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section className="space-y-5">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">الأدوات الرقمية الحية</h2>
+          <span className="text-[11px] text-slate-400">عرض مباشر</span>
+        </div>
+
+        <CalculatorWorkspace showSectionTabs={false} showAllSections />
+      </section>
+
+      <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-emerald-300">تجربة عملية</p>
+            <h2 className="mt-1 text-xl font-black text-white">استخدم الأدوات الرقمية المناسبة لقطاعك</h2>
           </div>
           <Link
             href="/dashboard/tools"
-            className="inline-flex items-center justify-center gap-2 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold px-5 py-3 rounded-xl transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 py-3 text-xs font-black text-slate-950 transition-colors hover:bg-emerald-300"
           >
-            <FolderCheck className="w-5 h-5" />
-            <span>أدواتي المحفوظة</span>
+            <FilePlus2 className="h-4 w-4" aria-hidden="true" />
+            لوحة أدواتي
           </Link>
         </div>
-
-        {/* Search Bar */}
-        <div className="mt-8 relative max-w-2xl">
-          <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="ابحث عن أداة أو حاسبة..."
-            aria-label="البحث في الأدوات الرقمية"
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl pr-12 pl-4 py-3.5 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
-          />
-        </div>
-      </div>
-
-      {/* Main Categories Bar */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-end justify-between gap-4 mb-4"><div><p className="text-xs font-bold uppercase tracking-wider text-emerald-400">01 / القطاعات</p><h2 className="mt-1 text-xl font-bold text-white">من أين نبدأ؟</h2></div><span className="text-xs text-slate-500">{TOOLS_REGISTRY.length} أدوات في السجل</span></div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {CATEGORIES.map((cat) => (
-            <button
-              type="button"
-              key={cat.id}
-              onClick={() => {
-                setActiveCategory(cat.id);
-                setActiveSubcategory('الكل');
-              }}
-              aria-pressed={activeCategory === cat.id}
-              className={`flex items-start gap-3 p-4 rounded-xl border text-right transition-all ${
-                activeCategory === cat.id
-                  ? 'bg-emerald-950/40 border-emerald-500 text-white shadow-md'
-                  : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
-              }`}
-            >
-              <div className={`p-2 rounded-lg ${activeCategory === cat.id ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}`} aria-hidden="true">
-                <cat.icon className="w-5 h-5" aria-hidden="true" />
-              </div>
-              <span><span className="block font-semibold text-sm sm:text-base">{cat.name}</span><span className="mt-1 block text-xs leading-5 text-slate-500">{cat.description}</span></span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Subcategories Filter Bar */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div id="tool-subcategories" className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-4" role="tablist" aria-label="الفروع الفرعية">
-          <button
-            type="button"
-            onClick={() => setActiveSubcategory('الكل')}
-            role="tab"
-            aria-selected={activeSubcategory === 'الكل'}
-            aria-controls="tools-results"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeSubcategory === 'الكل'
-                ? 'bg-emerald-500 text-slate-950'
-                : 'bg-slate-900 text-slate-400 hover:text-white'
-            }`}
-          >
-            الكل
-          </button>
-          {SUBCATEGORIES[activeCategory]?.map((sub) => (
-            <button
-              type="button"
-              key={sub}
-              onClick={() => setActiveSubcategory(sub)}
-              role="tab"
-              aria-selected={activeSubcategory === sub}
-              aria-controls="tools-results"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeSubcategory === sub
-                  ? 'bg-emerald-500 text-slate-950'
-                  : 'bg-slate-900 text-slate-400 hover:text-white'
-              }`}
-            >
-              {sub}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Tools Display Grid */}
-      <div id="tools-results" role="tabpanel" aria-label="نتائج الأدوات الرقمية" className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-4"><div><p className="text-xs font-bold uppercase tracking-wider text-emerald-400">02 / الأدوات</p><h2 className="mt-1 text-xl font-bold text-white">الأحدث في هذا القطاع</h2></div><span className="text-xs text-slate-500">{filteredTools.length} نتيجة</span></div>
-        {filteredTools.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.map((tool) => {
-              const Icon = ICONS[tool.iconName] ?? Calculator;
-              return (
-              <div
-                key={tool.id}
-                className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-slate-700 transition-all hover:shadow-lg group"
-              >
-                <div>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="p-3 bg-slate-800/80 rounded-xl"><Icon className="w-6 h-6 text-emerald-400" /></div>
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-800 text-emerald-400 border border-slate-700">
-                      {tool.isNew ? 'جديدة' : new Date(tool.createdAt).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' })}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">
-                    {tool.title}
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-4 leading-relaxed">{tool.description}</p>
-                </div>
-                <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between mt-auto">
-                  <span className="text-xs text-slate-500 font-medium">{tool.subcategory}</span>
-                  <Link
-                    href={`/tools/${tool.category}/${tool.slug}`}
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
-                  >
-                    <span>تشغيل الأداة</span>
-                    <ArrowLeft className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-slate-800">
-            <p className="text-slate-400 text-lg">لا توجد أدوات متاحة ضمن هذا الفرع حالياً.</p>
-          </div>
-        )}
-      </div>
+      </section>
     </div>
   );
 }
