@@ -90,6 +90,63 @@ export interface Database {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: number
+          user_id: string | null
+          email: string | null
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id?: string | null
+          email?: string | null
+          role: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string | null
+          email?: string | null
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          id: number
+          user_id: string | null
+          email: string | null
+          action: string
+          target_resource: string
+          details: Json
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          user_id?: string | null
+          email?: string | null
+          action: string
+          target_resource: string
+          details?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string | null
+          email?: string | null
+          action?: string
+          target_resource?: string
+          details?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
       saved_tools: {
         Row: {
           id: string

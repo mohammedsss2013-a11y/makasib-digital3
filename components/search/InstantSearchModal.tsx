@@ -19,6 +19,8 @@ export const InstantSearchModal = ({
     if (!isOpen) return;
 
     const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     inputRef.current?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -48,6 +50,7 @@ export const InstantSearchModal = ({
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
       previousFocus?.focus();
     };
   }, [isOpen, onClose]);

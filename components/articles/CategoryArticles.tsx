@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
+import AppImage from "@/components/ui/AppImage";
 import type { ReactNode } from "react";
 import { ArrowLeft, BookOpen, Database, RefreshCw } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
 import { getHtmlExcerpt } from "@/utils/sanitizeHtml";
 import { SubcategoryLinks } from "@/components/articles/SubcategoryLinks";
 import { getArticlePath } from "@/lib/articlePaths";
+import { getPostsService } from "@/services/posts.service";
 
 interface CategoryArticlesProps {
   category: string;
@@ -25,13 +25,13 @@ const accentStyles = {
 };
 
 export async function CategoryArticles({ category, categoryLabel, description, accent = "emerald", subcategorySection, interactiveTools }: CategoryArticlesProps) {
-  const supabase = await createClient();
-  const { data: posts, error } = await supabase
-    .from("posts")
-    .select("id, title, content, category, subcategory, image_url, slug, created_at, status")
-    .eq("category", category)
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
+  let posts = null;
+  let error = false;
+  try {
+    posts = (await getPostsService({ category, status: "published", limit: 100 })).posts;
+  } catch {
+    error = true;
+  }
 
   const style = accentStyles[accent];
 
@@ -65,7 +65,7 @@ export async function CategoryArticles({ category, categoryLabel, description, a
           {posts.map((post) => (
             <article key={post.id} className="group flex min-h-72 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50">
               <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
-                <Image src={post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80"} alt={post.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                <AppImage src={post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80"} alt={post.title} fallbackType="article" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
               <div>
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">

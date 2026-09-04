@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { getArticlePath } from "@/lib/articlePaths";
+import { env } from "@/lib/env";
 
 export const revalidate = 3600;
 
@@ -48,12 +49,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/sitemap",
   ];
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "";
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "";
-  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-  const { data: posts } = supabase
-    ? await supabase.from("posts").select("id, slug, category, subcategory, created_at, status").eq("status", "published").order("created_at", { ascending: false })
-    : { data: [] };
+  const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const { data: posts } = await supabase
+    .from("posts")
+    .select("id, slug, category, subcategory, created_at, status")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
 
   const staticEntries: MetadataRoute.Sitemap = paths.map((path) => ({
     url: `${baseUrl}${path}`,

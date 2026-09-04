@@ -1,15 +1,12 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUserProfile } from "@/services/auth.service";
 
 export const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
 
 export async function getAdminAccessState() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userProfile = await getCurrentUserProfile();
 
-  if (!user) {
+  if (!userProfile) {
     return {
       user: null,
       isAdmin: false,
@@ -17,6 +14,7 @@ export async function getAdminAccessState() {
     };
   }
 
+  const { user, roles } = userProfile;
   if (user.email === ADMIN_EMAIL) {
     return {
       user,
@@ -25,13 +23,7 @@ export async function getAdminAccessState() {
     };
   }
 
-  const { data: roleData } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  const role = roleData?.role ?? null;
+  const role = roles[0] ?? null;
 
   return {
     user,

@@ -14,6 +14,7 @@ import {
   Bell,
 } from "lucide-react";
 import { getDashboardData } from "@/utils/dashboard";
+import AppImage from "@/components/ui/AppImage";
 
 const dashboardLinks = [
   {
@@ -68,10 +69,9 @@ export default async function DashboardPage() {
         
         <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 shadow-inner">
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 shadow-inner">
               {profile?.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-2xl object-cover" />
+                <AppImage src={profile.avatar_url} alt={displayName} fallbackType="avatar" fill sizes="64px" className="object-cover" />
               ) : (
                 <UserCircle className="h-10 w-10 text-emerald-400" />
               )}

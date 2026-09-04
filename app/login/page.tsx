@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, LogIn, ShieldCheck, Sparkles } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 

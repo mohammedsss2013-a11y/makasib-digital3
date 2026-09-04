@@ -8,7 +8,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { TOOLS_REGISTRY } from '@/config/toolsRegistry';
-import { CalculatorWorkspace } from '@/components/dashboard/CalculatorWorkspace';
+import ToolCatalog from '@/components/tools/ToolCatalog';
 
 export default function ToolsWorkspacePage() {
   return (
@@ -51,7 +51,7 @@ export default function ToolsWorkspacePage() {
           <span className="text-[11px] text-slate-400">عرض مباشر</span>
         </div>
 
-        <CalculatorWorkspace showSectionTabs={false} showAllSections />
+        <ToolCatalog />
       </section>
 
       <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 sm:p-6">

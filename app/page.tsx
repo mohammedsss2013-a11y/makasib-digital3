@@ -13,7 +13,7 @@ import {
   LayoutDashboard
 } from "lucide-react";
 import { HomeSearchButton } from "@/components/search/HomeSearchButton";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
   const supabase = await createClient();

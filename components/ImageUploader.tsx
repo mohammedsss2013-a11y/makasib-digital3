@@ -1,15 +1,29 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
-import { uploadArticleImage } from "@/lib/upload";
-import { createClient } from "@/utils/supabase/client";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Upload, X } from "lucide-react";
+import { uploadArticleImage } from "@/services/upload.service";
+import AppImage from "@/components/ui/AppImage";
 
-export default function ImageUploader() {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+type ImageUploaderProps = {
+  onUploadComplete?: (url: string) => void;
+  onImageSelected?: (file: File | null) => void;
+  defaultImage?: string;
+};
+
+export default function ImageUploader({ onUploadComplete, onImageSelected, defaultImage }: ImageUploaderProps) {
+  const [imageUrl, setImageUrl] = useState<string | null>(defaultImage ?? null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(defaultImage ?? null);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -22,14 +36,15 @@ export default function ImageUploader() {
 
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
+    onImageSelected?.(file);
 
     try {
-      const client = createClient();
       setProgress(25);
 
-      const uploadedUrl = await uploadArticleImage(file, "articles", client);
+      const uploadedUrl = await uploadArticleImage(file);
       setProgress(100);
       setImageUrl(uploadedUrl);
+      onUploadComplete?.(uploadedUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : "فشل في رفع الصورة");
     } finally {
@@ -38,13 +53,22 @@ export default function ImageUploader() {
     }
   };
 
+  const handleRemoveImage = () => {
+    setPreviewUrl(null);
+    setImageUrl(null);
+    onImageSelected?.(null);
+    fileInputRef.current && (fileInputRef.current.value = "");
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 dir-rtl">
       <label className="block">
         <span className="mb-2 block text-sm font-medium text-gray-700">
           اختيار صورة
         </span>
         <input
+          ref={fileInputRef}
+          id="image-upload-input"
           type="file"
           accept="image/*"
           onChange={handleFileChange}
@@ -69,14 +93,21 @@ export default function ImageUploader() {
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
-      {previewUrl && (
-        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white p-2">
-          <img
+      {previewUrl ? (
+        <div className="group relative h-48 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+          <AppImage
             src={previewUrl}
             alt="معاينة الصورة"
-            className="h-48 w-full rounded-md object-cover"
+            fill
+            unoptimized
+            sizes="(max-width: 640px) 100vw, 480px"
+            fallbackType="article"
+            className="object-cover transition-transform group-hover:scale-105"
           />
+          <button type="button" onClick={handleRemoveImage} className="absolute left-3 top-3 rounded-xl bg-slate-900/80 p-2 text-white backdrop-blur-sm transition-colors hover:bg-red-600" aria-label="إزالة الصورة"><X className="h-4 w-4" /></button>
         </div>
+      ) : (
+        <label htmlFor="image-upload-input" className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-800 bg-slate-900/50 p-6 text-center transition-colors hover:bg-slate-800/50"><Upload className="mb-3 h-6 w-6 text-slate-500" /><span className="text-sm font-bold text-slate-300">اضغط لرفع صورة</span><span className="mt-1 text-xs text-slate-500">PNG, JPG, WEBP حتى 5 ميجابايت</span></label>
       )}
 
       {imageUrl && (

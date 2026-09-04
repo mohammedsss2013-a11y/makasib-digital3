@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { getArticlePath } from '@/lib/articlePaths';
 
 // التوليد الثابت مع التحديث الدوري (ISR) كل ساعة

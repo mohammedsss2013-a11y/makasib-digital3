@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Headphones, HelpCircle, MessageSquarePlus, Send, Ticket, CheckCircle2, Clock } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export interface SupportTicket {
   id: string;

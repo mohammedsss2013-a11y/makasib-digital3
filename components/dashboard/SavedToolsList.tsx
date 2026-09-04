@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeft, Trash2 } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import type { SavedTool } from "@/utils/dashboard";
 
 export function SavedToolsList({ initialTools }: { initialTools: SavedTool[] }) {

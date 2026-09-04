@@ -26,7 +26,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import AdminNavButton from "@/components/admin/AdminNavButton";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
+import AppImage from "@/components/ui/AppImage";
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -171,8 +172,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                   >
                     <div className="h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-slate-800 flex items-center justify-center">
                       {avatarUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+                        <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="32px" className="object-cover" />
                       ) : (
                         <UserCircle className="h-5 w-5 text-emerald-400" />
                       )}
@@ -188,8 +188,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                     <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
                       <div className="h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
                         {avatarUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={avatarUrl} alt={displayName} className="h-full w-full object-cover" />
+                          <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="48px" className="object-cover" />
                         ) : (
                           <UserCircle className="h-8 w-8 text-emerald-400" />
                         )}

@@ -1,5 +1,5 @@
 import { createAdminPostAction, deleteAdminPostAction, updateAdminPostAction } from "@/actions/admin.actions";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function AdminContentManagerPage() {
   const supabase = await createClient();
@@ -36,6 +36,7 @@ export default async function AdminContentManagerPage() {
               <select name="status" defaultValue="draft" className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-white outline-none ring-0">
                 <option value="draft">مسودة</option>
                 <option value="published">منشور</option>
+                <option value="archived">مؤرشف</option>
               </select>
             </label>
 
@@ -97,6 +98,7 @@ export default async function AdminContentManagerPage() {
               <select name="status" defaultValue={post.status} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white">
                 <option value="draft">مسودة</option>
                 <option value="published">منشور</option>
+                <option value="archived">مؤرشف</option>
               </select>
               <input name="category" defaultValue={post.category ?? "finance"} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white" />
               <button type="submit" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-black text-emerald-300">تحديث</button>

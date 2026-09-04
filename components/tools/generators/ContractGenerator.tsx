@@ -10,6 +10,7 @@ import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
 import { contractsService } from "@/services/contracts.service";
 import type { ContractData } from "@/types/contracts";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/providers/ToastProvider";
 
 export const contractSchema = z.object({
   freelancerName: z.string().min(2, "يرجى إدخال اسم المستقل (حرفين على الأقل)"),
@@ -28,6 +29,7 @@ export const ContractGenerator = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     recordToolUsage("contract-generator");
@@ -70,10 +72,15 @@ export const ContractGenerator = () => {
 
   const contractText = contractsService.generateContractMarkdown(contractPayload);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(contractText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(contractText);
+      setCopied(true);
+      showToast("تم نسخ العقد", "success");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      showToast("تعذر نسخ العقد", "error");
+    }
   };
 
   const onSubmit: SubmitHandler<ContractFormData> = async (data) => {
@@ -81,9 +88,11 @@ export const ContractGenerator = () => {
       const { error } = await contractsService.saveContract(data);
       if (error) throw error;
       setIsSaved(true);
+      showToast("تم حفظ العقد في لوحتك", "success");
       setTimeout(() => setIsSaved(false), 3000);
     } catch (error) {
       console.error("تعذر حفظ العقد", error);
+      showToast("تعذر حفظ العقد. حاول مرة أخرى", "error");
     }
   };
 

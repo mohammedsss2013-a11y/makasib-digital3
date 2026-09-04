@@ -15,6 +15,9 @@ export default function AdminOverviewPage() {
         <p className="mt-2 text-sm leading-7 text-slate-400">
           متابعة العمليات المالية، المستخدمين، والأداء العام للنظام الداخلي.
         </p>
+        <span className="mt-3 inline-flex rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-300">
+          بيانات توضيحية تجريبية
+        </span>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

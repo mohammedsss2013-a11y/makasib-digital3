@@ -1,8 +1,16 @@
 import { createBrowserClient } from "@supabase/ssr";
-import { Database } from "@/types/database.types";
+import { env } from "@/lib/env";
+import type { Database } from "@/types/database.types";
 
-export const createClient = () =>
-  createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+let clientInstance: ReturnType<typeof createBrowserClient<Database>> | null = null;
+
+export function createClient() {
+  if (clientInstance) return clientInstance;
+
+  clientInstance = createBrowserClient<Database>(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   );
+
+  return clientInstance;
+}

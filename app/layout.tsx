@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { Cairo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { NavbarWrapper } from "@/components/layout/NavbarWrapper";
 import { Footer } from "@/components/layout/Footer";
+import { ToastProvider } from "@/components/providers/ToastProvider";
+
+const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", display: "swap" });
+const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://makasib.digital"),
@@ -28,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" className="dark" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className={`dark ${cairo.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <body className="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <a
@@ -37,11 +42,13 @@ export default function RootLayout({
           >
             تخطي إلى المحتوى الرئيسي
           </a>
-          <NavbarWrapper />
-          <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </main>
-          <Footer />
+          <ToastProvider>
+            <NavbarWrapper />
+            <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {children}
+            </main>
+            <Footer />
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

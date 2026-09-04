@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Users, ThumbsUp, PlusCircle } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
+import PostCard from "@/components/community/PostCard";
 
 interface CommunityPost {
   id: string;
@@ -12,6 +13,11 @@ interface CommunityPost {
   content: string;
   likes_count: number;
   created_at: string;
+  author: {
+    full_name: string;
+    avatar_url: string | null;
+    role_title: string | null;
+  };
 }
 
 const supabase = createClient();
@@ -46,6 +52,22 @@ export default function CommunityPage() {
 
     setUserId(authData.user?.id ?? null);
     if (error) setErrorMessage("تعذر تحميل منشورات المجتمع حاليًا.");
+    const userIds = [...new Set((data ?? []).map((post) => post.user_id))];
+    const [{ data: profiles }, { data: roles }] = userIds.length ? await Promise.all([
+      supabase.from("profiles").select("id, full_name, avatar_url").in("id", userIds),
+      supabase.from("user_roles").select("user_id, role").in("user_id", userIds),
+    ]) : [{ data: [] }, { data: [] }];
+    const profileMap = new Map((profiles ?? []).map((profile) => [profile.id, profile]));
+    const roleMap = new Map((roles ?? []).map((role) => [role.user_id, role.role]));
+    const postsWithAuthors = (data ?? []).map((post) => ({
+      ...post,
+      author: {
+        full_name: profileMap.get(post.user_id)?.full_name || "عضو مكاسب",
+        avatar_url: profileMap.get(post.user_id)?.avatar_url ?? null,
+        role_title: roleMap.get(post.user_id) === "admin" || roleMap.get(post.user_id) === "super_admin" ? "فريق مكاسب" : null,
+      },
+    }));
+
     if (authData.user && data?.length) {
       const { data: userLikes } = await supabase
         .from("community_post_likes")
@@ -54,7 +76,7 @@ export default function CommunityPage() {
         .in("post_id", data.map((post) => post.id));
       setLikedPostIds((current) => new Set([...current, ...(userLikes ?? []).map((like) => like.post_id)]));
     }
-    setPosts((currentPosts) => pageNumber === 0 ? (data ?? []) : [...currentPosts, ...(data ?? [])]);
+    setPosts((currentPosts) => pageNumber === 0 ? postsWithAuthors : [...currentPosts, ...postsWithAuthors]);
     setPage(pageNumber);
     setHasMore((data?.length ?? 0) === PAGE_SIZE);
     setIsLoading(false);
@@ -180,37 +202,7 @@ export default function CommunityPage() {
       {/* Posts List */}
       <div className="space-y-4" aria-live="polite" aria-busy={isLoading}>
         {isLoading ? <p className="text-center text-slate-400 py-8">جارٍ تحميل المنشورات...</p> : posts.length === 0 ? <p className="text-center text-slate-400 py-8">لا توجد منشورات بعد.</p> : posts.map((post) => (
-          <article key={post.id} className="bg-slate-900 border border-slate-800/80 p-6 rounded-2xl space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-emerald-400 text-xs">
-                  م
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white">عضو مجتمع</h4>
-                  <span className="text-[10px] text-slate-500">{new Date(post.created_at).toLocaleDateString("ar-EG")}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <h3 className="text-sm font-bold text-slate-100">{post.title}</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">{post.content}</p>
-            </div>
-
-            <div className="flex items-center gap-4 pt-3 border-t border-slate-800/60 text-xs">
-              <button
-                type="button"
-                onClick={() => handleLike(post.id)}
-                disabled={!userId || likingPostId === post.id || likedPostIds.has(post.id)}
-                aria-pressed={likedPostIds.has(post.id)}
-                className="flex items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition-colors"
-              >
-                <ThumbsUp className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>{likedPostIds.has(post.id) ? "تم تسجيل الإعجاب" : `إعجاب (${post.likes_count})`}</span>
-              </button>
-            </div>
-          </article>
+          <PostCard key={post.id} post={post} liked={likedPostIds.has(post.id)} likeDisabled={!userId || likingPostId === post.id || likedPostIds.has(post.id)} onLike={handleLike} />
         ))}
       </div>
       {hasMore && !isLoading && (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { articlesService } from "@/services/articles.service";
@@ -127,7 +127,7 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
               className="group flex min-h-64 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50 hover:bg-slate-900"
             >
               <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
-                <Image src={article.coverImage} alt={article.coverImageAlt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                <AppImage src={article.coverImage} alt={article.coverImageAlt} fallbackType="article" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
               <div>
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">

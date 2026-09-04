@@ -67,6 +67,7 @@ export function sanitizeHtml(html: string, prioritizeImages = false) {
 
   return html
     .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<\/?(?:script|style|iframe|object|embed|form|input|button|textarea|select)[^>]*>[\s\S]*?<\/(?:script|style|iframe|object|embed|form|input|button|textarea|select)>/gi, "")
     .replace(/<\/?(?:script|style|iframe|object|embed|form|input|button|textarea|select)[^>]*>/gi, "")
     .replace(/<\/?([a-zA-Z0-9]+)([^>]*)>/g, (wholeTag, rawTagName: string, rawAttributes: string) => {
       const tagName = rawTagName.toLowerCase();

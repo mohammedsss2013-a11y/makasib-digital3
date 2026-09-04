@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
 import { ArrowRight, BookOpen, Clock3, UserRound } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</time>
         </div>
         <div className="relative mt-6 aspect-[16/7] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-          <Image src={article.coverImage} alt={article.coverImageAlt} fill priority sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
+          <AppImage src={article.coverImage} alt={article.coverImageAlt} fallbackType="article" fill priority sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
         </div>
       </header>
 

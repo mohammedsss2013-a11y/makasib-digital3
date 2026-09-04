@@ -10,6 +10,7 @@ import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
 import { saveToolResult } from "@/utils/savedTools";
 import { toolsService } from "@/services/tools.service";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/providers/ToastProvider";
 
 export const freelancePricingSchema = z.object({
   targetIncome: z.coerce.number({ message: "الدخل المستهدف يجب أن يكون رقماً" }).min(0, "الدخل المستهدف يجب ألا يقل عن 0"),
@@ -27,6 +28,7 @@ export const FreelancePricingCalculator = () => {
   const [copied, setCopied] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     recordToolUsage("freelance-pricing");
@@ -90,17 +92,24 @@ export const FreelancePricingCalculator = () => {
       });
       if (error) throw error;
       setIsSaved(true);
+      showToast("تم حفظ نتيجة التسعير في لوحتك", "success");
       setTimeout(() => setIsSaved(false), 3000);
     } catch (error) {
       console.error("تعذر حفظ النتيجة", error);
+      showToast("تعذر حفظ النتيجة. حاول مرة أخرى", "error");
     }
   };
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const summary = `📊 **تقرير تسعير الخدمات الشخصي - مكاسب رقمية**\n- الدخل المستهدف: ${targetIncome} $/شهر\n- المصاريف الثابتة: ${fixedExpenses} $/شهر\n- سعر الساعة الموصى به: ${hourlyRateRecommended} $/ساعة\n- الحد الأدنى لسعر الساعة: ${hourlyRateMinimum} $/ساعة`;
-    navigator.clipboard.writeText(summary);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(summary);
+      setCopied(true);
+      showToast("تم نسخ ملخص النتيجة", "success");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      showToast("تعذر نسخ النتيجة", "error");
+    }
   };
 
   return (

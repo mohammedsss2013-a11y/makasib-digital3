@@ -17,7 +17,8 @@ import {
   Loader2,
   UserCircle,
 } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
+import AppImage from "@/components/ui/AppImage";
 
 import { useRouter } from "next/navigation";
 
@@ -333,8 +334,7 @@ export default function SettingsPage() {
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="relative h-20 w-20 flex-shrink-0 rounded-2xl border-2 border-emerald-500/30 bg-slate-900 overflow-hidden shadow-inner flex items-center justify-center">
                   {avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={avatarUrl} alt="صورة الملف الشخصي" className="h-full w-full object-cover" />
+                    <AppImage src={avatarUrl} alt="صورة الملف الشخصي" fallbackType="avatar" fill sizes="80px" className="object-cover" />
                   ) : (
                     <UserCircle className="h-12 w-12 text-slate-500" />
                   )}

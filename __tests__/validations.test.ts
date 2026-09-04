@@ -1,0 +1,58 @@
+import { describe, expect, it } from "vitest";
+import { createPostSchema, parsePostFormData, updatePostSchema } from "@/lib/validations/post.schema";
+import { sanitizeHtml } from "@/lib/sanitize";
+
+const validPost = {
+  title: "عنوان مقال تجريبي مفيد",
+  slug: "valid-slug-123",
+  content: "هذا نص محتوى تجريبي يتجاوز الخمسين حرفًا لضمان نجاح التحقق من بيانات المقال بشكل صحيح.",
+  category: "finance",
+  status: "published" as const,
+};
+
+describe("Post validation", () => {
+  it("accepts a valid post", () => {
+    expect(createPostSchema.safeParse(validPost).success).toBe(true);
+  });
+
+  it("rejects invalid title, slug, and short content", () => {
+    const result = createPostSchema.safeParse({
+      ...validPost,
+      title: "قصير",
+      slug: "Invalid Slug!",
+      content: "محتوى قصير",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("allows partial updates with the numeric post id", () => {
+    const result = updatePostSchema.safeParse({ id: 12, status: "archived" });
+    expect(result.success).toBe(true);
+  });
+
+  it("parses the admin form and generates a slug when omitted", () => {
+    const formData = new FormData();
+    formData.set("title", "مقال عربي عملي");
+    formData.set("content", validPost.content);
+    formData.set("category", "finance");
+    formData.set("status", "draft");
+
+    const result = parsePostFormData(formData);
+    expect(result.slug).toMatch(/^post-|^$/);
+  });
+});
+
+describe("HTML sanitization", () => {
+  it("removes dangerous elements and preserves safe markup", () => {
+    const cleaned = sanitizeHtml("<p>نص آمن</p><script>alert('XSS')</script><a href='https://example.com'>رابط</a>");
+
+    expect(cleaned).toContain("<p>نص آمن</p>");
+    expect(cleaned).toContain("<a href=\"https://example.com\" rel=\"noopener noreferrer\">رابط</a>");
+    expect(cleaned).not.toContain("script");
+    expect(cleaned).not.toContain("alert");
+  });
+
+  it("rejects unsafe URL protocols", () => {
+    expect(sanitizeHtml('<a href="javascript:alert(1)">رابط</a>')).not.toContain("javascript:");
+  });
+});

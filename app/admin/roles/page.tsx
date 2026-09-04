@@ -1,5 +1,5 @@
 import { upsertAdminRoleAction, deleteAdminRoleAction } from "@/actions/admin.actions";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 const roleMeta: Record<string, string> = {
   super_admin: "إدارة كاملة للنظام ومقابل كل صفحاته.",
