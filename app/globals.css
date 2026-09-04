@@ -1,20 +1,31 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-:root {
-  color-scheme: light;
-}
+@layer base {
+  :root {
+    color-scheme: light;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+  }
 
-body {
-  background-color: #f8fafc;
-  color: #0f172a;
-  font-family: var(--font-cairo), sans-serif;
-  min-height: 100vh;
+  body {
+    background-color: #f8fafc;
+    color: #0f172a;
+    font-family: var(--font-cairo), sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 }
 
 *:focus-visible {
   outline: 3px solid #34d399;
   outline-offset: 3px;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900;
 }
 
 html {

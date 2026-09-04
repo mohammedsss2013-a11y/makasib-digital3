@@ -134,7 +134,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
               للبحث السريع
             </span>
             <Search className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
-            <kbd className="pointer-events-none absolute left-3 rounded border border-slate-700 bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-slate-400">
+            <kbd className="pointer-events-none absolute left-3 rounded border border-slate-700 bg-slate-800 px-2 py-0.5 font-mono text-xs text-slate-400">
               Cmd+K
             </kbd>
           </button>
@@ -166,7 +166,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen((open) => !open)}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-700/70 bg-slate-900/80 p-1.5 transition-all hover:border-emerald-500/60 focus:outline-none"
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-700/70 bg-slate-900/80 p-1.5 transition-all hover:border-emerald-500/60 focus-ring"
                     aria-label="قائمة الملف الشخصي"
                     aria-expanded={userDropdownOpen}
                   >
@@ -195,8 +195,8 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-black text-white truncate">{displayName}</p>
-                        <p className="text-[11px] text-slate-400 truncate dir-ltr text-right">{userEmail}</p>
-                        <span className="mt-1 inline-block rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+                        <p className="text-xs text-slate-400 truncate dir-ltr text-right">{userEmail}</p>
+                        <span className="mt-1 inline-block rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-xs font-bold text-emerald-300">
                           {isAdmin ? "مدير النظام (Admin)" : "عضو (Member)"}
                         </span>
                       </div>
