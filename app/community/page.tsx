@@ -54,7 +54,7 @@ export default function CommunityPage() {
     if (error) setErrorMessage("تعذر تحميل منشورات المجتمع حاليًا.");
     const userIds = [...new Set((data ?? []).map((post) => post.user_id))];
     const [{ data: profiles }, { data: roles }] = userIds.length ? await Promise.all([
-      supabase.from("profiles").select("id, full_name, avatar_url").in("id", userIds),
+      supabase.from("public_profiles").select("id, full_name, avatar_url").in("id", userIds),
       supabase.from("user_roles").select("user_id, role").in("user_id", userIds),
     ]) : [{ data: [] }, { data: [] }];
     const profileMap = new Map((profiles ?? []).map((profile) => [profile.id, profile]));

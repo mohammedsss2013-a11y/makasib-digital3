@@ -140,6 +140,23 @@ CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON public.audit_logs(create
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
+CREATE OR REPLACE FUNCTION public.is_admin_user()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog, public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.user_roles
+    WHERE user_id = (SELECT auth.uid())
+      AND role IN ('admin', 'super_admin')
+  );
+$$;
+
+REVOKE ALL ON FUNCTION public.is_admin_user() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_admin_user() TO authenticated;
+
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -148,20 +165,8 @@ BEGIN
   ) THEN
     CREATE POLICY "Admins can manage user roles"
       ON public.user_roles FOR ALL TO authenticated
-      USING (
-        EXISTS (
-          SELECT 1 FROM public.user_roles ur
-          WHERE ur.user_id = auth.uid() AND ur.role IN ('super_admin', 'admin')
-        )
-        OR auth.email() = 'mohammed.sss2013@gmail.com'
-      )
-      WITH CHECK (
-        EXISTS (
-          SELECT 1 FROM public.user_roles ur
-          WHERE ur.user_id = auth.uid() AND ur.role IN ('super_admin', 'admin')
-        )
-        OR auth.email() = 'mohammed.sss2013@gmail.com'
-      );
+      USING ((SELECT public.is_admin_user()))
+      WITH CHECK ((SELECT public.is_admin_user()));
   END IF;
 END
 $$;
@@ -174,13 +179,7 @@ BEGIN
   ) THEN
     CREATE POLICY "Admins can read audit logs"
       ON public.audit_logs FOR SELECT TO authenticated
-      USING (
-        EXISTS (
-          SELECT 1 FROM public.user_roles ur
-          WHERE ur.user_id = auth.uid() AND ur.role IN ('super_admin', 'admin')
-        )
-        OR auth.email() = 'mohammed.sss2013@gmail.com'
-      );
+      USING ((SELECT public.is_admin_user()));
   END IF;
 END
 $$;
@@ -201,7 +200,7 @@ ALTER TABLE public.community_post_likes ENABLE ROW LEVEL SECURITY;
 -- =============================================
 
 -- سياسات جدول Profiles
-CREATE POLICY "Public profiles are viewable by everyone" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT TO authenticated USING ((SELECT auth.uid()) = id OR (SELECT public.is_admin_user()));
 CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE TO authenticated USING ((select auth.uid()) = id) WITH CHECK ((select auth.uid()) = id);
 
@@ -236,8 +235,34 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public;
 
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+CREATE OR REPLACE VIEW public.public_profiles
+WITH (security_invoker = false)
+AS SELECT id, full_name, avatar_url, bio FROM public.profiles;
+
+REVOKE ALL ON public.profiles FROM anon;
+REVOKE ALL ON public.public_profiles FROM PUBLIC;
+GRANT SELECT ON public.public_profiles TO anon, authenticated;
+
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
+CREATE POLICY "Public article image access"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'article-images');
+
+DROP POLICY IF EXISTS "Authenticated Upload" ON storage.objects;
+CREATE POLICY "Users upload owned article images"
+  ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id = 'article-images'
+    AND (SELECT (storage.foldername(name))[1]) = (SELECT auth.uid()::text)
+    AND metadata->>'mimetype' IN ('image/jpeg', 'image/png', 'image/webp', 'image/gif')
+    AND CASE
+      WHEN metadata->>'size' ~ '^[0-9]+$' THEN (metadata->>'size')::bigint
+      ELSE 0
+    END BETWEEN 1 AND 5242880
+  );

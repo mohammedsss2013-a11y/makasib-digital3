@@ -4,6 +4,8 @@ import type { CreatePostInput, UpdatePostInput } from "@/lib/validations/post.sc
 import { sanitizeHtml } from "@/lib/sanitize";
 import { cache } from "react";
 
+const postFields = "id, title, content, category, subcategory, image_url, slug, description, image_alt, article_type, tool_slug, status, published_at, updated_at, created_at";
+
 export const getPostsService = cache(async function getPostsService({
   page = 1,
   limit = 10,
@@ -23,7 +25,7 @@ export const getPostsService = cache(async function getPostsService({
 
   let query = supabase
     .from("posts")
-    .select("*", { count: "exact" })
+    .select(postFields, { count: "exact" })
     .eq("status", status)
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -41,7 +43,7 @@ export const getPostsService = cache(async function getPostsService({
 
 export async function getPostBySlugService(slug: string) {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("posts").select("*").eq("slug", slug).maybeSingle();
+  const { data, error } = await supabase.from("posts").select(postFields).eq("slug", slug).maybeSingle();
   if (error) {
     console.error("خطأ في جلب المقال:", error.message);
     return null;
@@ -58,7 +60,7 @@ export async function createPostService(input: CreatePostInput) {
   const { data, error } = await supabase
     .from("posts")
     .insert({ ...safeInput, updated_at: new Date().toISOString() })
-    .select()
+    .select(postFields)
     .single();
 
   if (error) {
@@ -76,7 +78,7 @@ export async function updatePostService(input: UpdatePostInput) {
     .from("posts")
     .update({ ...safeUpdates, updated_at: new Date().toISOString() })
     .eq("id", id)
-    .select()
+    .select(postFields)
     .single();
 
   if (error) {

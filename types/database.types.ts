@@ -245,6 +245,42 @@ export interface Database {
         }
         Relationships: []
       }
+      tool_definitions: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          description: string
+          category: string
+          icon_name: string
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          description?: string
+          category: string
+          icon_name?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          description?: string
+          category?: string
+          icon_name?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_posts: {
         Row: {
           id: string
@@ -362,10 +398,21 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          id: string
+          full_name: string | null
+          avatar_url: string | null
+          bio: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

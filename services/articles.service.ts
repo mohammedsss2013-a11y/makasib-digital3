@@ -24,6 +24,8 @@ export interface ArticleSlugPath {
   slug: string;
 }
 
+const articleFields = "id, title, content, category, subcategory, image_url, slug, description, image_alt, created_at";
+
 export const articlesService = {
   async getAllSlugPaths(): Promise<ArticleSlugPath[]> {
     try {
@@ -55,14 +57,16 @@ export const articlesService = {
 
       const { data: postBySlug } = await supabase
         .from("posts")
-        .select("*")
+        .select(articleFields)
         .eq("slug", slug)
+        .eq("category", category)
+        .eq("subcategory", subcategory)
         .eq("status", "published")
         .maybeSingle();
 
       const post = postBySlug || (await supabase
         .from("posts")
-        .select("*")
+        .select(articleFields)
         .eq("id", Number(slug) || 0)
         .eq("status", "published")
         .maybeSingle()).data;
@@ -100,7 +104,7 @@ export const articlesService = {
       const supabase = await createClient();
       const { data: posts } = await supabase
         .from("posts")
-        .select("*")
+        .select(articleFields)
         .eq("status", "published")
         .order("created_at", { ascending: false });
 

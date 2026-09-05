@@ -39,7 +39,7 @@ export const toolsService = {
         inputs: record.inputs as unknown as Json,
         outputs: record.outputs as unknown as Json,
       })
-      .select()
+      .select("id, user_id, category, tool_slug, tool_title, inputs, outputs, created_at, updated_at")
       .single();
 
     if (error) throw new Error(error.message);
@@ -48,7 +48,10 @@ export const toolsService = {
 
   async getSavedTools(category?: string) {
     const supabase = createClient();
-    let query = supabase.from("saved_tools").select("*").order("created_at", { ascending: false });
+    let query = supabase
+      .from("saved_tools")
+      .select("id, user_id, category, tool_slug, tool_title, inputs, outputs, created_at, updated_at")
+      .order("created_at", { ascending: false });
 
     if (category) {
       query = query.eq("category", category);

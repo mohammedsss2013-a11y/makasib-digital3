@@ -18,8 +18,11 @@ export async function uploadArticleImage(file: File): Promise<string> {
   }
 
   const extension = EXTENSIONS[file.type];
-  const filePath = `articles/${crypto.randomUUID()}.${extension}`;
   const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("يجب تسجيل الدخول لرفع الصور.");
+
+  const filePath = `${user.id}/articles/${crypto.randomUUID()}.${extension}`;
   const { error } = await supabase.storage.from("article-images").upload(filePath, file, {
     cacheControl: "3600",
     contentType: file.type,
