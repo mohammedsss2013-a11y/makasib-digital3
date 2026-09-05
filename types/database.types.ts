@@ -6,6 +6,12 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+export type NotificationSettings = {
+  email_articles?: boolean
+  email_updates?: boolean
+  community_alerts?: boolean
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -70,6 +76,9 @@ export interface Database {
           username: string | null
           avatar_url: string | null
           specialty: string | null
+          bio: string | null
+          notification_settings: NotificationSettings | null
+          two_factor_enabled: boolean
           created_at: string
         }
         Insert: {
@@ -78,6 +87,9 @@ export interface Database {
           username?: string | null
           avatar_url?: string | null
           specialty?: string | null
+          bio?: string | null
+          notification_settings?: NotificationSettings | null
+          two_factor_enabled?: boolean
           created_at?: string
         }
         Update: {
@@ -86,6 +98,9 @@ export interface Database {
           username?: string | null
           avatar_url?: string | null
           specialty?: string | null
+          bio?: string | null
+          notification_settings?: NotificationSettings | null
+          two_factor_enabled?: boolean
           created_at?: string
         }
         Relationships: []
@@ -191,6 +206,45 @@ export interface Database {
           }
         ]
       }
+      tools: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          sector: string
+          description: string
+          icon: string
+          is_interactive: boolean
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          sector: string
+          description?: string
+          icon?: string
+          is_interactive?: boolean
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          sector?: string
+          description?: string
+          icon?: string
+          is_interactive?: boolean
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_posts: {
         Row: {
           id: string
@@ -258,6 +312,47 @@ export interface Database {
           },
           {
             foreignKeyName: "community_post_likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      support_tickets: {
+        Row: {
+          id: string
+          user_id: string
+          subject: string
+          category: string
+          status: string
+          message: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject: string
+          category?: string
+          status?: string
+          message: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject?: string
+          category?: string
+          status?: string
+          message?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"

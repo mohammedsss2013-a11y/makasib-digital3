@@ -28,17 +28,26 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 import AdminNavButton from "@/components/admin/AdminNavButton";
 import { createClient } from "@/lib/supabase/client";
 import AppImage from "@/components/ui/AppImage";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
 interface NavbarProps {
   onOpenSearch: () => void;
 }
 
+const sectorIcons = {
+  finance: TrendingUp,
+  technology: Cpu,
+  media: Tv,
+  digitalists: Brain,
+} as const;
+
 const navLinks = [
   { name: "الرئيسية", href: "/", icon: Home },
-  { name: "المال والأعمال", href: "/finance", icon: TrendingUp },
-  { name: "التكنولوجيا والابتكار", href: "/tech", icon: Cpu },
-  { name: "الإعلام الجديد", href: "/media", icon: Tv },
-  { name: "رقميون", href: "/digital-lifestyle", icon: Brain },
+  ...ARTICLE_SECTORS.map((sector) => ({
+    name: sector.title,
+    href: sector.href,
+    icon: sectorIcons[sector.id],
+  })),
   { name: "أدوات رقمية", href: "/tools", icon: Sparkles },
   { name: "مجتمع مكاسب", href: "/community", icon: Users },
 ];

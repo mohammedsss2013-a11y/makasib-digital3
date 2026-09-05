@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FreelancePricingCalculator } from "@/components/tools/calculators/FreelancePricingCalculator";
-import { ContractGenerator } from "@/components/tools/generators/ContractGenerator";
+import { DynamicToolRenderer } from "@/components/tools/DynamicToolRenderer";
 import { Clock, User, MessageSquare } from "lucide-react";
 
 export default function PricingGuideArticlePage() {
@@ -51,7 +50,7 @@ export default function PricingGuideArticlePage() {
       {/* Embedded Tool 1 */}
       <section id="pricing-calculator" className="scroll-mt-24 my-8">
         <div className="bg-slate-900/50 border border-emerald-500/30 p-2 rounded-2xl">
-          <FreelancePricingCalculator />
+          <DynamicToolRenderer slug="freelance-pricing-calculator" />
         </div>
       </section>
 
@@ -68,7 +67,7 @@ export default function PricingGuideArticlePage() {
       {/* Embedded Tool 2 */}
       <section id="contract-generator" className="scroll-mt-24 my-8">
         <div className="bg-slate-900/50 border border-emerald-500/30 p-2 rounded-2xl">
-          <ContractGenerator />
+          <DynamicToolRenderer slug="contract-generator" />
         </div>
       </section>
 

@@ -1,15 +1,13 @@
 "use client";
 
 import React from "react";
-import { Target, HeartPulse, Brain, BookOpen, SunMedium, Sparkles } from "lucide-react";
+import { Target, HeartPulse, BookOpen, Sparkles } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
 
 const digitalLifestyleSubcategories = [
   { key: "إدارة الحياة الرقمية", title: "إدارة الحياة الرقمية", href: "/articles/digital-lifestyle/life-management", icon: Target },
   { key: "الصحة الرقمية", title: "الصحة الرقمية", href: "/articles/digital-lifestyle/health", icon: HeartPulse },
-  { key: "علم النفس الرقمي", title: "علم النفس الرقمي", href: "/articles/digital-lifestyle/psychology", icon: Brain },
   { key: "التعليم والتعلم الرقمي", title: "التعليم والتعلم", href: "/articles/digital-lifestyle/learning", icon: BookOpen },
-  { key: "فلسفة العصر الرقمي", title: "فلسفة العصر الرقمي", href: "/articles/digital-lifestyle/philosophy", icon: SunMedium },
   { key: "الثقافة الرقمية", title: "الثقافة الرقمية", href: "/articles/digital-lifestyle/culture", icon: Sparkles },
 ];
 

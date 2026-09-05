@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   ArrowLeft,
-  Brain,
   BookOpen,
   HeartPulse,
   Sparkles,
@@ -47,13 +46,6 @@ const subcategoryCards: Array<{
     icon: HeartPulse,
   },
   {
-    key: "علم النفس الرقمي",
-    title: "علم النفس الرقمي",
-    description: "الانتباه، العادات، وسلوك المستخدم.",
-    href: "/digital-lifestyle/psychology",
-    icon: Brain,
-  },
-  {
     key: "التعليم والتعلم الرقمي",
     title: "التعليم والتعلم",
     description: "مهارات مستدامة ونماذج تعليم قابلة للتنفيذ.",
@@ -76,13 +68,11 @@ function getArticlePath(post: SectorPost) {
       ? "life-management"
       : post.subcategory === "الصحة الرقمية"
         ? "health"
-        : post.subcategory === "علم النفس الرقمي"
-          ? "psychology"
-          : post.subcategory === "التعليم والتعلم الرقمي"
-            ? "learning"
-            : post.subcategory === "الثقافة الرقمية"
-              ? "culture"
-              : "general";
+        : post.subcategory === "التعليم والتعلم الرقمي"
+          ? "learning"
+          : post.subcategory === "الثقافة الرقمية"
+            ? "culture"
+            : "general";
 
   return `/articles/digital-lifestyle/${subcategorySlug}/${slug}`;
 }
@@ -253,15 +243,6 @@ export default function DigitalLifestylePage() {
       slug: "digital-burnout-checklist",
       image_url: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
       created_at: "2026-08-18T10:00:00.000Z",
-    },
-    {
-      id: 3,
-      title: "أساسيات الانتباه: لماذا تتشتت أكثر في العالم الرقمي؟",
-      content: "<p>تفسير نفسي عملي لسبب انفصال التركيز أمام العالم الرقمي وكيفية التعامل معه.</p>",
-      subcategory: "علم النفس الرقمي",
-      slug: "attention-digital-psychology",
-      image_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-14T10:00:00.000Z",
     },
     {
       id: 4,

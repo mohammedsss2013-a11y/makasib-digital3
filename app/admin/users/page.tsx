@@ -5,7 +5,7 @@ export default async function AdminUsersPage() {
   const supabase = await createClient();
 
   const [{ data: profiles }, { data: roles }] = await Promise.all([
-    supabase.from("profiles").select("id, full_name, username, specialty").order("created_at", { ascending: false }),
+    supabase.from("profiles").select("id, full_name, username, specialty, created_at, avatar_url").order("created_at", { ascending: false }),
     supabase.from("user_roles").select("user_id, email, role"),
   ]);
 

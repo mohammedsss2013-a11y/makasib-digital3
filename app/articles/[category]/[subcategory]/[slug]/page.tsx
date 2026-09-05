@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { articlesService } from "@/services/articles.service";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
+import ArticleToolEmbedder from "@/components/articles/ArticleToolEmbedder";
 
 // 1. تحديد مدة إعادة التوليد الدوري (كل ساعة = 3600 ثانية)
 export const revalidate = 3600;
@@ -58,8 +59,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const paragraphs = article.content.split("\n\n");
-
   return (
     <article className="mx-auto max-w-4xl py-6 dir-rtl" dir="rtl">
       <nav aria-label="مسار المقال" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-slate-500">
@@ -87,23 +86,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </header>
 
       <div className="prose prose-invert prose-emerald mt-10 max-w-none text-slate-300">
-        {paragraphs.map((paragraph, index) => {
-          const isList = /^\d+\./.test(paragraph.trim());
-          if (isList) {
-            return (
-              <ol key={index} className="list-decimal space-y-2 pr-6 leading-8 marker:text-emerald-400">
-                {paragraph.split("\n").map((item) => <li key={item}>{item.replace(/^\d+\.\s*/, "")}</li>)}
-              </ol>
-            );
-          }
-          return (
-            <div
-              key={index}
-              className="leading-9"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(paragraph) }}
-            />
-          );
-        })}
+        <ArticleToolEmbedder content={article.content} />
       </div>
 
       {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (

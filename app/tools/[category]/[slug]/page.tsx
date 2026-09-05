@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
-import { CalculatorWorkspace } from "@/components/dashboard/CalculatorWorkspace";
-import { TOOLS_REGISTRY } from "@/config/toolsRegistry";
 import { ToolActions } from "@/components/tools/ToolActions";
+import { DynamicToolRenderer } from "@/components/tools/DynamicToolRenderer";
+import { createClient } from "@/lib/supabase/server";
 
 interface ToolPageProps {
   params: Promise<{
@@ -14,7 +14,14 @@ interface ToolPageProps {
 
 export default async function DynamicToolPage({ params }: ToolPageProps) {
   const { category, slug } = await params;
-  const tool = TOOLS_REGISTRY.find((item) => item.category === category && item.slug === slug);
+  const supabase = await createClient();
+  const { data: tool } = await supabase
+    .from("tools")
+    .select("id, title, slug, description, sector, is_interactive")
+    .eq("slug", slug)
+    .eq("sector", category)
+    .eq("status", "active")
+    .maybeSingle();
 
   if (!tool) {
     notFound();
@@ -34,7 +41,7 @@ export default async function DynamicToolPage({ params }: ToolPageProps) {
         <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:flex-row sm:items-center">
           <div>
             <span className="rounded-full border border-emerald-800 bg-emerald-950/60 px-3 py-1 text-xs font-bold text-emerald-400">
-              {tool.categoryLabel}
+              {tool.sector}
             </span>
             <h1 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
               {tool.title}
@@ -47,7 +54,7 @@ export default async function DynamicToolPage({ params }: ToolPageProps) {
       </div>
 
       <div className="mx-auto max-w-5xl">
-        <CalculatorWorkspace />
+        {tool.is_interactive ? <DynamicToolRenderer slug={tool.slug} /> : <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/50 p-8 text-center text-sm text-slate-400">هذه الأداة مسجلة في المنصة، وستتوفر واجهتها التفاعلية قريبًا.</div>}
       </div>
     </div>
   );

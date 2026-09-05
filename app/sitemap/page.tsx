@@ -75,7 +75,6 @@ export default function SitemapPage() {
       items: [
         { title: "إدارة الحياة الرقمية والتنظيم (Life Management)", href: "/digital-lifestyle/life-management", desc: "بناء الدماغ الثاني وتنظيم المهام" },
         { title: "الصحة الرقمية والوقاية من الاحتراق (Digital Health)", href: "/digital-lifestyle/health", desc: "اختبار قياس Burnout والتعافي" },
-        { title: "علم النفس الرقمي وسلوك الجمهور (Digital Psychology)", href: "/digital-lifestyle/psychology", desc: "هندسة الانتباه والانحيازات المعرفية" },
         { title: "التعليم والتعلم الرقمي المستمر (Continuous Learning)", href: "/digital-lifestyle/learning", desc: "دليل التعلم السريع وخرائط المهارات" },
         { title: "الثقافة الرقمية العابرة للمستقبل (Future Culture)", href: "/digital-lifestyle/culture", desc: "دليل الرحالة الرقمي والبرمجيات المفتوحة" },
       ]

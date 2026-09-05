@@ -98,7 +98,14 @@ export default function CommunityPage() {
       return;
     }
 
-    setPosts((currentPosts) => [data, ...currentPosts]);
+    setPosts((currentPosts) => [{
+      ...data,
+      author: {
+        full_name: "عضو مكاسب",
+        avatar_url: null,
+        role_title: null,
+      },
+    }, ...currentPosts]);
     setNewPostTitle("");
     setNewPostContent("");
     setShowNewPostForm(false);

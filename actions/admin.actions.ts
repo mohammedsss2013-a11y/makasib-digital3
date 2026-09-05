@@ -6,8 +6,9 @@ import { ensureAdminAccess } from "@/lib/admin";
 import { createPostService, deletePostService, updatePostService } from "@/services/posts.service";
 import { parsePostFormData } from "@/lib/validations/post.schema";
 import { deleteRoleSchema, upsertRoleSchema } from "@/lib/validations/role.schema";
+import type { Json } from "@/types/database.types";
 
-type AuditDetails = Record<string, unknown>;
+type AuditDetails = { [key: string]: Json | undefined };
 
 async function writeAuditLog(action: string, targetResource: string, details: AuditDetails) {
   const { user } = await ensureAdminAccess();
@@ -106,3 +107,4 @@ export async function deleteAdminRoleAction(userId: string) {
     throw new Error(getErrorMessage(error));
   }
 }
+

@@ -14,11 +14,14 @@ interface PostPageProps {
 }
 
 async function getPost(id: string) {
+  const numericId = Number(id);
+  if (!Number.isInteger(numericId) || numericId <= 0) return null;
+
   const supabase = await createClient();
   const { data } = await supabase
     .from('posts')
     .select('id, title, content, category, subcategory, image_url, slug, created_at')
-    .eq('id', id)
+    .eq('id', numericId)
     .single();
   return data;
 }

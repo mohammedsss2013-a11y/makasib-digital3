@@ -14,7 +14,7 @@ export async function getAdminAccessState() {
     };
   }
 
-  const { user, roles } = userProfile;
+  const { roles, ...user } = userProfile;
   if (user.email === ADMIN_EMAIL) {
     return {
       user,

@@ -2,7 +2,7 @@
 
 import { FileText, Image as ImageIcon, User } from "lucide-react";
 import Image, { type ImageProps } from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type FallbackType = "avatar" | "article" | "general";
 
@@ -13,13 +13,9 @@ interface AppImageProps extends Omit<ImageProps, "onError" | "src"> {
 }
 
 export default function AppImage({ src, alt, fallbackSrc, fallbackType = "general", className = "", ...props }: AppImageProps) {
-  const [hasError, setHasError] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
-  useEffect(() => {
-    setHasError(false);
-  }, [src]);
-
-  if (hasError || !src) {
+  if (!src || failedSrc === src) {
     if (fallbackSrc) {
       return <Image {...props} src={fallbackSrc} alt={alt || "صورة"} className={className} />;
     }
@@ -34,7 +30,7 @@ export default function AppImage({ src, alt, fallbackSrc, fallbackType = "genera
       src={src}
       alt={alt || "صورة"}
       className={className}
-      onError={() => setHasError(true)}
+      onError={() => setFailedSrc(src)}
     />
   );
 }

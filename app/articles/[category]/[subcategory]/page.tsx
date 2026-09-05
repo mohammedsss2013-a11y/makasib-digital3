@@ -42,7 +42,7 @@ function normalizeText(value: string) {
     .trim();
 }
 
-const subcategoryAliases: Record<string, string[]> = {
+const subcategoryAliases: Record<string, Record<string, string[]>> = {
   finance: {
     freelancing: ["العمل الحر", "المشاريع المصغرة", "freelancing", "تسعير الخدمات", "العقود", "السعر", "العميل"],
     ecommerce: ["التجارة الإلكترونية", "ecommerce", "البيع", "المتجر", "هوامش الربح", "المنتج"],
@@ -68,10 +68,8 @@ const subcategoryAliases: Record<string, string[]> = {
   "digital-lifestyle": {
     "life-management": ["إدارة الحياة الرقمية", "life management", "التنظيم", "الوقت", "الاستخدام"],
     health: ["الصحة الرقمية", "health", "التوازن", "النوم", "الإرهاق"],
-    psychology: ["علم النفس الرقمي", "psychology", "الانتباه", "العادات", "السلوك"],
     learning: ["التعليم", "learning", "التعلم", "المهارات", "المحتوى التعليمي"],
     culture: ["الثقافة الرقمية", "culture", "الهوية", "الوعي", "الرقمي"],
-    philosophy: ["الفلسفة", "philosophy", "العصر الرقمي", "الوعي", "التفكير"],
   },
 };
 

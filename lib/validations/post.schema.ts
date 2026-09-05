@@ -26,7 +26,9 @@ export const updatePostSchema = createPostSchema.partial().extend({
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;
 
-export function parsePostFormData(formData: FormData, includeId = false) {
+export function parsePostFormData(formData: FormData): CreatePostInput;
+export function parsePostFormData(formData: FormData, includeId: true): UpdatePostInput;
+export function parsePostFormData(formData: FormData, includeId = false): CreatePostInput | UpdatePostInput {
   const title = formData.get("title")?.toString().trim() ?? "";
   const submittedSlug = formData.get("slug")?.toString().trim() ?? "";
   const generatedSlug = submittedSlug ||

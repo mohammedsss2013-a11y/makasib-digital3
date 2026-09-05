@@ -10,14 +10,16 @@ import TextAlign from "@tiptap/extension-text-align";
 import { AlignCenter, AlignRight, Bold, Image as ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from "lucide-react";
 import { uploadArticleImage } from "@/services/upload.service";
 import { sanitizeHtml } from "@/lib/sanitize";
+import ToolPicker from "@/components/admin/ToolPicker";
 
 type EditorProps = {
   content: string;
   onChange: (html: string) => void;
   placeholder?: string;
+  onInsertTool?: (tag: string) => void;
 };
 
-export default function RichTextEditor({ content, onChange, placeholder = "اكتب محتوى المقال هنا..." }: EditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder = "اكتب محتوى المقال هنا...", onInsertTool }: EditorProps) {
   const [isUploading, setIsUploading] = useState(false);
   const editor = useEditor({
     immediatelyRender: false,
@@ -61,6 +63,11 @@ export default function RichTextEditor({ content, onChange, placeholder = "اك�
 
   const buttonClass = (active = false) => `rounded p-2 transition hover:bg-slate-200 ${active ? "bg-slate-300 text-blue-700" : "text-slate-700"}`;
 
+  const insertTool = (tag: string) => {
+    editor.chain().focus().insertContent(tag).run();
+    onInsertTool?.(tag);
+  };
+
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white" dir="rtl">
       <div className="flex flex-wrap items-center gap-1 border-b bg-slate-100 p-2">
@@ -79,6 +86,7 @@ export default function RichTextEditor({ content, onChange, placeholder = "اك�
         <button type="button" className={buttonClass()} onClick={() => editor.chain().focus().undo().run()} title="تراجع" aria-label="تراجع"><Undo size={16} /></button>
         <button type="button" className={buttonClass()} onClick={() => editor.chain().focus().redo().run()} title="إعادة" aria-label="إعادة"><Redo size={16} /></button>
       </div>
+      <ToolPicker onInsert={insertTool} />
       <EditorContent editor={editor} />
       {isUploading && <p className="border-t bg-blue-50 p-2 text-center text-xs text-blue-700">جاري رفع الصورة...</p>}
     </div>

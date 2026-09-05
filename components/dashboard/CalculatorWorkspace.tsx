@@ -1,53 +1,65 @@
 "use client";
 
 import { useState } from "react";
-import { BarChart3, Calculator, HeartPulse, ShieldCheck } from "lucide-react";
-import { ContractGenerator } from "@/components/tools/generators/ContractGenerator";
-import { FreelancePricingCalculator } from "@/components/tools/calculators/FreelancePricingCalculator";
+import { DynamicToolRenderer } from "@/components/tools/DynamicToolRenderer";
 
-function Panel({ title, icon: Icon, children }: { title: string; icon: typeof Calculator; children: React.ReactNode }) {
-  return <section className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"><div className="flex items-center gap-3 border-b border-slate-800 pb-4"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400"><Icon className="h-5 w-5" /></div><h2 className="text-lg font-bold text-white">{title}</h2></div>{children}</section>;
-}
+type Section = "finance" | "tech" | "media" | "lifestyle";
+
+const sectionTools: Record<Section, string[]> = {
+  finance: ["freelance-pricing-calculator", "contract-generator", "break-even-calculator", "cash-flow-calculator"],
+  tech: ["prompt-optimizer", "privacy-policy-generator", "cloud-cost-calculator", "web-speed-checker"],
+  media: ["engagement-rate-calculator", "headline-generator", "posting-time-optimizer", "creator-earnings-calculator"],
+  lifestyle: ["aura-life-score", "focus-time-calculator", "learning-path-builder", "burnout-prevention-checker"],
+};
+
+const sectionLabels: Record<Section, string> = {
+  finance: "مال وأعمال",
+  tech: "تكنولوجيا",
+  media: "إعلام جديد",
+  lifestyle: "حياة رقمية",
+};
+
+const sectionTitles: Record<Section, string> = {
+  finance: "أدوات المال والأعمال",
+  tech: "أدوات التكنولوجيا",
+  media: "أدوات الإعلام الجديد",
+  lifestyle: "أدوات الحياة الرقمية",
+};
 
 export function CalculatorWorkspace({
   initialSection = "finance",
   showSectionTabs = true,
   showAllSections = false,
 }: {
-  initialSection?: "finance" | "tech" | "media" | "lifestyle";
+  initialSection?: Section;
   showSectionTabs?: boolean;
   showAllSections?: boolean;
 }) {
-  const [activeSection, setActiveSection] = useState<"finance" | "tech" | "media" | "lifestyle">(initialSection);
-  const [tokenCount, setTokenCount] = useState(500000);
-  const [tokenPrice, setTokenPrice] = useState(2.5);
-  const [password, setPassword] = useState("");
-  const [followers, setFollowers] = useState(10000);
-  const [interactions, setInteractions] = useState(535);
-  const [screenHours, setScreenHours] = useState(7);
-  const [sleepHours, setSleepHours] = useState(7);
-  const passwordScore = [password.length >= 8, password.length >= 12, /[A-Z]/.test(password), /[0-9]/.test(password), /[^A-Za-z0-9]/.test(password)].filter(Boolean).length * 20;
-  const engagement = followers > 0 ? ((interactions / followers) * 100).toFixed(2) : "0.00";
-  const screenPercentage = Math.round((screenHours / 24) * 100);
+  const [activeSection, setActiveSection] = useState<Section>(initialSection);
+  const visibleSections = showAllSections ? (Object.keys(sectionTools) as Section[]) : [activeSection];
 
-  return <div className="space-y-6" dir="rtl">
-    {showSectionTabs && <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2 sm:grid-cols-4">
-      {([[
-        "finance", "مال وأعمال"
-      ], ["tech", "تكنولوجيا"], ["media", "إعلام جديد"], ["lifestyle", "حياة رقمية"]] as const).map(([section, label]) => (
-        <button key={section} type="button" onClick={() => setActiveSection(section)} className={`rounded-xl px-3 py-3 text-xs font-bold transition-colors sm:text-sm ${activeSection === section ? "bg-emerald-400 text-slate-950" : "text-slate-400 hover:bg-slate-800 hover:text-white"}`}>
-          {label}
-        </button>
+  return (
+    <div className="space-y-6" dir="rtl">
+      {showSectionTabs && (
+        <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2 sm:grid-cols-4">
+          {(Object.keys(sectionTools) as Section[]).map((section) => (
+            <button key={section} type="button" onClick={() => setActiveSection(section)} className={`rounded-xl px-3 py-3 text-xs font-bold transition-colors sm:text-sm ${activeSection === section ? "bg-emerald-400 text-slate-950" : "text-slate-400 hover:bg-slate-800 hover:text-white"}`}>
+              {sectionLabels[section]}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {visibleSections.map((section) => (
+        <section key={section} className="space-y-4">
+          <h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">{sectionTitles[section]}</h2>
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            {sectionTools[section].map((slug) => <DynamicToolRenderer key={slug} slug={slug} />)}
+          </div>
+        </section>
       ))}
-    </div>}
 
-    {(showAllSections || activeSection === "finance") && <section className="space-y-4"><h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">أدوات المال والأعمال</h2><div className="grid grid-cols-1 gap-6 xl:grid-cols-2"><FreelancePricingCalculator /><ContractGenerator /></div></section>}
-    {(showAllSections || activeSection === "tech") && <section className="space-y-4"><h2 className="border-r-4 border-blue-500 pr-3 text-xl font-bold text-white">أدوات التكنولوجيا</h2><div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-      <Panel title="حاسبة تكلفة نماذج الذكاء الاصطناعي" icon={Calculator}><div className="grid gap-4 sm:grid-cols-2"><label className="text-xs text-slate-300">عدد الـ Tokens<input type="number" value={tokenCount} onChange={(e) => setTokenCount(Math.max(0, Number(e.target.value)))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label><label className="text-xs text-slate-300">سعر المليون ($)<input type="number" step="0.1" value={tokenPrice} onChange={(e) => setTokenPrice(Math.max(0, Number(e.target.value)))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label></div><output className="block rounded-xl border border-slate-800 bg-slate-950 p-5 text-3xl font-black text-blue-400">{((tokenCount / 1000000) * tokenPrice).toFixed(3)} $</output></Panel>
-      <Panel title="فاحص قوة كلمة المرور" icon={ShieldCheck}><label className="sr-only" htmlFor="password-checker">كلمة المرور التجريبية</label><input id="password-checker" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="اكتب كلمة مرور تجريبية" className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm text-white" /><div className="h-2 overflow-hidden rounded-full bg-slate-950"><div className={`h-full transition-all ${passwordScore < 40 ? "bg-red-500" : passwordScore < 80 ? "bg-yellow-500" : "bg-emerald-500"}`} style={{ width: `${passwordScore}%` }} /></div><p className="text-xs text-slate-400">درجة الأمان: <strong className="text-white">{passwordScore}%</strong></p></Panel>
-    </div></section>}
-    {(showAllSections || activeSection === "media") && <section className="space-y-4"><h2 className="border-r-4 border-rose-500 pr-3 text-xl font-bold text-white">أدوات الإعلام الجديد</h2><Panel title="حاسبة معدل التفاعل" icon={BarChart3}><div className="grid gap-4 sm:grid-cols-2"><label className="text-xs text-slate-300">عدد المتابعين<input type="number" value={followers} onChange={(e) => setFollowers(Math.max(1, Number(e.target.value)))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label><label className="text-xs text-slate-300">إجمالي التفاعلات<input type="number" value={interactions} onChange={(e) => setInteractions(Math.max(0, Number(e.target.value)))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label></div><output className="block text-3xl font-black text-rose-400">{engagement}%</output></Panel></section>}
-    {(showAllSections || activeSection === "lifestyle") && <section className="space-y-4"><h2 className="border-r-4 border-pink-500 pr-3 text-xl font-bold text-white">أدوات الحياة الرقمية</h2><Panel title="مؤشر الصحة الرقمية" icon={HeartPulse}><div className="grid gap-4 sm:grid-cols-2"><label className="text-xs text-slate-300">ساعات الشاشة<input type="number" min="0" max="24" value={screenHours} onChange={(e) => setScreenHours(Math.min(24, Math.max(0, Number(e.target.value))))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label><label className="text-xs text-slate-300">ساعات النوم<input type="number" min="0" max="24" value={sleepHours} onChange={(e) => setSleepHours(Math.min(24, Math.max(0, Number(e.target.value))))} className="mt-2 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-white" /></label></div><output className="block text-3xl font-black text-pink-400">{screenPercentage}% من يومك</output><p className="text-xs text-slate-400">{screenHours > 9 || sleepHours < 6 ? "إجهاد رقمي مرتفع" : screenHours > 6 ? "توازن متوسط" : "نمط حياة رقمي متوازن"}</p></Panel></section>}
-    <p className="text-xs text-slate-500">تُحفظ النتائج من داخل كل أداة عند توفر خيار الحفظ، وتبقى الحسابات المحلية داخل المتصفح.</p>
-  </div>;
+      <p className="text-xs text-slate-500">تُحفظ النتائج من داخل كل أداة عند توفر خيار الحفظ، وتبقى الحسابات المحلية داخل المتصفح.</p>
+    </div>
+  );
 }

@@ -65,7 +65,6 @@ export const InstantSearchModal = ({
     { type: "tool", title: "التسويق الرقمي وحاسبة عائد الإعلانات (ROAS & CAC)", category: "المال والأعمال - Digital Marketing", path: "/finance/marketing" },
     { type: "article", title: "اقتصاد صناعة المحتوى ونماذج التكسب الرقمي", category: "المال والأعمال - Content Economy", path: "/finance/content-economy" },
     { type: "article", title: "العملات الرقمية والبلوكشين وتقنيات Web3", category: "المال والأعمال - Crypto & Web3", path: "/finance/crypto" },
-    { type: "tool", title: "الذكاء الاصطناعي في المال والأعمال وأتمتة العمليات", category: "المال والأعمال - AI in Business", path: "/finance/ai-business" },
     { type: "article", title: "العتاد والإنتاجية المالية وتجهيز بيئة العمل", category: "المال والأعمال - Hardware & Productivity", path: "/finance/hardware" },
 
     // ⚙️ قطاع التكنولوجيا والابتكار
@@ -88,7 +87,6 @@ export const InstantSearchModal = ({
     { type: "sector", title: "قطاع رقميون (أسلوب الحياة والتفكير)", category: "أسلوب الحياة الرقمي", path: "/digital-lifestyle" },
     { type: "tool", title: "إدارة الحياة الرقمية وتنظيم الوقت والمهام", category: "رقميون - Life Management", path: "/digital-lifestyle/life-management" },
     { type: "article", title: "الصحة الرقمية والوقاية من الاحتراق الرقمي", category: "رقميون - Digital Health", path: "/digital-lifestyle/health" },
-    { type: "article", title: "علم النفس الرقمي وسلوك الجمهور والمتابعين", category: "رقميون - Digital Psychology", path: "/digital-lifestyle/psychology" },
     { type: "article", title: "التعليم والتعلم الرقمي المستمر وتطوير الذات", category: "رقميون - Continuous Learning", path: "/digital-lifestyle/learning" },
     { type: "article", title: "الثقافة الرقمية العابرة للمستقبل والأنماط المعاصرة", category: "رقميون - Future Culture", path: "/digital-lifestyle/culture" },
 

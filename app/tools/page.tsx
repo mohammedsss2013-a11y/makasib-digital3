@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -7,10 +5,60 @@ import {
   Sparkles,
   TrendingUp,
 } from 'lucide-react';
-import { TOOLS_REGISTRY } from '@/config/toolsRegistry';
 import ToolCatalog from '@/components/tools/ToolCatalog';
+import { createClient } from '@/lib/supabase/server';
+import { TOOLS_REGISTRY, type ToolItem } from '@/config/toolsRegistry';
 
-export default function ToolsWorkspacePage() {
+const sectorLabels: Record<ToolItem['category'], string> = {
+  finance: 'قطاع المال والأعمال',
+  tech: 'قطاع التكنولوجيا',
+  media: 'قطاع الإعلام الجديد',
+  'digital-lifestyle': 'قطاع رقميون',
+};
+
+const sectorSubcategories: Record<ToolItem['category'], string> = {
+  finance: 'المال والأعمال',
+  tech: 'التكنولوجيا',
+  media: 'الإعلام الجديد',
+  'digital-lifestyle': 'الحياة الرقمية',
+};
+
+function isToolCategory(value: string): value is ToolItem['category'] {
+  return value in sectorLabels;
+}
+
+export default async function ToolsWorkspacePage() {
+  const supabase = await createClient();
+  const { data: databaseTools, error } = await supabase
+    .from('tools')
+    .select('id, slug, title, description, sector, icon, is_interactive, created_at')
+    .eq('status', 'active')
+    .order('created_at', { ascending: true });
+
+  const mappedTools = (databaseTools ?? []).flatMap((tool): ToolItem[] => {
+    if (!isToolCategory(tool.sector)) return [];
+
+    return [{
+      id: `database-${tool.id}`,
+      slug: tool.slug,
+      title: tool.title,
+      description: tool.description,
+      category: tool.sector,
+      categoryLabel: sectorLabels[tool.sector],
+      subcategory: sectorSubcategories[tool.sector],
+      iconName: tool.icon,
+      href: `/tools/${tool.sector}/${tool.slug}`,
+      createdAt: tool.created_at,
+      isInteractive: tool.is_interactive,
+      isCatalogOnly: !tool.is_interactive,
+    }];
+  });
+
+  if (error) {
+    console.error('تعذر جلب الأدوات الرقمية من Supabase:', error.message);
+  }
+
+  const tools = mappedTools.length > 0 ? mappedTools : TOOLS_REGISTRY;
   return (
     <div className="space-y-8 py-4 dir-rtl" dir="rtl">
       <section className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl shadow-slate-950/30 sm:p-8">
@@ -33,7 +81,7 @@ export default function ToolsWorkspacePage() {
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
               <TrendingUp className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              {TOOLS_REGISTRY.length} أداة متاحة
+              {tools.length} أداة متاحة
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
               <ArrowLeft className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
@@ -51,7 +99,7 @@ export default function ToolsWorkspacePage() {
           <span className="text-[11px] text-slate-400">عرض مباشر</span>
         </div>
 
-        <ToolCatalog />
+        <ToolCatalog tools={tools} />
       </section>
 
       <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 sm:p-6">

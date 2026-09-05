@@ -57,7 +57,9 @@ export default function ImageUploader({ onUploadComplete, onImageSelected, defau
     setPreviewUrl(null);
     setImageUrl(null);
     onImageSelected?.(null);
-    fileInputRef.current && (fileInputRef.current.value = "");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (

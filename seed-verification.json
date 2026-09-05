@@ -1,0 +1,109 @@
+{
+  "total": 20,
+  "published": 20,
+  "uniqueBranches": 20,
+  "missingSlugs": [],
+  "forbiddenFinanceAi": [],
+  "branches": [
+    {
+      "category": "المال والأعمال",
+      "subcategory": "التجارة الإلكترونية والبيع الرقمي",
+      "slug": "e-commerce-and-digital-sales-guide"
+    },
+    {
+      "category": "المال والأعمال",
+      "subcategory": "التسويق الرقمي وعائد الإعلانات",
+      "slug": "digital-marketing-ad-roi-guide"
+    },
+    {
+      "category": "المال والأعمال",
+      "subcategory": "اقتصاد صناعة المحتوى",
+      "slug": "content-creation-economy-guide"
+    },
+    {
+      "category": "المال والأعمال",
+      "subcategory": "العمل الحر والمشاريع المصغرة",
+      "slug": "freelancing-and-micro-projects-guide"
+    },
+    {
+      "category": "المال والأعمال",
+      "subcategory": "العملات الرقمية والبلوكشين",
+      "slug": "crypto-and-blockchain-essentials"
+    },
+    {
+      "category": "المال والأعمال",
+      "subcategory": "العتاد والإنتاجية المالية",
+      "slug": "financial-productivity-hardware-guide"
+    },
+    {
+      "category": "التكنولوجيا والابتكار",
+      "subcategory": "تطبيقات وأنظمة الذكاء الاصطناعي",
+      "slug": "ai-applications-and-systems-guide"
+    },
+    {
+      "category": "التكنولوجيا والابتكار",
+      "subcategory": "الأمن السيبراني والخصوصية الرقمية",
+      "slug": "cybersecurity-and-digital-privacy-guide"
+    },
+    {
+      "category": "التكنولوجيا والابتكار",
+      "subcategory": "الحوسبة السحابية والعمل عن بعد",
+      "slug": "cloud-computing-remote-tools-guide"
+    },
+    {
+      "category": "التكنولوجيا والابتكار",
+      "subcategory": "تطوير البنية وتقنيات المستقبل",
+      "slug": "digital-infrastructure-future-tech"
+    },
+    {
+      "category": "التكنولوجيا والابتكار",
+      "subcategory": "إنترنت الأشياء والتقنيات الناشئة",
+      "slug": "iot-and-emerging-technologies"
+    },
+    {
+      "category": "الإعلام الجديد",
+      "subcategory": "صناعة المحتوى المرئي والمكتوب",
+      "slug": "visual-and-written-content-creation-guide"
+    },
+    {
+      "category": "الإعلام الجديد",
+      "subcategory": "أخبار وتحليلات الصناعة الرقمية",
+      "slug": "digital-industry-news-and-analysis"
+    },
+    {
+      "category": "الإعلام الجديد",
+      "subcategory": "البودكاست والبودكاست المرئي",
+      "slug": "visual-and-audio-podcasting-guide"
+    },
+    {
+      "category": "الإعلام الجديد",
+      "subcategory": "منصات البث الحي والتفاعل",
+      "slug": "live-streaming-and-audience-engagement"
+    },
+    {
+      "category": "الإعلام الجديد",
+      "subcategory": "الترفيه الرقمي والألعاب",
+      "slug": "digital-entertainment-and-indie-gaming"
+    },
+    {
+      "category": "رقميون - أسلوب الحياة",
+      "subcategory": "إدارة الحياة الرقمية والتنظيم",
+      "slug": "digital-life-management-and-organization"
+    },
+    {
+      "category": "رقميون - أسلوب الحياة",
+      "subcategory": "الصحة الرقمية والوقاية من الاحتراق",
+      "slug": "digital-health-and-burnout-prevention"
+    },
+    {
+      "category": "رقميون - أسلوب الحياة",
+      "subcategory": "التعليم والتعلم الرقمي المستمر",
+      "slug": "continuous-digital-learning-and-skills"
+    },
+    {
+      "category": "رقميون - أسلوب الحياة",
+      "subcategory": "الثقافة الرقمية العابرة للمستقبل",
+      "slug": "future-digital-culture-and-self-building"
+    }
+  ]
+}

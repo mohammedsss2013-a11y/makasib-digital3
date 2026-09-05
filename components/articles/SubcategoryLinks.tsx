@@ -14,7 +14,6 @@ const subcategories: Record<string, SubcategoryLink[]> = {
     { title: "التسويق الرقمي وعائد الإعلانات", href: "/finance/marketing", description: "قياس ROAS وCAC ونقطة التعادل" },
     { title: "اقتصاد صناعة المحتوى", href: "/finance/content-economy", description: "تسعير الرعايات والعضويات الرقمية" },
     { title: "العملات الرقمية والبلوكشين", href: "/finance/crypto", description: "حماية المحافظ والعملات المستقرة" },
-    { title: "الذكاء الاصطناعي في المال والأعمال", href: "/finance/ai-business", description: "حاسبة العائد على الاستثمار وأتمتة العمليات" },
     { title: "العتاد والإنتاجية المالية", href: "/finance/hardware", description: "حاسبة إهلاك العتاد وتجهيز بيئة العمل" },
   ],
   tech: [
@@ -34,7 +33,6 @@ const subcategories: Record<string, SubcategoryLink[]> = {
   lifestyle: [
     { title: "إدارة الحياة الرقمية والتنظيم", href: "/digital-lifestyle/life-management", description: "بناء الدماغ الثاني وتنظيم المهام" },
     { title: "الصحة الرقمية والوقاية من الاحتراق", href: "/digital-lifestyle/health", description: "اختبار قياس Burnout والتعافي" },
-    { title: "علم النفس الرقمي وسلوك الجمهور", href: "/digital-lifestyle/psychology", description: "هندسة الانتباه والانحيازات المعرفية" },
     { title: "التعليم والتعلم الرقمي المستمر", href: "/digital-lifestyle/learning", description: "دليل التعلم السريع وخرائط المهارات" },
     { title: "الثقافة الرقمية العابرة للمستقبل", href: "/digital-lifestyle/culture", description: "دليل الرحالة الرقمي والبرمجيات المفتوحة" },
   ],

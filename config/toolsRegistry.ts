@@ -9,10 +9,12 @@ export interface ToolItem {
   categoryLabel: string;
   subcategory: string;
   iconName: string;
+  isInteractive?: boolean;
   href: string;
   createdAt: string; // ISO Date: "YYYY-MM-DD"
   isNew?: boolean;
   articleUrl?: string; // رابط المقال الشارح
+  isCatalogOnly?: boolean;
 }
 
 export const TOOLS_REGISTRY: ToolItem[] = [

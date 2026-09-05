@@ -32,7 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/digital-lifestyle",
     "/digital-lifestyle/life-management",
     "/digital-lifestyle/health",
-    "/digital-lifestyle/psychology",
     "/digital-lifestyle/learning",
     "/digital-lifestyle/culture",
     "/community",

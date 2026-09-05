@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImageUploader from '@/components/ImageUploader';
+import RichTextEditor from '@/components/RichTextEditor';
 import { createClient } from '@/lib/supabase/client';
 
 export default function NewPostPage() {
@@ -75,14 +76,8 @@ export default function NewPostPage() {
           <label className="mb-1 block text-sm font-medium text-gray-700">
             محتوى المقال
           </label>
-          <textarea
-            rows={8}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full rounded-md border px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="أكتب محتوى المقال هنا..."
-            required
-          />
+          <RichTextEditor content={content} onChange={setContent} />
+          <input type="hidden" name="content" value={content} readOnly />
         </div>
 
         <button
