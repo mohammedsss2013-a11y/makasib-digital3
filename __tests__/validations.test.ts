@@ -32,13 +32,13 @@ describe("Post validation", () => {
 
   it("parses the admin form and generates a slug when omitted", () => {
     const formData = new FormData();
-    formData.set("title", "مقال عربي عملي");
+    formData.set("title", "Testing Post Title");
     formData.set("content", validPost.content);
     formData.set("category", "finance");
     formData.set("status", "draft");
 
     const result = parsePostFormData(formData);
-    expect(result.slug).toMatch(/^post-|^$/);
+    expect(result.slug).toBe("testing-post-title");
   });
 });
 

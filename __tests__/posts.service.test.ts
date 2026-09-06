@@ -7,6 +7,10 @@ const query = {
   range: vi.fn(),
 };
 
+query.select.mockReturnValue(query);
+query.eq.mockReturnValue(query);
+query.order.mockReturnValue(query);
+
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(async () => ({ from: vi.fn(() => query) })),
 }));
@@ -15,9 +19,6 @@ import { getPostsService } from "@/services/posts.service";
 
 describe("posts service", () => {
   it("applies published status, category, ordering, and pagination", async () => {
-    query.select.mockReturnValue(query);
-    query.eq.mockReturnValue(query);
-    query.order.mockReturnValue(query);
     query.range.mockResolvedValue({
       data: [{ id: 1, title: "مقال" }],
       count: 1,
