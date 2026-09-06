@@ -26,11 +26,11 @@ export const getPostsService = cache(async function getPostsService({
   let query = supabase
     .from("posts")
     .select(postFields, { count: "exact" })
-    .eq("status", status)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .eq("status", status);
 
   if (category) query = query.eq("category", category);
+
+  query = query.order("created_at", { ascending: false }).range(from, to);
 
   const { data, count, error } = await query;
   if (error) {

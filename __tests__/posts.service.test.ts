@@ -1,15 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 
-const query = {
-  select: vi.fn(),
-  eq: vi.fn(),
-  order: vi.fn(),
-  range: vi.fn(),
-};
+const { query } = vi.hoisted(() => {
+  const query = {
+    select: vi.fn(),
+    eq: vi.fn(),
+    order: vi.fn(),
+    range: vi.fn(),
+  };
 
-query.select.mockReturnValue(query);
-query.eq.mockReturnValue(query);
-query.order.mockReturnValue(query);
+  query.select.mockReturnValue(query);
+  query.eq.mockReturnValue(query);
+  query.order.mockReturnValue(query);
+
+  return { query };
+});
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(async () => ({ from: vi.fn(() => query) })),
