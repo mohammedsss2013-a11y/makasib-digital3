@@ -45,7 +45,10 @@ function UnavailableTool({ slug, reason }: { slug: string; reason: string }) {
 }
 
 export function DynamicToolRenderer({ slug }: { slug: string }) {
-  const [status, setStatus] = useState<"loading" | "active" | "unavailable" | "error">("loading");
+  const [verification, setVerification] = useState<{
+    slug: string;
+    status: "loading" | "active" | "unavailable" | "error";
+  }>({ slug, status: "loading" });
 
   useEffect(() => {
     let cancelled = false;
@@ -61,18 +64,19 @@ export function DynamicToolRenderer({ slug }: { slug: string }) {
 
       if (cancelled) return;
       if (error) {
-        setStatus("error");
+        setVerification({ slug, status: "error" });
       } else {
-        setStatus(data ? "active" : "unavailable");
+        setVerification({ slug, status: data ? "active" : "unavailable" });
       }
     }
 
-    setStatus("loading");
     void verifyTool();
     return () => {
       cancelled = true;
     };
   }, [slug]);
+
+  const status = verification.slug === slug ? verification.status : "loading";
 
   if (status === "loading") return <ToolLoader />;
   if (status === "error") return <UnavailableTool slug={slug} reason="تعذر التحقق من حالة الأداة. حاول تحديث الصفحة لاحقًا." />;
