@@ -179,7 +179,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                     aria-label="قائمة الملف الشخصي"
                     aria-expanded={userDropdownOpen}
                   >
-                    <div className="h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-slate-800 flex items-center justify-center">
+                    <div className="relative h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-slate-800 flex items-center justify-center">
                       {avatarUrl ? (
                         <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="32px" className="object-cover" />
                       ) : (
@@ -195,7 +195,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                   <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95">
                     {/* أعلى المستطيل: صورة البروفايل والبريد */}
                     <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
-                      <div className="h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
+                      <div className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
                         {avatarUrl ? (
                           <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="48px" className="object-cover" />
                         ) : (
