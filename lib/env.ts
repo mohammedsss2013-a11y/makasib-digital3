@@ -6,6 +6,11 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 });
 
+const fallbackEnv = {
+  NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co",
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder-anon-key",
+} as const;
+
 function readRawEnv() {
   return {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -18,12 +23,16 @@ export function isSupabaseConfigured() {
   return envSchema.safeParse(readRawEnv()).success;
 }
 
-function getEnv() {
+export function getEnv() {
   const parsedEnv = envSchema.safeParse(readRawEnv());
 
   if (!parsedEnv.success) {
-    console.error("خطأ في متغيرات البيئة الخاصة بـ Supabase:", parsedEnv.error.format());
-    throw new Error("متغيرات بيئة Supabase مفقودة أو غير صحيحة.");
+    return {
+      ...fallbackEnv,
+      ...(process.env.SUPABASE_SERVICE_ROLE_KEY
+        ? { SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY }
+        : {}),
+    };
   }
 
   return parsedEnv.data;
