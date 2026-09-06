@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Sparkles, type LucideIcon } from "lucide-react";
 
 export interface SubcategoryItem {
@@ -31,18 +30,26 @@ export function CategorySubnav({
   totalCount,
 }: CategorySubnavProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const isMainActive = mainHref
-    ? pathname === mainHref
+    ? pathname === mainHref && !searchParams.get("sub")
     : activeKey === "الكل" || !activeKey;
+
+  function navigateTo(href: string) {
+    const target = new URL(href, window.location.origin);
+    router.replace(`${target.pathname}${target.search}`, { scroll: false });
+  }
 
   return (
     <div className="sticky top-[4.5rem] z-30 mb-6 border-b border-slate-800/80 bg-slate-950/90 shadow-md shadow-black/30 backdrop-blur-xl dir-rtl">
       <div className="mx-auto flex max-w-7xl items-center gap-2.5 overflow-x-auto px-4 py-3 no-scrollbar sm:px-6">
         {/* زر "كل المقالات" */}
         {mainHref ? (
-          <Link
-            href={mainHref}
+          <button
+            type="button"
+            onClick={() => navigateTo(mainHref)}
             className={`flex cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 active:scale-[0.98] flex-shrink-0 ${
               isMainActive
                 ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md"
@@ -56,7 +63,7 @@ export function CategorySubnav({
                 {totalCount}
               </span>
             )}
-          </Link>
+          </button>
         ) : (
           <button
             type="button"
@@ -82,15 +89,17 @@ export function CategorySubnav({
           const Icon = item.icon;
           const count = counts[item.key];
           const canNavigate = Boolean(item.href);
+          const target = item.href ? new URL(item.href, "http://localhost") : null;
           const isActive = canNavigate
-            ? pathname.startsWith(item.href!)
+            ? pathname === target?.pathname && searchParams.get("sub") === target.searchParams.get("sub")
             : activeKey === item.key;
 
           if (canNavigate) {
             return (
-              <Link
+              <button
+                type="button"
                 key={item.key}
-                href={item.href!}
+                onClick={() => navigateTo(item.href!)}
                 className={`flex cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 active:scale-[0.98] flex-shrink-0 ${
                   isActive
                     ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md"
@@ -110,7 +119,7 @@ export function CategorySubnav({
                     {count}
                   </span>
                 )}
-              </Link>
+              </button>
             );
           }
 

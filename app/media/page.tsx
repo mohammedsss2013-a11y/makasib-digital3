@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Camera,
@@ -92,7 +93,14 @@ function stripHtml(value: string) {
 }
 
 function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
-  const [activeKey, setActiveKey] = useState<string>("الكل");
+  const searchParams = useSearchParams();
+  const activeKey = {
+    creation: "صناعة المحتوى المرئي والمكتوب",
+    news: "الأخبار والتحليلات",
+    podcasting: "البودكاست",
+    streaming: "البث المباشر",
+    gaming: "الترفيه الرقمي",
+  }[searchParams.get("sub") ?? ""] ?? "الكل";
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -210,7 +218,7 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-sm text-slate-400">
-            لا توجد مقالات منشورة في هذا الفرع حاليًا. جرّب قسمًا آخر أو عد إلى القائمة الكاملة.
+            لا توجد مقالات في هذا التصنيف حالياً
           </div>
         )}
       </section>

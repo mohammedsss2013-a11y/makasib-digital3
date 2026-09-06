@@ -5,11 +5,11 @@ import { Camera, Newspaper, Mic, Radio, Clapperboard } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
 
 const mediaSubcategories = [
-  { key: "صناعة المحتوى المرئي والمكتوب", title: "صناعة المحتوى", href: "/articles/media/creation", icon: Camera },
-  { key: "الأخبار والتحليلات", title: "الأخبار والتحليلات", href: "/articles/media/news", icon: Newspaper },
-  { key: "البودكاست", title: "البودكاست", href: "/articles/media/podcasting", icon: Mic },
-  { key: "البث المباشر", title: "البث المباشر", href: "/articles/media/streaming", icon: Radio },
-  { key: "صناعة الألعاب والترفيه", title: "صناعة الألعاب", href: "/articles/media/gaming", icon: Clapperboard },
+  { key: "صناعة المحتوى المرئي والمكتوب", title: "صناعة المحتوى", href: "/media?sub=creation", icon: Camera },
+  { key: "الأخبار والتحليلات", title: "الأخبار والتحليلات", href: "/media?sub=news", icon: Newspaper },
+  { key: "البودكاست", title: "البودكاست", href: "/media?sub=podcasting", icon: Mic },
+  { key: "البث المباشر", title: "البث المباشر", href: "/media?sub=streaming", icon: Radio },
+  { key: "صناعة الألعاب والترفيه", title: "صناعة الألعاب", href: "/media?sub=gaming", icon: Clapperboard },
 ];
 
 export default function MediaLayout({ children }: { children: React.ReactNode }) {

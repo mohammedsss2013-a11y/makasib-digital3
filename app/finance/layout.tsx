@@ -5,12 +5,12 @@ import { BriefcaseBusiness, ShoppingCart, Megaphone, BadgePercent, Bitcoin, Buil
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
 
 const financeSubcategories = [
-  { key: "العمل الحر والخدمات", title: "العمل الحر", href: "/articles/finance/freelancing", icon: BriefcaseBusiness },
-  { key: "التجارة الإلكترونية", title: "التجارة الإلكترونية", href: "/articles/finance/ecommerce", icon: ShoppingCart },
-  { key: "التسويق الرقمي", title: "التسويق الرقمي", href: "/articles/finance/marketing", icon: Megaphone },
-  { key: "اقتصاد صناعة المحتوى", title: "صناعة المحتوى", href: "/articles/finance/content-economy", icon: BadgePercent },
-  { key: "العملات الرقمية والبلوكشين", title: "العملات الرقمية", href: "/articles/finance/crypto", icon: Bitcoin },
-  { key: "العتاد والإنتاجية المالية", title: "العتاد والإنتاجية", href: "/articles/finance/hardware", icon: Building2 },
+  { key: "العمل الحر والخدمات", title: "العمل الحر", href: "/finance?sub=freelancing", icon: BriefcaseBusiness },
+  { key: "التجارة الإلكترونية", title: "التجارة الإلكترونية", href: "/finance?sub=ecommerce", icon: ShoppingCart },
+  { key: "التسويق الرقمي", title: "التسويق الرقمي", href: "/finance?sub=marketing", icon: Megaphone },
+  { key: "اقتصاد صناعة المحتوى", title: "صناعة المحتوى", href: "/finance?sub=content-economy", icon: BadgePercent },
+  { key: "العملات الرقمية والبلوكشين", title: "العملات الرقمية", href: "/finance?sub=crypto", icon: Bitcoin },
+  { key: "العتاد والإنتاجية المالية", title: "العتاد والإنتاجية", href: "/finance?sub=hardware", icon: Building2 },
 ];
 
 export default function FinanceLayout({ children }: { children: React.ReactNode }) {

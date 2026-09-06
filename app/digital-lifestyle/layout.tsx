@@ -5,10 +5,10 @@ import { Target, HeartPulse, BookOpen, Sparkles } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
 
 const digitalLifestyleSubcategories = [
-  { key: "إدارة الحياة الرقمية", title: "إدارة الحياة الرقمية", href: "/articles/digital-lifestyle/life-management", icon: Target },
-  { key: "الصحة الرقمية", title: "الصحة الرقمية", href: "/articles/digital-lifestyle/health", icon: HeartPulse },
-  { key: "التعليم والتعلم الرقمي", title: "التعليم والتعلم", href: "/articles/digital-lifestyle/learning", icon: BookOpen },
-  { key: "الثقافة الرقمية", title: "الثقافة الرقمية", href: "/articles/digital-lifestyle/culture", icon: Sparkles },
+  { key: "إدارة الحياة الرقمية", title: "إدارة الحياة الرقمية", href: "/digital-lifestyle?sub=life-management", icon: Target },
+  { key: "الصحة الرقمية", title: "الصحة الرقمية", href: "/digital-lifestyle?sub=health", icon: HeartPulse },
+  { key: "التعليم والتعلم الرقمي", title: "التعليم والتعلم", href: "/digital-lifestyle?sub=learning", icon: BookOpen },
+  { key: "الثقافة الرقمية", title: "الثقافة الرقمية", href: "/digital-lifestyle?sub=culture", icon: Sparkles },
 ];
 
 export default function DigitalLifestyleLayout({ children }: { children: React.ReactNode }) {

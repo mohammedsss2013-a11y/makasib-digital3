@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Bot,
@@ -93,7 +94,14 @@ function stripHtml(value: string) {
 }
 
 function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
-  const [activeKey, setActiveKey] = useState<string>("الكل");
+  const searchParams = useSearchParams();
+  const activeKey = {
+    "ai-apps": "تطبيقات الذكاء الاصطناعي",
+    cybersecurity: "الأمن السيبراني",
+    "cloud-remote": "الحوسبة السحابية",
+    infra: "البنية التحتية",
+    "iot-emerging": "الإنترنت والتقنيات الناشئة",
+  }[searchParams.get("sub") ?? ""] ?? "الكل";
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -211,7 +219,7 @@ function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-sm text-slate-400">
-            لا توجد مقالات منشورة في هذا الفرع حاليًا. جرّب قسمًا آخر أو عد إلى القائمة الكاملة.
+            لا توجد مقالات في هذا التصنيف حالياً
           </div>
         )}
       </section>

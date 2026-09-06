@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { useEffect, useState } from "react";
 import { AlertTriangle, Loader2, Wrench } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { GenericToolRunner } from "@/components/tools/GenericToolRunner";
 
 type ToolComponent = ComponentType;
 
@@ -84,7 +85,7 @@ export function DynamicToolRenderer({ slug }: { slug: string }) {
 
   const ToolComponent = toolsMap[slug];
   if (!ToolComponent) {
-    return <UnavailableTool slug={slug} reason="تم تسجيل الأداة في قاعدة البيانات، لكن واجهتها التفاعلية لم تُطوّر بعد." />;
+    return <GenericToolRunner key={slug} slug={slug} />;
   }
 
   return <ToolComponent />;
