@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { getArticlePath } from "@/lib/articlePaths";
-import { env } from "@/lib/env";
+import { env, isSupabaseConfigured } from "@/lib/env";
 
 export const revalidate = 3600;
 
@@ -48,19 +48,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/sitemap",
   ];
 
-  const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-  const { data: posts } = await supabase
-    .from("posts")
-    .select("id, slug, category, subcategory, created_at, status")
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
-
   const staticEntries: MetadataRoute.Sitemap = paths.map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: path === "" ? "daily" : "weekly",
     priority: path === "" ? 1.0 : path.split("/").length === 2 ? 0.8 : 0.6,
   }));
+
+  if (!isSupabaseConfigured()) return staticEntries;
+
+  const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const { data: posts } = await supabase
+    .from("posts")
+    .select("id, slug, category, subcategory, created_at, status")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
 
   const postEntries = (posts || []).map((post) => ({
     url: `${baseUrl}${getArticlePath(post)}`,
