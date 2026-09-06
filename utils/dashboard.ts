@@ -25,11 +25,26 @@ export interface Profile {
   two_factor_enabled: boolean;
 }
 
+export function getUserRoleDisplayName(role?: string | null): string {
+  switch (role ?? "user") {
+    case "super_admin":
+      return "مدير النظام الرئيسي";
+    case "admin":
+      return "مدير نظام";
+    case "editor":
+      return "محرر";
+    case "user":
+    case "member":
+    default:
+      return "عضو (Member)";
+  }
+}
+
 export async function getDashboardData() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { user: null, profile: null, savedTools: [] as SavedTool[], communityCount: 0, ticketsCount: 0, userRole: 'member' };
+  if (!user) return { user: null, profile: null, savedTools: [] as SavedTool[], communityCount: 0, ticketsCount: 0, userRole: 'user' };
 
   const [{ data: profile }, { data: savedTools }, { count: communityCount }, { count: ticketsCount }, { data: roleRow }] = await Promise.all([
     supabase.from("profiles").select("id, full_name, username, avatar_url, specialty, bio, notification_settings, two_factor_enabled").eq("id", user.id).maybeSingle(),

@@ -13,7 +13,7 @@ import {
   UserCircle,
   Bell,
 } from "lucide-react";
-import { getDashboardData } from "@/utils/dashboard";
+import { getDashboardData, getUserRoleDisplayName } from "@/utils/dashboard";
 import AppImage from "@/components/ui/AppImage";
 
 const dashboardLinks = [
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "مستخدم مكاسب";
   const userEmail = user?.email || "";
   const lastSaved = savedTools[0];
-  const roleTitle = userRole === "super_admin" ? "مدير النظام الرئيسي" : userRole === "admin" ? "مدير نظام" : "عضو (Member)";
+  const roleTitle = getUserRoleDisplayName(userRole);
 
   return (
     <div className="space-y-8 py-2 dir-rtl">

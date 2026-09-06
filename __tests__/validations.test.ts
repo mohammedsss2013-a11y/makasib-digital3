@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createPostSchema, parsePostFormData, updatePostSchema } from "@/lib/validations/post.schema";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { getUserRoleDisplayName } from "@/utils/dashboard";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -54,5 +55,16 @@ describe("HTML sanitization", () => {
 
   it("rejects unsafe URL protocols", () => {
     expect(sanitizeHtml('<a href="javascript:alert(1)">رابط</a>')).not.toContain("javascript:");
+  });
+});
+
+describe("Dashboard role labels", () => {
+  it("maps persisted roles to the correct dashboard labels", () => {
+    expect(getUserRoleDisplayName("super_admin")).toBe("مدير النظام الرئيسي");
+    expect(getUserRoleDisplayName("admin")).toBe("مدير نظام");
+    expect(getUserRoleDisplayName("editor")).toBe("محرر");
+    expect(getUserRoleDisplayName("user")).toBe("عضو (Member)");
+    expect(getUserRoleDisplayName("member")).toBe("عضو (Member)");
+    expect(getUserRoleDisplayName(null)).toBe("عضو (Member)");
   });
 });
