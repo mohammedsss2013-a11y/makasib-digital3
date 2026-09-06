@@ -70,6 +70,52 @@ const subcategoryCards: Array<{
   },
 ];
 
+type HeroContent = {
+  title: string;
+  description: string;
+  badgeText: string;
+  metadataText: string;
+};
+
+const heroContentBySub: Record<string, HeroContent> = {
+  all: {
+    title: "الإعلام الجديد",
+    description: "استراتيجيات بناء المحتوى، الإنتاج، التوزيع، والوعي بالاتجاهات في الإعلام الرقمي وصناعة التفاعل.",
+    badgeText: "مقالات مكاسب رقمية",
+    metadataText: "محتوى + توزيع + تفاعل",
+  },
+  creation: {
+    title: "صناعة المحتوى المرئي والمكتوب",
+    description: "ابنِ رسائل واضحة ومحتوى مؤثرًا يوازن بين القصة والوعي والنتائج التسويقية.",
+    badgeText: "مسار صناعة المحتوى",
+    metadataText: "رسالة + قصة + أثر",
+  },
+  news: {
+    title: "الأخبار والتحليلات",
+    description: "اقرأ الاتجاهات والأخبار الرقمية بأدوات تساعدك على التحقق والفهم واتخاذ موقف واعٍ.",
+    badgeText: "مسار الأخبار والتحليلات",
+    metadataText: "اتجاهات + تحقق + سياق",
+  },
+  podcasting: {
+    title: "البودكاست",
+    description: "خطط للحلقة والصوت والتوزيع لبناء تجربة بودكاست مستدامة وقابلة للنمو.",
+    badgeText: "مسار البودكاست",
+    metadataText: "صوت + سرد + توزيع",
+  },
+  streaming: {
+    title: "البث المباشر",
+    description: "طوّر حضورك المباشر عبر الانتشار والتفاعل والمرونة الفنية التي تحافظ على اهتمام الجمهور.",
+    badgeText: "مسار البث المباشر",
+    metadataText: "انتشار + تفاعل + مرونة",
+  },
+  gaming: {
+    title: "الترفيه الرقمي واللعب",
+    description: "افهم المجتمع والتفاعل والحضور الرقمي لصناعة تجارب ترفيهية أكثر اتصالًا بالجمهور.",
+    badgeText: "مسار الترفيه الرقمي",
+    metadataText: "مجتمع + تفاعل + تجربة",
+  },
+};
+
 function getArticlePath(post: SectorPost) {
   const slug = post.slug || `post-${post.id}`;
   const subcategorySlug =
@@ -94,6 +140,7 @@ function stripHtml(value: string) {
 
 function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
   const searchParams = useSearchParams();
+  const activeSub = searchParams.get("sub") ?? "all";
   const activeKey = {
     creation: "صناعة المحتوى المرئي والمكتوب",
     news: "الأخبار والتحليلات",
@@ -101,6 +148,7 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
     streaming: "البث المباشر",
     gaming: "الترفيه الرقمي",
   }[searchParams.get("sub") ?? ""] ?? "الكل";
+  const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -118,27 +166,27 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
   return (
     <div className="space-y-8 py-2 dir-rtl" dir="rtl">
       <section className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl shadow-slate-950/30 sm:p-8">
-        <div className="space-y-5">
+        <div key={heroContent.title} className="min-h-[220px] space-y-5 animate-[sectorHeroFadeIn_300ms_ease-out] sm:min-h-[208px]">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            مقالات مكاسب رقمية
+            {heroContent.badgeText}
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-3xl font-black text-white sm:text-4xl">الإعلام الجديد</h1>
+            <h1 className="text-3xl font-black text-white sm:text-4xl">{heroContent.title}</h1>
             <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
-              استراتيجيات بناء المحتوى، الإنتاج، التوزيع، والوعي بالاتجاهات في الإعلام الرقمي وصناعة التفاعل.
+              {heroContent.description}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
               <TrendingUp className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              {posts.length} مقال منشور
+              {articleCounts[activeKey] ?? posts.length} مقال منشور
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
               <ArrowLeft className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-              محتوى + توزيع + تفاعل
+              {heroContent.metadataText}
             </span>
           </div>
         </div>
