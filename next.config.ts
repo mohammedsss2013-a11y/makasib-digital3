@@ -21,8 +21,5 @@ export default withSentryConfig(nextConfig, {
   project: "javascript-nextjs",
   silent: true,
   widenClientFileUpload: true,
-  sourcemaps: {
-    hideSourceMaps: true,
-  },
   disableLogger: true,
 });
