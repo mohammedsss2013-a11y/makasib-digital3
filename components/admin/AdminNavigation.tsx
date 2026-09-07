@@ -10,8 +10,6 @@ import {
   Settings,
   ShieldCheck,
   Users,
-  Wrench,
-  PlusCircle,
 } from "lucide-react";
 
 const navigationItems = [
@@ -24,8 +22,6 @@ const navigationItems = [
   { name: "7. الدعم الفني", href: "/admin/support", icon: Headphones },
   { name: "8. المراقبة والسجلات", href: "/admin/logs", icon: ShieldCheck },
   { name: "9. إعدادات النظام", href: "/admin/settings", icon: Settings },
-  { name: "10. الأدوات الرقمية", href: "/admin/tools", icon: Wrench },
-  { name: "11. إضافة أداة جديدة", href: "/admin/tools/new", icon: PlusCircle },
 ];
 
 export default function AdminNavigation() {
