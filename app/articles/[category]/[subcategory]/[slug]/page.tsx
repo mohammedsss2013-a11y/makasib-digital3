@@ -7,6 +7,7 @@ import { articlesService } from "@/services/articles.service";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
 import ArticleToolEmbedder from "@/components/articles/ArticleToolEmbedder";
+import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractiveBoundary";
 
 // 1. تحديد مدة إعادة التوليد الدوري (كل ساعة = 3600 ثانية)
 export const revalidate = 3600;
@@ -16,13 +17,18 @@ export const dynamicParams = true;
 
 // 3. إنشاء المسارات الثابتة أثناء عملية الـ Build
 export async function generateStaticParams() {
-  const articles = await articlesService.getAllSlugPaths();
+  try {
+    const articles = await articlesService.getAllSlugPaths();
 
-  return articles.map((article) => ({
-    category: article.category,
-    subcategory: article.subcategory,
-    slug: article.slug,
-  }));
+    return articles.map((article) => ({
+      category: article.category,
+      subcategory: article.subcategory,
+      slug: article.slug,
+    }));
+  } catch (error) {
+    console.error("تعذر إنشاء المسارات الثابتة للمقالات:", error);
+    return [];
+  }
 }
 
 interface ArticlePageProps {
@@ -35,29 +41,39 @@ interface ArticlePageProps {
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { category, subcategory, slug } = await params;
-  const article = await articlesService.getBySlug(category, subcategory, slug);
-  if (!article) return { title: "المقال غير موجود | مكاسب رقمية" };
+  try {
+    const article = await articlesService.getBySlug(category, subcategory, slug);
+    if (!article) return { title: "المقال غير موجود | مكاسب رقمية" };
 
-  return {
-    title: `${article.title} | مكاسب رقمية`,
-    description: article.description,
-    alternates: { canonical: `/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}` },
-    openGraph: {
-      type: "article",
-      title: article.title,
+    return {
+      title: `${article.title} | مكاسب رقمية`,
       description: article.description,
-      images: [{ url: article.coverImage, alt: article.coverImageAlt }],
-    },
-  };
+      alternates: { canonical: `/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}` },
+      openGraph: {
+        type: "article",
+        title: article.title,
+        description: article.description,
+        images: [{ url: article.coverImage, alt: article.coverImageAlt }],
+      },
+    };
+  } catch (error) {
+    console.error("تعذر إنشاء بيانات المقال الوصفية:", error);
+    return { title: "المقال غير موجود | مكاسب رقمية" };
+  }
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { category, subcategory, slug } = await params;
-  const article = await articlesService.getBySlug(category, subcategory, slug);
+  let article;
 
-  if (!article) {
+  try {
+    article = await articlesService.getBySlug(category, subcategory, slug);
+  } catch (error) {
+    console.error("تعذر جلب المقال:", error);
     notFound();
   }
+
+  if (!article) notFound();
 
   return (
     <article className="mx-auto max-w-4xl py-6 dir-rtl" dir="rtl">
@@ -86,12 +102,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </header>
 
       <div className="prose prose-invert prose-emerald mt-10 max-w-none text-slate-300">
-        <ArticleToolEmbedder content={article.content} />
+        <ArticleInteractiveBoundary>
+          <ArticleToolEmbedder content={article.content} />
+        </ArticleInteractiveBoundary>
       </div>
 
       {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
         <div className="mt-12 border-t border-slate-800 pt-10">
-          <SectionInteractiveTools section="finance" />
+          <ArticleInteractiveBoundary>
+            <SectionInteractiveTools section="finance" />
+          </ArticleInteractiveBoundary>
         </div>
       )}
 
