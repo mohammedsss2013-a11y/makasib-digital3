@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAdminAccessState } from "@/lib/admin";
 import AdminNavigation from "@/components/admin/AdminNavigation";
 import {
   CreditCard,
@@ -14,8 +14,6 @@ import {
   Wrench,
   PlusCircle,
 } from "lucide-react";
-
-const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
 
 const navigationItems = [
   { name: "1. نظرة عامة", href: "/admin", icon: LayoutDashboard },
@@ -36,29 +34,20 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let access;
+  try {
+    access = await getAdminAccessState();
+  } catch (error) {
+    console.error("تعذر التحقق من صلاحيات لوحة الإدارة:", error);
+    access = { user: null, isAdmin: false, role: null };
+  }
 
-  if (!user) {
+  if (!access.user) {
     redirect("/login");
   }
 
-  if (user.email !== ADMIN_EMAIL) {
-    try {
-      const { data: roleData, error: roleError } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (roleError || !roleData || !["super_admin", "admin"].includes(roleData.role)) {
-        redirect("/");
-      }
-    } catch {
-      redirect("/");
-    }
+  if (!access.isAdmin) {
+    redirect("/");
   }
 
   return (
