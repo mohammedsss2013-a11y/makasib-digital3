@@ -2,32 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdminAccessState } from "@/lib/admin";
 import AdminNavigation from "@/components/admin/AdminNavigation";
-import {
-  CreditCard,
-  FileText,
-  Headphones,
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  ShieldCheck,
-  Users,
-  Wrench,
-  PlusCircle,
-} from "lucide-react";
-
-const navigationItems = [
-  { name: "1. نظرة عامة", href: "/admin", icon: LayoutDashboard },
-  { name: "2. المحتوى والأدوات", href: "/admin/content", icon: FileText },
-  { name: "3. إدارة المحتوى", href: "/admin/content/manage", icon: FileText },
-  { name: "4. إدارة المستخدمين", href: "/admin/users", icon: Users },
-  { name: "5. أدوار النظام", href: "/admin/roles", icon: ShieldCheck },
-  { name: "6. المعاملات المالية", href: "/admin/finance", icon: CreditCard },
-  { name: "7. الدعم الفني", href: "/admin/support", icon: Headphones },
-  { name: "8. المراقبة والسجلات", href: "/admin/logs", icon: ShieldCheck },
-  { name: "9. إعدادات النظام", href: "/admin/settings", icon: Settings },
-  { name: "10. الأدوات الرقمية", href: "/admin/tools", icon: Wrench },
-  { name: "11. إضافة أداة جديدة", href: "/admin/tools/new", icon: PlusCircle },
-];
+import { LogOut } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -65,7 +40,7 @@ export default async function AdminLayout({
               </div>
             </div>
 
-            <AdminNavigation items={navigationItems} />
+            <AdminNavigation />
           </div>
 
           <div className="border-t border-slate-800 pt-4">
