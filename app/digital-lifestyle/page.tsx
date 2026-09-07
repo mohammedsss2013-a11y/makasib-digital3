@@ -69,6 +69,40 @@ type HeroContent = {
   metadataText: string;
 };
 
+type InstantReport = {
+  title: string;
+  badge: string;
+  description: string;
+};
+
+const instantReportsBySub: Record<string, InstantReport> = {
+  all: {
+    badge: "قطاع حياة رقمية",
+    title: "الصحة الرقمية + التنظيم",
+    description: "النتائج الأفضل تأتي عندما يكون التوازن البشري هو نقطة بداية كل تصميم واختيار.",
+  },
+  "life-management": {
+    badge: "أولوية يومية",
+    title: "إدارة الحياة الرقمية بتركيز",
+    description: "التقرير الفوري الخاص بالتنظيم والهوية وإدارة المهام في بيئة مزدحمة.",
+  },
+  health: {
+    badge: "توازن مستدام",
+    title: "الصحة الرقمية والوقاية من الإرهاق",
+    description: "التقرير الفوري الخاص بالنوم والطاقة وبناء علاقة أكثر صحة مع التقنية.",
+  },
+  learning: {
+    badge: "مهارة قابلة للنمو",
+    title: "التعليم والتعلم الرقمي",
+    description: "التقرير الفوري الخاص ببناء نظام مهارات شخصي قابل للتنفيذ والقياس.",
+  },
+  culture: {
+    badge: "وعي رقمي",
+    title: "الثقافة الرقمية والهوية الواعية",
+    description: "التقرير الفوري الخاص بالأدوات والعادات والهوية الرقمية.",
+  },
+};
+
 const heroContentBySub: Record<string, HeroContent> = {
   all: {
     title: "رقميون - أسلوب الحياة",
@@ -132,6 +166,7 @@ function DigitalLifestylePageContent({ posts }: { posts: SectorPost[] }) {
     culture: "الثقافة الرقمية",
   }[searchParams.get("sub") ?? ""] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
+  const currentReport = instantReportsBySub[activeSub] ?? instantReportsBySub.all;
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -179,13 +214,13 @@ function DigitalLifestylePageContent({ posts }: { posts: SectorPost[] }) {
       <div className="mt-2 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
         <div className="flex items-center justify-between gap-3">
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">مؤشر التوازن</span>
-          <span className="text-[10px] text-slate-400">قطاع حياة رقمية</span>
+          <span className="text-[10px] text-slate-400">{currentReport.badge}</span>
         </div>
 
         <div className="mt-4 text-sm leading-7 text-slate-300">
           <p className="text-[10px] text-slate-400">أكثر مسار يطلبه الزوار</p>
-          <p className="mt-2 text-lg font-black text-white">الصحة الرقمية + التنظيم</p>
-          <p className="mt-2 text-sm text-slate-300">النتائج الأفضل تأتي عندما يكون التوازن البشري هو نقطة بداية كل تصميم واختيار.</p>
+          <p className="mt-2 text-lg font-black text-white">{currentReport.title}</p>
+          <p className="mt-2 text-sm text-slate-300">{currentReport.description}</p>
         </div>
       </div>
 

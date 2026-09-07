@@ -77,6 +77,45 @@ type HeroContent = {
   metadataText: string;
 };
 
+type InstantReport = {
+  title: string;
+  badge: string;
+  description: string;
+};
+
+const instantReportsBySub: Record<string, InstantReport> = {
+  all: {
+    badge: "قطاع إعلامي",
+    title: "صناعة المحتوى + البث",
+    description: "التركيز يذهب إلى القنوات التي تجمع بين الصدق الإعلامي والقدرة على التوزيع المستمر.",
+  },
+  creation: {
+    badge: "الأكثر تأثيراً",
+    title: "صناعة المحتوى المرئي والمكتوب",
+    description: "التقرير الفوري الخاص بالرسائل والقصص وبناء محتوى قابل للنمو.",
+  },
+  news: {
+    badge: "طلب مستمر",
+    title: "الأخبار والتحليلات الرقمية",
+    description: "التقرير الفوري الخاص بالتحقق والاتجاهات وبناء سياق إعلامي موثوق.",
+  },
+  podcasting: {
+    badge: "نمو صوتي",
+    title: "البودكاست والسرد الرقمي",
+    description: "التقرير الفوري الخاص بالصوت وتخطيط الحلقات وتوزيعها.",
+  },
+  streaming: {
+    badge: "تفاعل مباشر",
+    title: "البث المباشر وبناء الجمهور",
+    description: "التقرير الفوري الخاص بالانتشار والتفاعل والمرونة الفنية.",
+  },
+  gaming: {
+    badge: "مجتمع متفاعل",
+    title: "الترفيه الرقمي واللعب",
+    description: "التقرير الفوري الخاص بالمجتمع والتفاعل وتصميم التجارب الرقمية.",
+  },
+};
+
 const heroContentBySub: Record<string, HeroContent> = {
   all: {
     title: "الإعلام الجديد",
@@ -149,6 +188,7 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
     gaming: "الترفيه الرقمي",
   }[searchParams.get("sub") ?? ""] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
+  const currentReport = instantReportsBySub[activeSub] ?? instantReportsBySub.all;
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -196,13 +236,13 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
       <div className="mt-2 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
         <div className="flex items-center justify-between gap-3">
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">مؤشر المحتوى</span>
-          <span className="text-[10px] text-slate-400">قطاع إعلامي</span>
+          <span className="text-[10px] text-slate-400">{currentReport.badge}</span>
         </div>
 
         <div className="mt-4 text-sm leading-7 text-slate-300">
           <p className="text-[10px] text-slate-400">أكثر مسار يطلبه الزوار</p>
-          <p className="mt-2 text-lg font-black text-white">صناعة المحتوى + البث</p>
-          <p className="mt-2 text-sm text-slate-300">التركيز يذهب إلى القنوات التي تجمع بين الصدق الإعلامي والقدرة على التوزيع المستمر.</p>
+          <p className="mt-2 text-lg font-black text-white">{currentReport.title}</p>
+          <p className="mt-2 text-sm text-slate-300">{currentReport.description}</p>
         </div>
       </div>
 

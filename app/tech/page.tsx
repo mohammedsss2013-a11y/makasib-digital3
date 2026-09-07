@@ -78,6 +78,45 @@ type HeroContent = {
   metadataText: string;
 };
 
+type InstantReport = {
+  title: string;
+  badge: string;
+  description: string;
+};
+
+const instantReportsBySub: Record<string, InstantReport> = {
+  all: {
+    badge: "قطاع تقني",
+    title: "ذكاء اصطناعي + أمان + سحابة",
+    description: "قيمة أعلى تتركز في الربط بين البنية التقنية والقرار العملي والنتائج الملموسة.",
+  },
+  "ai-apps": {
+    badge: "الأكثر نمواً",
+    title: "تطبيقات الذكاء الاصطناعي العملية",
+    description: "التقرير الفوري الخاص بالنماذج والأدوات التي تحول الذكاء الاصطناعي إلى نتائج قابلة للقياس.",
+  },
+  cybersecurity: {
+    badge: "أولوية تشغيلية",
+    title: "الأمن السيبراني وحماية البيانات",
+    description: "التقرير الفوري الخاص بالخصوصية والحماية والاستجابة للمخاطر الرقمية.",
+  },
+  "cloud-remote": {
+    badge: "مرونة أعلى",
+    title: "السحابة والعمل عن بُعد",
+    description: "التقرير الفوري الخاص بالتكلفة والأداء وبناء بيئة عمل قابلة للتوسع.",
+  },
+  infra: {
+    badge: "أساس مستقر",
+    title: "البنية التحتية وحوكمة الأنظمة",
+    description: "التقرير الفوري الخاص بالأداء والتوسع واستقرار المنتجات الرقمية.",
+  },
+  "iot-emerging": {
+    badge: "فرصة ناشئة",
+    title: "إنترنت الأشياء والتقنيات الناشئة",
+    description: "التقرير الفوري الخاص بالبيانات والأجهزة والأنظمة الذكية.",
+  },
+};
+
 const heroContentBySub: Record<string, HeroContent> = {
   all: {
     title: "التكنولوجيا والابتكار",
@@ -150,6 +189,7 @@ function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
     "iot-emerging": "إنترنت الأشياء",
   }[searchParams.get("sub") ?? ""] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
+  const currentReport = instantReportsBySub[activeSub] ?? instantReportsBySub.all;
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -197,13 +237,13 @@ function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
       <div className="mt-2 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
         <div className="flex items-center justify-between gap-3">
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">مؤشر الابتكار</span>
-          <span className="text-[10px] text-slate-400">قطاع تقني</span>
+          <span className="text-[10px] text-slate-400">{currentReport.badge}</span>
         </div>
 
         <div className="mt-4 text-sm leading-7 text-slate-300">
           <p className="text-[10px] text-slate-400">أكثر مسار يطلبه الزوار</p>
-          <p className="mt-2 text-lg font-black text-white">ذكاء اصطناعي + أمان + سحابة</p>
-          <p className="mt-2 text-sm text-slate-300">قيمة أعلى تتركز في الربط بين البنية التقنية والقرار العملي والنتائج الملموسة.</p>
+          <p className="mt-2 text-lg font-black text-white">{currentReport.title}</p>
+          <p className="mt-2 text-sm text-slate-300">{currentReport.description}</p>
         </div>
       </div>
 
