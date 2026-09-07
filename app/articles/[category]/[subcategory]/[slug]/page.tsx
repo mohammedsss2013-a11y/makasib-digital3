@@ -9,13 +9,13 @@ import { SectionInteractiveTools } from "@/components/articles/SectionInteractiv
 import ArticleToolEmbedder from "@/components/articles/ArticleToolEmbedder";
 import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractiveBoundary";
 
-// 1. تحديد مدة إعادة التوليد الدوري (كل ساعة = 3600 ثانية)
-export const revalidate = 3600;
+// The article query uses the SSR Supabase client, which reads request cookies.
+export const dynamic = "force-dynamic";
 
-// 2. السماح بتوليد الصفحات غير المُنشأة مسبقاً عند أول طلب (On-Demand ISR)
+// السماح بتوليد الصفحات غير المُنشأة مسبقاً عند أول طلب (On-Demand ISR)
 export const dynamicParams = true;
 
-// 3. إنشاء المسارات الثابتة أثناء عملية الـ Build
+// إنشاء المسارات الثابتة أثناء عملية الـ Build
 export async function generateStaticParams() {
   try {
     const articles = await articlesService.getAllSlugPaths();
