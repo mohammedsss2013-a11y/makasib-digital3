@@ -69,6 +69,56 @@ export async function deleteAdminPostAction(postId: string) {
   }
 }
 
+export async function updateInstantReportAction(input: {
+  id: string;
+  badge: string | null;
+  title: string;
+  description: string | null;
+}) {
+  try {
+    await ensureAdminAccess();
+
+    const title = input.title.trim();
+    if (!input.id || !title) {
+      return { success: false as const, error: "بيانات التقرير غير صالحة" };
+    }
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("instant_reports")
+      .update({
+        badge: input.badge?.trim() || null,
+        title,
+        description: input.description?.trim() || null,
+      })
+      .eq("id", input.id)
+      .select("id, category_slug, sub_category_slug, badge, title, description")
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    await writeAuditLog("update_instant_report", "instant_reports", {
+      targetId: data.id,
+      category: data.category_slug,
+      subcategory: data.sub_category_slug,
+      title: data.title,
+    });
+
+    revalidatePath("/admin/content");
+    revalidatePath("/finance");
+    revalidatePath("/tech");
+    revalidatePath("/media");
+    revalidatePath("/digital-lifestyle");
+
+    return { success: true as const, data };
+  } catch (error) {
+    return {
+      success: false as const,
+      error: getErrorMessage(error),
+    };
+  }
+}
+
 export async function upsertAdminRoleAction(formData: FormData) {
   try {
     await ensureAdminAccess();

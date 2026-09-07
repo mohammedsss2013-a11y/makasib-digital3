@@ -1,13 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
+import ReportManagement, { type InstantReportItem } from "./_components/ReportManagement";
 
 export default async function AdminContentPage() {
   const supabase = await createClient();
 
-  const [{ count: publishedCount }, { count: draftCount }, { count: usersCount }, { count: savedCount }] = await Promise.all([
+  const [{ count: publishedCount }, { count: draftCount }, { count: usersCount }, { count: savedCount }, { data: reports }] = await Promise.all([
     supabase.from("posts").select("id", { count: "exact", head: true }).eq("status", "published"),
     supabase.from("posts").select("id", { count: "exact", head: true }).neq("status", "published"),
     supabase.from("profiles").select("id", { count: "exact", head: true }),
     supabase.from("saved_tools").select("id", { count: "exact", head: true }),
+    supabase
+      .from("instant_reports")
+      .select("id, category_slug, sub_category_slug, badge, title, description")
+      .order("category_slug")
+      .order("sub_category_slug", { nullsFirst: true }),
   ]);
 
   const contentStats = [
@@ -49,6 +55,10 @@ export default async function AdminContentPage() {
             <span className="text-slate-500">جاهز</span>
           </div>
         </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <ReportManagement initialReports={(reports ?? []) as InstantReportItem[]} />
       </section>
     </div>
   );
