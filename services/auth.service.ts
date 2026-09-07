@@ -1,6 +1,8 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
+const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
+
 export const getCurrentUser = cache(async () => {
   try {
     const supabase = await createClient();
@@ -64,6 +66,9 @@ export const getCurrentUserProfile = cache(async () => {
 });
 
 export async function isAdmin() {
+  const user = await getCurrentUser();
+  if (user?.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) return true;
+
   const userProfile = await getCurrentUserProfile();
   return userProfile?.roles.some((role) => ["admin", "super_admin"].includes(role)) ?? false;
 }
