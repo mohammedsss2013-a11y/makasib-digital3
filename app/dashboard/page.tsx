@@ -136,7 +136,7 @@ export default async function DashboardPage() {
           </div>
           <strong className="mt-3 block text-sm font-bold text-emerald-300">حساب موثق وخاص</strong>
           <span className="mt-1 block text-[11px] text-slate-500">
-            {profile?.two_factor_enabled ? "التحقق بخطوتين مفعّل" : "صلاحيات عضو مفعلة"}
+            {profile?.two_factor_enabled ? "التحقق بخطوتين مفعّل" : `صلاحيات ${roleTitle} مفعلة`}
           </span>
         </div>
       </section>
@@ -148,7 +148,7 @@ export default async function DashboardPage() {
           <span>التنبيهات والأخبار الهامة للمستخدمين</span>
         </div>
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs text-emerald-200">
-          مرحباً بك في منصة مكاسب! حسابك مسجل بصلاحيات <strong>عضو (Member)</strong> آمنة. يمكنك تعديل معلوماتك الشخصية، إدارة كلمات المرور، حفظ نتائج الحاسبات، ومراسلة الدعم الفني في أي وقت.
+          مرحباً بك في منصة مكاسب! حسابك مسجل بصلاحيات <strong>{roleTitle}</strong> آمنة. يمكنك تعديل معلوماتك الشخصية، إدارة كلمات المرور، حفظ نتائج الحاسبات، ومراسلة الدعم الفني في أي وقت.
         </div>
       </section>
 

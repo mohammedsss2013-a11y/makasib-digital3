@@ -46,7 +46,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (user.email === ADMIN_EMAIL) {
+  if (user.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
     return response;
   }
 

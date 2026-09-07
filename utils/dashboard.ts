@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
+const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
+
 export interface SavedTool {
   id: string;
   category: string;
@@ -60,6 +62,9 @@ export async function getDashboardData() {
     savedTools: (savedTools ?? []) as SavedTool[],
     communityCount: communityCount ?? 0,
     ticketsCount: ticketsCount ?? 0,
-    userRole: roleRow?.role || 'member',
+    userRole:
+      user.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()
+        ? "super_admin"
+        : roleRow?.role || "member",
   };
 }
