@@ -38,14 +38,16 @@ export async function ensureAdminAccess() {
   const { data: { user }, error } = await supabase.auth.getUser();
 
   if (error || !user) {
-    throw new Error("غير مصرح: يجب تسجيل الدخول أولاً");
+    return { isAdmin: false, user: null };
   }
 
-  const { data: isAdmin } = await supabase.rpc("is_admin_user");
+  const { data: roleData, error: roleError } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
-  if (!isAdmin) {
-    throw new Error("غير مصرح: لا تملك صلاحيات أدمن");
-  }
+  const isAdmin = !roleError && roleData?.role === "admin";
 
-  return { user, supabase };
+  return { isAdmin, user };
 }
