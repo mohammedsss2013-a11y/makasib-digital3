@@ -1,7 +1,5 @@
-import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser, getCurrentUserProfile } from "@/services/auth.service";
-
-export const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
 
 export async function getAdminAccessState() {
   const user = await getCurrentUser();
@@ -11,14 +9,6 @@ export async function getAdminAccessState() {
       user: null,
       isAdmin: false,
       role: null,
-    };
-  }
-
-  if (user.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-    return {
-      user,
-      isAdmin: true,
-      role: "super_admin",
     };
   }
 
@@ -44,11 +34,18 @@ export async function getAdminAccessState() {
 }
 
 export async function ensureAdminAccess() {
-  const access = await getAdminAccessState();
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (!access.user || !access.isAdmin) {
-    redirect("/");
+  if (error || !user) {
+    throw new Error("غير مصرح: يجب تسجيل الدخول أولاً");
   }
 
-  return access;
+  const { data: isAdmin } = await supabase.rpc("is_admin_user");
+
+  if (!isAdmin) {
+    throw new Error("غير مصرح: لا تملك صلاحيات أدمن");
+  }
+
+  return { user, supabase };
 }

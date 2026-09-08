@@ -16,6 +16,7 @@ import {
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
+import InstantReportCard from "@/components/sections/InstantReportCard";
 
 type FinancePost = {
   id: string | number;
@@ -83,50 +84,6 @@ type HeroContent = {
   description: string;
   badgeText: string;
   metadataText: string;
-};
-
-type InstantReport = {
-  title: string;
-  badge: string;
-  description: string;
-};
-
-const instantReportsBySub: Record<string, InstantReport> = {
-  all: {
-    badge: "قطاع صاعد",
-    title: "تسعير الخدمات والعمل الحر",
-    description: "المقالات المميزة والمجالات ذات الصلة تُظهر أفضل مسار للزوار في هذا القطاع.",
-  },
-  freelancing: {
-    badge: "الأكثر طلباً",
-    title: "نماذج العقود واستراتيجيات التسعير",
-    description: "التقرير الفوري الخاص بمسار العمل الحر والخدمات.",
-  },
-  ecommerce: {
-    badge: "نمو متسارع",
-    title: "معدلات التحويل ومتاجر التجزئة",
-    description: "التقرير الفوري الخاص بالتجارة الإلكترونية.",
-  },
-  marketing: {
-    badge: "عائد مرتفع",
-    title: "تكلفة الاستحواذ وحملات النمو",
-    description: "التقرير الفوري الخاص بالتسويق الرقمي.",
-  },
-  "content-economy": {
-    badge: "فرصة متنامية",
-    title: "الرعاية والعضويات واقتصاد المحتوى",
-    description: "التقرير الفوري الخاص بصناعة المحتوى والفرص التجارية المرتبطة بها.",
-  },
-  crypto: {
-    badge: "سوق متقلب",
-    title: "الأمان وإدارة مخاطر الأصول الرقمية",
-    description: "التقرير الفوري الخاص بالعملات الرقمية والبلوكشين.",
-  },
-  hardware: {
-    badge: "إنفاق محسوب",
-    title: "العتاد والإنتاجية المالية",
-    description: "التقرير الفوري الخاص بتجهيز بيئة العمل وتحسين الإنتاجية.",
-  },
 };
 
 const heroContentBySub: Record<string, HeroContent> = {
@@ -210,7 +167,6 @@ function FinanceSectorPageContent({ posts }: { posts: FinancePost[] }) {
     hardware: "العتاد والإنتاجية المالية",
   }[searchParams.get("sub") ?? ""] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
-  const currentReport = instantReportsBySub[activeSub] ?? instantReportsBySub.all;
 
   const articleCounts = useMemo(() => {
     const counts: Record<string, number> = { "الكل": posts.length };
@@ -257,20 +213,7 @@ function FinanceSectorPageContent({ posts }: { posts: FinancePost[] }) {
 
       </section>
 
-      <div className="mt-2 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
-        <div className="flex items-center justify-between gap-3">
-          <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">
-            تقرير فوري
-          </span>
-          <span className="text-[10px] text-slate-400">{currentReport.badge}</span>
-        </div>
-
-        <div className="mt-4 text-sm leading-7 text-slate-300">
-          <p className="text-[10px] text-slate-400">أكثر مسار يطلبه الزوار</p>
-          <p className="mt-2 text-lg font-black text-white">{currentReport.title}</p>
-          <p className="mt-2 text-sm text-slate-300">{currentReport.description}</p>
-        </div>
-      </div>
+      <InstantReportCard category="finance" sub={activeSub === "all" ? undefined : activeSub} />
 
       <section className="space-y-5">
         <div className="flex items-center justify-between gap-3">

@@ -132,6 +132,36 @@ export interface Database {
         }
         Relationships: []
       }
+      instant_reports: {
+        Row: {
+          id: string
+          category_slug: string
+          sub_category_slug: string | null
+          badge: string | null
+          title: string
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          category_slug: string
+          sub_category_slug?: string | null
+          badge?: string | null
+          title: string
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          category_slug?: string
+          sub_category_slug?: string | null
+          badge?: string | null
+          title?: string
+          description?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           id: number
