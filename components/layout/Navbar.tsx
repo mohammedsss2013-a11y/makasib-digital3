@@ -217,36 +217,36 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                       <Link
                         href="/dashboard"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-800 hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
                       >
-                        <LayoutDashboard className="h-4 w-4 text-emerald-400" />
+                        <LayoutDashboard className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                         <span>لوحة التحكم الرئيسية</span>
                       </Link>
 
                       <Link
                         href="/dashboard/settings"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-800 hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
                       >
-                        <Settings className="h-4 w-4 text-emerald-400" />
+                        <Settings className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                         <span>تعديل وإعدادات الحساب</span>
                       </Link>
 
                       <Link
                         href="/dashboard/bookmarks"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-800 hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
                       >
-                        <Bookmark className="h-4 w-4 text-emerald-400" />
+                        <Bookmark className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                         <span>المفضلة والنتائج المحفوظة</span>
                       </Link>
 
                       <Link
                         href="/dashboard/support"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-200 transition-colors hover:bg-slate-800 hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
                       >
-                        <Headphones className="h-4 w-4 text-teal-400" />
+                        <Headphones className="h-4 w-4 text-teal-500 dark:text-teal-400" />
                         <span>الدعم الفني والمساعدة</span>
                       </Link>
 
@@ -254,9 +254,9 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                         <Link
                           href="/admin"
                           onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-red-300 bg-red-500/10 border border-red-500/20 transition-colors hover:bg-red-500/20"
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-red-600 dark:text-red-300 bg-red-500/10 border border-red-500/20 transition-colors hover:bg-red-500/20"
                         >
-                          <ShieldAlert className="h-4 w-4 text-red-400" />
+                          <ShieldAlert className="h-4 w-4 text-red-500 dark:text-red-400" />
                           <span>لوحة الإدارة التنفيذية</span>
                         </Link>
                       )}

@@ -42,13 +42,19 @@ export default function RootLayout({
                 try {
                   var savedAccent = localStorage.getItem('makasib_accent_theme') || 'emerald';
                   document.documentElement.setAttribute('data-accent', savedAccent);
+                  var savedTheme = localStorage.getItem('theme') || 'dark';
+                  if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else if (savedTheme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  }
                 } catch (e) {}
               })();
             `,
           }}
         />
       </head>
-      <body className="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased min-h-screen flex flex-col transition-colors duration-200">
+      <body className="bg-[var(--bg-main)] text-[var(--text-main)] antialiased min-h-screen flex flex-col transition-colors duration-200">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={true}>
           <a
             href="#main-content"
