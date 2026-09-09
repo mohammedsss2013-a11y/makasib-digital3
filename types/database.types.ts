@@ -79,6 +79,8 @@ export interface Database {
           bio: string | null
           notification_settings: NotificationSettings | null
           two_factor_enabled: boolean
+          theme_mode: string | null
+          theme_accent: string | null
           created_at: string
         }
         Insert: {
@@ -90,6 +92,8 @@ export interface Database {
           bio?: string | null
           notification_settings?: NotificationSettings | null
           two_factor_enabled?: boolean
+          theme_mode?: string | null
+          theme_accent?: string | null
           created_at?: string
         }
         Update: {
@@ -101,6 +105,8 @@ export interface Database {
           bio?: string | null
           notification_settings?: NotificationSettings | null
           two_factor_enabled?: boolean
+          theme_mode?: string | null
+          theme_accent?: string | null
           created_at?: string
         }
         Relationships: []

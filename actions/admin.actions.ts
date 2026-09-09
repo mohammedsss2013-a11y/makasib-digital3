@@ -12,6 +12,7 @@ type AuditDetails = { [key: string]: Json | undefined };
 
 async function writeAuditLog(action: string, targetResource: string, details: AuditDetails) {
   const { user } = await ensureAdminAccess();
+  if (!user) return;
   const supabase = await createClient();
   const { error } = await supabase.from("audit_logs").insert({
     user_id: user.id,

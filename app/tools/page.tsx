@@ -8,6 +8,9 @@ import {
 import ToolCatalog from '@/components/tools/ToolCatalog';
 import { createClient } from '@/lib/supabase/server';
 import { TOOLS_REGISTRY, type ToolItem } from '@/config/toolsRegistry';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 
 const sectorLabels: Record<ToolItem['category'], string> = {
   finance: 'قطاع المال والأعمال',
@@ -61,12 +64,12 @@ export default async function ToolsWorkspacePage() {
   const tools = mappedTools.length > 0 ? mappedTools : TOOLS_REGISTRY;
   return (
     <div className="space-y-8 py-4 dir-rtl" dir="rtl">
-      <section className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl shadow-slate-950/30 sm:p-8">
+      <section className="overflow-hidden rounded-[28px] border border-[var(--border-main)] bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl sm:p-8">
         <div className="space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
+          <Badge variant="accent" size="md">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             منصة أدوات رقمية
-          </div>
+          </Badge>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-3">
@@ -75,48 +78,43 @@ export default async function ToolsWorkspacePage() {
                 حاسبات ومولدات عملية مصممة لكل قطاع بحيث يمكنك الانتقال من الفكرة إلى القرار في دقائق بدل التشتت.
               </p>
             </div>
-
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+            <Badge variant="secondary" size="md">
+              <TrendingUp className="h-3.5 w-3.5 text-[var(--accent-primary)]" aria-hidden="true" />
               {tools.length} أداة متاحة
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 text-[11px] text-slate-300">
-              <ArrowLeft className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
+            </Badge>
+            <Badge variant="secondary" size="md">
+              <ArrowLeft className="h-3.5 w-3.5 text-[var(--accent-primary)]" aria-hidden="true" />
               بحث + تصنيف + استخدام فوري
-            </span>
+            </Badge>
           </div>
-
         </div>
-
       </section>
 
       <section className="space-y-5">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="border-r-4 border-emerald-500 pr-3 text-xl font-bold text-white">الأدوات الرقمية الحية</h2>
-          <span className="text-[11px] text-slate-400">عرض مباشر</span>
+          <h2 className="border-r-4 border-[var(--accent-primary)] pr-3 text-xl font-bold text-[var(--text-main)]">الأدوات الرقمية الحية</h2>
+          <span className="text-[11px] text-[var(--text-muted)]">عرض مباشر</span>
         </div>
 
         <ToolCatalog tools={tools} />
       </section>
 
-      <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5 sm:p-6">
+      <Card className="p-5 sm:p-6 bg-[var(--accent-light)] border-[var(--accent-primary)]/20">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[10px] font-bold text-emerald-300">تجربة عملية</p>
-            <h2 className="mt-1 text-xl font-black text-white">استخدم الأدوات الرقمية المناسبة لقطاعك</h2>
+            <p className="text-[10px] font-bold text-[var(--accent-primary)]">تجربة عملية</p>
+            <h2 className="mt-1 text-xl font-black text-[var(--text-main)]">استخدم الأدوات الرقمية المناسبة لقطاعك</h2>
           </div>
-          <Link
-            href="/dashboard/tools"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 py-3 text-xs font-black text-slate-950 transition-colors hover:bg-emerald-300"
-          >
-            <FilePlus2 className="h-4 w-4" aria-hidden="true" />
-            لوحة أدواتي
+          <Link href="/dashboard/tools">
+            <Button variant="primary" icon={<FilePlus2 className="h-4 w-4" aria-hidden="true" />}>
+              لوحة أدواتي
+            </Button>
           </Link>
         </div>
-      </section>
+      </Card>
     </div>
   );
 }

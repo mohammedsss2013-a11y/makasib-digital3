@@ -29,6 +29,7 @@ import AdminNavButton from "@/components/admin/AdminNavButton";
 import { createClient } from "@/lib/supabase/client";
 import AppImage from "@/components/ui/AppImage";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
+import { ProfileThemeSelector } from "@/components/theme/ProfileThemeSelector";
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -192,20 +193,20 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
                 {/* المستطيل المنبثق المصغر عند الضغط على صورة البروفايل */}
                 {userDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-slate-800 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95">
+                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/95 p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95 text-slate-900 dark:text-white">
                     {/* أعلى المستطيل: صورة البروفايل والبريد */}
-                    <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
-                      <div className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
+                    <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+                      <div className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
                         {avatarUrl ? (
                           <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="48px" className="object-cover" />
                         ) : (
-                          <UserCircle className="h-8 w-8 text-emerald-400" />
+                          <UserCircle className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-black text-white truncate">{displayName}</p>
-                        <p className="text-xs text-slate-400 truncate dir-ltr text-right">{userEmail}</p>
-                        <span className="mt-1 inline-block rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-xs font-bold text-emerald-300">
+                        <p className="text-sm font-black text-slate-900 dark:text-white truncate">{displayName}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate dir-ltr text-right">{userEmail}</p>
+                        <span className="mt-1 inline-block rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-300">
                           {isAdmin ? "مدير النظام (Admin)" : "عضو (Member)"}
                         </span>
                       </div>
@@ -261,12 +262,15 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                       )}
                     </div>
 
+                    {/* محول الثيمات التفاعلي */}
+                    <ProfileThemeSelector />
+
                     {/* زر تسجيل الخروج */}
-                    <div className="pt-2 border-t border-slate-800">
+                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800 mt-2">
                       <button
                         type="button"
                         onClick={handleSignOut}
-                        className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-red-400 transition-colors hover:bg-red-500/10 hover:text-red-300"
+                        className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-red-500 transition-colors hover:bg-red-500/10 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
                       >
                         <span className="flex items-center gap-2">
                           <LogOut className="h-4 w-4" />
