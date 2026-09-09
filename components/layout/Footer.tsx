@@ -20,9 +20,9 @@ const footerLinks = {
 
 export const Footer = () => {
   return (
-    <footer className="mt-auto border-t border-slate-800/80 bg-[#070b14] text-slate-400 dir-rtl">
+    <footer className="mt-auto border-t border-[var(--border-main)] bg-[var(--bg-surface)] text-[var(--text-muted)] dir-rtl">
       <div className="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 lg:px-8">
-        <div className="border-b border-slate-800/80 pb-10">
+        <div className="border-b border-[var(--border-main)] pb-10">
           <div className="space-y-5">
             <BrandLogo />
             <p className="max-w-2xl text-sm leading-7 text-slate-400">
@@ -31,7 +31,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="grid gap-8 border-b border-slate-800/80 py-8 md:grid-cols-[1.2fr_0.9fr_0.9fr]">
+        <div className="grid gap-8 border-b border-[var(--border-main)] py-8 md:grid-cols-[1.2fr_0.9fr_0.9fr]">
           <div className="space-y-4">
             <Link href="/community" className="inline-flex items-center gap-2 text-sm font-bold text-slate-200 transition-colors hover:text-emerald-300">
               <MessageSquare className="h-4 w-4 text-emerald-400" /> شارك تجربتك مع مجتمع مكاسب

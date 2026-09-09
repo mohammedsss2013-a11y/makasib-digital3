@@ -128,7 +128,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const isAdmin = userEmail?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800/70 bg-slate-950/90 text-white backdrop-blur-xl dir-rtl">
+    <header className="sticky top-0 z-40 w-full border-b border-[var(--border-main)] bg-[var(--bg-surface)]/95 text-[var(--text-main)] backdrop-blur-xl dir-rtl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3">
           <BrandLogo />
@@ -140,11 +140,11 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             title="البحث السريع (Cmd+K)"
             aria-label="فتح البحث السريع"
           >
-            <span className="flex w-full items-center rounded-xl border border-slate-700/60 bg-slate-900/60 py-2.5 pr-10 pl-16 text-right text-xs text-slate-400 transition-colors group-hover:border-emerald-500/70">
+            <span className="flex w-full items-center rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 py-2.5 pr-10 pl-16 text-right text-xs text-[var(--text-muted)] transition-colors group-hover:border-emerald-500/70">
               للبحث السريع
             </span>
             <Search className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
-            <kbd className="pointer-events-none absolute left-3 rounded border border-slate-700 bg-slate-800 px-2 py-0.5 font-mono text-xs text-slate-400">
+            <kbd className="pointer-events-none absolute left-3 rounded border border-[var(--border-main)] bg-[var(--bg-muted)] px-2 py-0.5 font-mono text-xs text-[var(--text-muted)]">
               Cmd+K
             </kbd>
           </button>
@@ -153,7 +153,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             <button
               type="button"
               onClick={onOpenSearch}
-              className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2.5 text-slate-300 transition-colors hover:border-emerald-500/70 hover:text-emerald-300 md:hidden"
+              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2.5 text-[var(--text-muted)] transition-colors hover:border-emerald-500/70 hover:text-emerald-300 md:hidden"
               title="البحث السريع (Cmd+K)"
               aria-label="فتح البحث السريع"
             >
@@ -176,11 +176,11 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen((open) => !open)}
-                    className="flex items-center gap-1.5 rounded-xl border border-slate-700/70 bg-slate-900/80 p-1.5 transition-all hover:border-emerald-500/60 focus-ring"
+                    className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/80 p-1.5 transition-all hover:border-emerald-500/60 focus-ring"
                     aria-label="قائمة الملف الشخصي"
                     aria-expanded={userDropdownOpen}
                   >
-                    <div className="relative h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-slate-800 flex items-center justify-center">
+                    <div className="relative h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-[var(--bg-muted)] flex items-center justify-center">
                       {avatarUrl ? (
                         <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="32px" className="object-cover" />
                       ) : (
@@ -284,7 +284,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2.5 text-xs font-bold text-slate-200 transition-colors hover:border-emerald-500/70 hover:text-emerald-300 sm:px-4 sm:text-sm"
+                className="flex items-center gap-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2.5 text-xs font-bold text-[var(--text-main)] transition-colors hover:border-emerald-500/70 hover:text-emerald-300 sm:px-4 sm:text-sm"
                 title="تسجيل الدخول"
               >
                 <LogIn className="h-4 w-4" />
@@ -295,7 +295,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen((open) => !open)}
-              className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-2.5 text-slate-300 hover:text-white lg:hidden"
+              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2.5 text-[var(--text-muted)] hover:text-[var(--text-main)] lg:hidden"
               aria-label="القائمة الرئيسية"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -322,7 +322,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
       </div>
 
       {mobileMenuOpen && (
-        <nav id="mobile-navigation" aria-label="التصفح الرئيسي" className="border-t border-slate-800/70 bg-slate-950/95 px-4 py-3 lg:hidden">
+        <nav id="mobile-navigation" aria-label="التصفح الرئيسي" className="border-t border-[var(--border-main)] bg-[var(--bg-surface)]/95 px-4 py-3 lg:hidden">
           <div className="mx-auto grid max-w-7xl gap-1 sm:grid-cols-2">
             {navLinks.map((link) => (
               <Link
