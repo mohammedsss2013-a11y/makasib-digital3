@@ -27,9 +27,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return <ToastContext.Provider value={{ showToast }}>
     {children}
     <div className="pointer-events-none fixed inset-x-4 bottom-4 z-[70] flex max-w-sm flex-col gap-2 sm:left-4 sm:right-auto" dir="rtl" aria-live="polite">
-      {toasts.map((toast) => <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className="pointer-events-auto flex items-center justify-between gap-3 rounded-xl border border-slate-700 bg-slate-900 p-4 text-sm text-white shadow-2xl">
-        <div className="flex min-w-0 items-center gap-3">{toast.type === "success" ? <CheckCircle2 className="shrink-0 text-emerald-400" size={18} /> : toast.type === "error" ? <AlertCircle className="shrink-0 text-red-400" size={18} /> : <Info className="shrink-0 text-blue-400" size={18} />}<span>{toast.message}</span></div>
-        <button type="button" onClick={() => removeToast(toast.id)} className="shrink-0 rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white" aria-label="إغلاق الإشعار"><X size={16} /></button>
+      {toasts.map((toast) => <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className="pointer-events-auto flex items-center justify-between gap-3 rounded-xl border border-[var(--border-main)] bg-[var(--bg-surface)] p-4 text-sm text-[var(--text-main)] shadow-2xl">
+        <div className="flex min-w-0 items-center gap-3">{toast.type === "success" ? <CheckCircle2 className="shrink-0 text-emerald-500 dark:text-emerald-400" size={18} /> : toast.type === "error" ? <AlertCircle className="shrink-0 text-red-500 dark:text-red-400" size={18} /> : <Info className="shrink-0 text-blue-500 dark:text-blue-400" size={18} />}<span>{toast.message}</span></div>
+        <button type="button" onClick={() => removeToast(toast.id)} className="shrink-0 rounded-lg p-1 text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]" aria-label="إغلاق الإشعار"><X size={16} /></button>
       </div>)}
     </div>
   </ToastContext.Provider>;

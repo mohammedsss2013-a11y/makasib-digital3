@@ -37,17 +37,17 @@ export async function CategoryArticles({ category, categoryLabel, description, a
 
   return (
     <div className="space-y-8 py-4 dir-rtl" dir="rtl">
-      <header className="border-b border-slate-800/80 pb-8">
+      <header className="border-b border-[var(--border-main)] pb-8">
         <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-bold ${style}`}>
           <BookOpen className="h-4 w-4" /> مدونة مكاسب رقمية
         </div>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-black text-white sm:text-4xl">{categoryLabel}</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">{description}</p>
+            <h1 className="text-3xl font-black text-[var(--text-main)] sm:text-4xl">{categoryLabel}</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--text-muted)]">{description}</p>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-slate-400">
-            <Database className="h-3.5 w-3.5 text-emerald-400" /> {posts?.length ?? 0} مقال من قاعدة البيانات
+          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-main)] bg-[var(--bg-card)] px-3 py-1.5 text-xs text-[var(--text-muted)]">
+            <Database className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" /> {posts?.length ?? 0} مقال من قاعدة البيانات
           </span>
         </div>
       </header>
@@ -57,39 +57,39 @@ export async function CategoryArticles({ category, categoryLabel, description, a
       {interactiveTools}
 
       {error ? (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center text-sm text-red-300">
+        <div className="rounded-2xl border border-red-500/20 bg-red-500/5 p-8 text-center text-sm text-red-400">
           تعذر جلب مقالات هذا القسم حاليًا. حاول تحديث الصفحة.
         </div>
       ) : posts?.length ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <article key={post.id} className="group flex min-h-72 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50">
-              <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+            <article key={post.id} className="group flex min-h-72 flex-col justify-between rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50">
+              <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]">
                 <AppImage src={post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80"} alt={post.title} fallbackType="article" fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
               <div>
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">
-                  {post.subcategory && <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{post.subcategory}</span>}
-                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">مقال جديد</span>
+                  {post.subcategory && <span className="rounded-full border border-[var(--border-main)] bg-[var(--bg-muted)] px-2.5 py-1 text-[var(--text-muted)]">{post.subcategory}</span>}
+                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-600 dark:text-emerald-300">مقال جديد</span>
                 </div>
-                <h2 className="text-xl font-bold leading-8 text-white transition-colors group-hover:text-emerald-300">
-                  <Link href={getArticlePath(post)} className="hover:text-emerald-300">
+                <h2 className="text-xl font-bold leading-8 text-[var(--text-main)] transition-colors group-hover:text-emerald-500 dark:group-hover:text-emerald-300">
+                  <Link href={getArticlePath(post)} className="hover:text-emerald-500 dark:hover:text-emerald-300">
                     {post.title}
                   </Link>
                 </h2>
-                <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{getHtmlExcerpt(post.content)}</p>
+                <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">{getHtmlExcerpt(post.content)}</p>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-4 text-xs text-slate-500">
+              <div className="mt-6 flex items-center justify-between border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
                 <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ar-EG")}</time>
-                <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
+                <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
               </div>
             </article>
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-12 text-center">
-          <RefreshCw className="mx-auto mb-3 h-8 w-8 text-slate-600" />
-          <p className="text-sm text-slate-400">لا توجد مقالات منشورة في هذا القسم حتى الآن.</p>
+        <div className="rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] p-12 text-center">
+          <RefreshCw className="mx-auto mb-3 h-8 w-8 text-[var(--text-subtle)]" />
+          <p className="text-sm text-[var(--text-muted)]">لا توجد مقالات منشورة في هذا القسم حتى الآن.</p>
         </div>
       )}
     </div>

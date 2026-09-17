@@ -71,17 +71,17 @@ export default function InstantReportCard({ category, sub }: InstantReportCardPr
   const currentReport = report ?? fallbackReport;
 
   return (
-    <div className="mt-2 rounded-3xl border border-slate-800 bg-slate-950/60 p-5">
+    <div className="mt-2 rounded-3xl border border-[var(--border-main)] bg-[var(--bg-card)] p-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300">
+        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-300">
           {isLoading ? "جاري تحميل التقرير" : "تقرير فوري"}
         </span>
-        <span className="text-[10px] text-slate-400">{currentReport.badge}</span>
+        <span className="text-[10px] text-[var(--text-muted)]">{currentReport.badge}</span>
       </div>
-      <div className="mt-4 text-sm leading-7 text-slate-300">
-        <p className="text-[10px] text-slate-400">أكثر مسار يطلبه الزوار</p>
-        <p className="mt-2 text-lg font-black text-white">{currentReport.title}</p>
-        <p className="mt-2 text-sm text-slate-300">{currentReport.description}</p>
+      <div className="mt-4 text-sm leading-7 text-[var(--text-muted)]">
+        <p className="text-[10px] text-[var(--text-subtle)]">أكثر مسار يطلبه الزوار</p>
+        <p className="mt-2 text-lg font-black text-[var(--text-main)]">{currentReport.title}</p>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">{currentReport.description}</p>
       </div>
     </div>
   );

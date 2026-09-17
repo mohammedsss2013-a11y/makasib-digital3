@@ -228,27 +228,28 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8 py-2 dir-rtl">
       {/* رأس الصفحة */}
-      <div className="rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-6 sm:p-10 shadow-2xl space-y-4">
-        <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
+      {/* رأس الصفحة */}
+      <div className="rounded-3xl border border-[var(--border-main)] bg-[var(--bg-card)] p-6 sm:p-10 shadow-xl space-y-4">
+        <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs px-3.5 py-1.5 rounded-full font-semibold">
           <Settings className="w-4 h-4" />
           <span>لوحة تحكم المستخدم</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-black text-white leading-tight">
+        <h1 className="text-2xl sm:text-4xl font-black text-[var(--text-main)] leading-tight">
           إعدادات الحساب والأمان والتفضيلات
         </h1>
-        <p className="text-slate-300 text-sm leading-relaxed max-w-3xl">
+        <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-3xl">
           التحكم الكامل في حسابك كعضو: تعديل بيانات الملف الشخصي، كلمة المرور، مراجعة الجلسات والأجهزة النشطة، وضبط استقبال الإشعارات.
         </p>
 
         {/* علامات التبويب Tabs */}
-        <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-800">
+        <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-[var(--border-main)]">
           <button
             type="button"
             onClick={() => setActiveTab("profile")}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "profile"
-                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md"
-                : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
+                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 shadow-md"
+                : "bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             <User className="h-4 w-4" />
@@ -260,8 +261,8 @@ export default function SettingsPage() {
             onClick={() => setActiveTab("security")}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "security"
-                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md"
-                : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
+                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 shadow-md"
+                : "bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             <ShieldCheck className="h-4 w-4" />
@@ -273,8 +274,8 @@ export default function SettingsPage() {
             onClick={() => setActiveTab("notifications")}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
               activeTab === "notifications"
-                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md"
-                : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
+                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 shadow-md"
+                : "bg-[var(--bg-surface)] border border-[var(--border-main)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
             }`}
           >
             <Bell className="h-4 w-4" />

@@ -30,6 +30,7 @@ import { createClient } from "@/lib/supabase/client";
 import AppImage from "@/components/ui/AppImage";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 import { ProfileThemeSelector } from "@/components/theme/ProfileThemeSelector";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 interface NavbarProps {
   onOpenSearch: () => void;
@@ -150,6 +151,8 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
           </button>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
+
             <button
               type="button"
               onClick={onOpenSearch}

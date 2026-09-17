@@ -52,13 +52,13 @@ export function SubcategoryLinks({ section }: { section: keyof typeof subcategor
           <Link
             key={item.href}
             href={item.href}
-            className="group rounded-xl border border-slate-800 bg-slate-900/60 p-4 transition-colors hover:border-emerald-500/50 hover:bg-slate-900"
+            className="group rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] p-4 transition-colors hover:border-emerald-500/50 hover:bg-[var(--bg-muted)]"
           >
             <div className="flex items-start justify-between gap-3">
-              <h3 className="text-sm font-bold leading-6 text-white transition-colors group-hover:text-emerald-300">{item.title}</h3>
-              <ArrowLeft aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-slate-600 transition-colors group-hover:text-emerald-300" />
+              <h3 className="text-sm font-bold leading-6 text-[var(--text-main)] transition-colors group-hover:text-emerald-500 dark:group-hover:text-emerald-300">{item.title}</h3>
+              <ArrowLeft aria-hidden="true" className="mt-1 h-4 w-4 shrink-0 text-[var(--text-subtle)] transition-colors group-hover:text-emerald-500 dark:group-hover:text-emerald-300" />
             </div>
-            <p className="mt-2 text-xs leading-5 text-slate-500">{item.description}</p>
+            <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{item.description}</p>
           </Link>
         ))}
       </div>

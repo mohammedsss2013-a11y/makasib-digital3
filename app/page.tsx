@@ -67,7 +67,7 @@ export default async function HomePage() {
   return (
     <div className="space-y-16 py-4 dir-rtl">
       {/* Hero Section */}
-      <section aria-labelledby="home-hero-title" className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-8 shadow-2xl sm:p-10">
+      <section aria-labelledby="home-hero-title" className="relative overflow-hidden rounded-3xl border border-[var(--border-main)] bg-[var(--bg-card)] p-8 shadow-xl sm:p-10">
         <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="z-10 max-w-2xl space-y-6 text-center lg:text-right">
             <Badge variant="accent" size="md">
@@ -75,11 +75,11 @@ export default async function HomePage() {
               <span>منصة تمكين رقمي وتوجيه عملي</span>
             </Badge>
 
-            <h1 id="home-hero-title" className="text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">
+            <h1 id="home-hero-title" className="text-3xl font-black leading-tight tracking-tight text-[var(--text-main)] sm:text-5xl">
               طريقك المباشر لتحويل <span className="text-[var(--accent-primary)]">المهارات الرقمية</span> إلى مكاسب حقيقية
             </h1>
 
-            <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
+            <p className="text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
               مقالات تطبيقية، أدوات مجانية، ومجتمع يربط بين التعلم والتنفيذ والفرص الرقمية لتساعدك على بناء دخل محترف واستقرار مهني.
             </p>
 
@@ -99,7 +99,7 @@ export default async function HomePage() {
           </div>
 
           <div className="relative z-10">
-            <Card className="p-5 bg-slate-950/70 shadow-2xl">
+            <Card className="p-5 bg-[var(--bg-surface)] shadow-2xl">
               <div className="mb-4 flex items-center justify-between gap-2">
                 <Badge variant="accent">أدوات مختارة</Badge>
                 <span className="text-[10px] text-[var(--text-muted)]">عرض سريع</span>
@@ -112,10 +112,10 @@ export default async function HomePage() {
                   { title: "قائمة أدوات المنصة", detail: "كل الأدوات", href: "/tools" },
                 ].map((tool) => (
                   <Link key={tool.title} href={tool.href} className="block">
-                    <Card hoverEffect className="flex items-center justify-between gap-3 p-3 bg-slate-900/60">
+                    <Card hoverEffect className="flex items-center justify-between gap-3 p-3 bg-[var(--bg-muted)]/50">
                       <div>
-                        <p className="text-sm font-bold text-white">{tool.title}</p>
-                        <p className="text-[10px] text-slate-400">{tool.detail}</p>
+                        <p className="text-sm font-bold text-[var(--text-main)]">{tool.title}</p>
+                        <p className="text-[10px] text-[var(--text-muted)]">{tool.detail}</p>
                       </div>
                       <ArrowLeft className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
                     </Card>

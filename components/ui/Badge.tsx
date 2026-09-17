@@ -38,7 +38,7 @@ export function Badge({ className, variant = "accent", size = "sm", children, ..
     danger:
       "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20 font-bold",
     neutral:
-      "bg-slate-800 text-slate-200 dark:bg-slate-900 dark:text-slate-400 border-slate-700 font-medium",
+      "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700 font-medium",
   };
 
   return (

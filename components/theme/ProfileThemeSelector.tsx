@@ -109,10 +109,10 @@ export function ProfileThemeSelector() {
           onClick={() => handleModeChange("light")}
           className={`flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-all ${
             theme === "light"
-              ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white"
+              ? "bg-white text-slate-900 shadow-sm border border-slate-200"
               : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           }`}
-          title="الوضع الفاتح"
+          title="الوضع الفاتح الكامل"
         >
           <Sun className="h-3.5 w-3.5 text-amber-500" />
           <span>فاتح</span>
@@ -123,10 +123,10 @@ export function ProfileThemeSelector() {
           onClick={() => handleModeChange("dark")}
           className={`flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-all ${
             theme === "dark"
-              ? "bg-slate-900 text-white shadow-sm dark:bg-slate-700"
+              ? "bg-slate-900 text-white shadow-sm border border-slate-700"
               : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           }`}
-          title="الوضع الداكن"
+          title="الوضع الداكن الكامل"
         >
           <Moon className="h-3.5 w-3.5 text-indigo-400" />
           <span>داكن</span>
@@ -137,12 +137,12 @@ export function ProfileThemeSelector() {
           onClick={() => handleModeChange("system")}
           className={`flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-all ${
             theme === "system"
-              ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white"
+              ? "bg-slate-200 text-slate-900 shadow-sm border border-slate-300 font-black"
               : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           }`}
-          title="حسب إعدادات النظام"
+          title="الوضع التلقائي المموج (رصاصي مموج)"
         >
-          <Monitor className="h-3.5 w-3.5 text-emerald-400" />
+          <Monitor className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
           <span>تلقائي</span>
         </button>
       </div>

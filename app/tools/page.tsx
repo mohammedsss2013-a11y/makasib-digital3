@@ -64,7 +64,7 @@ export default async function ToolsWorkspacePage() {
   const tools = mappedTools.length > 0 ? mappedTools : TOOLS_REGISTRY;
   return (
     <div className="space-y-8 py-4 dir-rtl" dir="rtl">
-      <section className="overflow-hidden rounded-[28px] border border-[var(--border-main)] bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-950 p-6 shadow-2xl sm:p-8">
+      <section className="overflow-hidden rounded-[28px] border border-[var(--border-main)] bg-[var(--bg-card)] p-6 shadow-xl sm:p-8">
         <div className="space-y-5">
           <Badge variant="accent" size="md">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
@@ -73,8 +73,8 @@ export default async function ToolsWorkspacePage() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-3">
-              <h1 className="text-3xl font-black text-white sm:text-4xl">أدوات رقمية تفاعلية</h1>
-              <p className="max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+              <h1 className="text-3xl font-black text-[var(--text-main)] sm:text-4xl">أدوات رقمية تفاعلية</h1>
+              <p className="max-w-2xl text-sm leading-7 text-[var(--text-muted)] sm:text-base">
                 حاسبات ومولدات عملية مصممة لكل قطاع بحيث يمكنك الانتقال من الفكرة إلى القرار في دقائق بدل التشتت.
               </p>
             </div>

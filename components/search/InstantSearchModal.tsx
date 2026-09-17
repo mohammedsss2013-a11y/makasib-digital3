@@ -123,16 +123,16 @@ export const InstantSearchModal = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4">
+    <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex items-start justify-center pt-16 sm:pt-24 px-4">
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="site-search-title"
-        className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden dir-rtl"
+        className="bg-[var(--bg-surface)] border border-[var(--border-main)] rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden dir-rtl text-[var(--text-main)]"
       >
-        <div className="flex items-center px-4 border-b border-slate-800">
-          <Search className="w-5 h-5 text-emerald-400" aria-hidden="true" />
+        <div className="flex items-center px-4 border-b border-[var(--border-main)]">
+          <Search className="w-5 h-5 text-emerald-500 dark:text-emerald-400" aria-hidden="true" />
           <h2 id="site-search-title" className="sr-only">البحث في الموقع</h2>
           <input
             ref={inputRef}
@@ -143,13 +143,13 @@ export const InstantSearchModal = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            className="w-full bg-transparent p-4 text-sm text-white placeholder-slate-500 focus:outline-none"
+            className="w-full bg-transparent p-4 text-sm text-[var(--text-main)] placeholder-[var(--text-subtle)] focus:outline-none"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label="إغلاق البحث"
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
+            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg hover:bg-[var(--bg-muted)]"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -162,47 +162,47 @@ export const InstantSearchModal = ({
                 key={idx}
                 href={res.path}
                 onClick={onClose}
-                className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-800/80 transition-all group border border-transparent hover:border-slate-700/60"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-[var(--bg-muted)] transition-all group border border-transparent hover:border-[var(--border-main)]"
               >
                 <div className="flex items-center gap-3">
                   {res.type === "tool" ? (
-                    <Wrench className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Wrench className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
                   ) : res.type === "dashboard" ? (
                     res.path === "/dashboard/tools" ? (
-                      <FilePlus2 className="w-4 h-4 text-teal-400 shrink-0" />
+                      <FilePlus2 className="w-4 h-4 text-teal-500 dark:text-teal-400 shrink-0" />
                     ) : (
-                      <LayoutDashboard className="w-4 h-4 text-teal-400 shrink-0" />
+                      <LayoutDashboard className="w-4 h-4 text-teal-500 dark:text-teal-400 shrink-0" />
                     )
                   ) : res.type === "community" ? (
-                    <Users className="w-4 h-4 text-blue-400 shrink-0" />
+                    <Users className="w-4 h-4 text-blue-500 dark:text-blue-400 shrink-0" />
                   ) : res.type === "legal" ? (
-                    <Shield className="w-4 h-4 text-amber-400 shrink-0" />
+                    <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
                   ) : (
-                    <FileText className="w-4 h-4 text-purple-400 shrink-0" />
+                    <FileText className="w-4 h-4 text-purple-500 dark:text-purple-400 shrink-0" />
                   )}
                   <div>
-                    <h4 className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">
+                    <h4 className="text-xs font-bold text-[var(--text-main)] group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                       {res.title}
                     </h4>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-[var(--text-muted)]">
                       {res.category} • {res.path}
                     </span>
                   </div>
                 </div>
-                <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors shrink-0" />
+                <ArrowLeft className="w-4 h-4 text-[var(--text-subtle)] group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors shrink-0" />
               </Link>
             ))
           ) : (
             <div className="text-center py-10 space-y-2">
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[var(--text-muted)]">
                 لا توجد نتائج مطابقة لمفهوم البحث &ldquo;{query}&rdquo;
               </p>
-              <p className="text-[11px] text-slate-500">جرب البحث بكلمات عامة مثل &ldquo;تسعير&rdquo;، &ldquo;أمان&rdquo;، &ldquo;ذكاء&rdquo; أو &ldquo;لوحة&rdquo;</p>
+              <p className="text-[11px] text-[var(--text-subtle)]">جرب البحث بكلمات عامة مثل &ldquo;تسعير&rdquo;، &ldquo;أمان&rdquo;، &ldquo;ذكاء&rdquo; أو &ldquo;لوحة&rdquo;</p>
             </div>
           )}
         </div>
 
-        <div className="bg-slate-950 px-4 py-2.5 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500">
+        <div className="bg-[var(--bg-muted)]/60 px-4 py-2.5 border-t border-[var(--border-main)] flex items-center justify-between text-[10px] text-[var(--text-muted)]">
           <span>مفتاح Esc للإغلاق</span>
           <span>{mockResults.length} نتيجة متوفرة</span>
         </div>

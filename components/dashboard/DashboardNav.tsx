@@ -30,10 +30,10 @@ export function DashboardNav() {
   };
 
   return (
-    <div className="mb-8 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-[4rem] z-30 dir-rtl">
+    <div className="mb-8 border-b border-[var(--border-main)] bg-[var(--bg-surface)]/90 backdrop-blur-md sticky top-[4rem] z-30 dir-rtl">
       <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-3 no-scrollbar sm:px-6">
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-400 pl-4 border-l border-slate-800 hidden md:flex">
-          <ShieldCheck className="h-4 w-4 text-emerald-400" />
+        <div className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] pl-4 border-l border-[var(--border-main)] hidden md:flex">
+          <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
           <span>لوحة المستخدم</span>
         </div>
         {navItems.map((item) => {
@@ -45,11 +45,11 @@ export function DashboardNav() {
               href={item.href}
               className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-bold transition-all ${
                 active
-                  ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 shadow-sm"
-                  : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+                  ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 shadow-sm"
+                  : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"
               }`}
             >
-              <Icon className={`h-4 w-4 ${active ? "text-emerald-400" : "text-slate-500"}`} />
+              <Icon className={`h-4 w-4 ${active ? "text-emerald-500 dark:text-emerald-400" : "text-[var(--text-subtle)]"}`} />
               <span>{item.name}</span>
             </Link>
           );
