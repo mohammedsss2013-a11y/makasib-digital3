@@ -137,12 +137,12 @@ export function ProfileThemeSelector() {
           onClick={() => handleModeChange("system")}
           className={`flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] font-bold transition-all ${
             theme === "system"
-              ? "bg-slate-200 text-slate-900 shadow-sm border border-slate-300 font-black"
+              ? "bg-[#2b3641] text-white shadow-sm border border-[#4a5765]"
               : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           }`}
-          title="الوضع التلقائي المموج (رصاصي مموج)"
+          title="الوضع التلقائي (رصاصي داكن مموج)"
         >
-          <Monitor className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+          <Monitor className="h-3.5 w-3.5 text-teal-400" />
           <span>تلقائي</span>
         </button>
       </div>

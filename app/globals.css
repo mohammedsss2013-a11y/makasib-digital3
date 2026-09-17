@@ -56,24 +56,24 @@
 
   /* ==========================================================================
      3. SYSTEM / AUTO THEME (.system)
-     A completely wavy soft light gray slate mode (بلون رصاصي مموج وفاتح قليلاً بالكامل)
+     Mid-dark slate/blue-gray matching the reference swatch image (#333f4a palette).
      ========================================================================== */
   .system {
-    color-scheme: light;
-    --bg-main: #dbe2ea;
-    --bg-surface: #e8eef5;
-    --bg-card: #f3f6f9;
-    --bg-muted: #cbd5e1;
-    --border-main: #94a3b8;
-    --border-subtle: #cbd5e1;
-    --text-main: #0f172a;
-    --text-muted: #334155;
-    --text-subtle: #475569;
+    color-scheme: dark;
+    --bg-main: #333f4a;
+    --bg-surface: #263039;
+    --bg-card: #3a4753;
+    --bg-muted: #2b3641;
+    --border-main: #4a5765;
+    --border-subtle: #5a6a7b;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --text-subtle: #94a3b8;
 
-    --accent-primary: #059669;
-    --accent-hover: #047857;
-    --accent-light: rgba(5, 150, 105, 0.15);
-    --accent-ring: rgba(5, 150, 105, 0.3);
+    --accent-primary: #34d399;
+    --accent-hover: #6ee7b7;
+    --accent-light: rgba(52, 211, 153, 0.15);
+    --accent-ring: rgba(52, 211, 153, 0.35);
   }
 
   [data-accent="sapphire"] {
@@ -114,16 +114,16 @@
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Wavy gradient background for system mode */
+  /* Wavy gradient background for system mode - dark slate palette */
   html.system body {
-    background-color: #dbe2ea;
+    background-color: #333f4a;
     background-image:
-      radial-gradient(at 15% 15%, rgba(255, 255, 255, 0.8) 0px, transparent 45%),
-      radial-gradient(at 85% 20%, rgba(203, 213, 225, 0.85) 0px, transparent 50%),
-      radial-gradient(at 50% 50%, rgba(226, 232, 240, 0.7) 0px, transparent 50%),
-      radial-gradient(at 85% 85%, rgba(148, 163, 184, 0.45) 0px, transparent 50%),
-      radial-gradient(at 15% 85%, rgba(241, 245, 249, 0.85) 0px, transparent 50%),
-      linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #e2e8f0 100%);
+      radial-gradient(at 15% 15%, rgba(74, 87, 101, 0.6) 0px, transparent 45%),
+      radial-gradient(at 85% 20%, rgba(38, 48, 57, 0.7) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(58, 71, 83, 0.4) 0px, transparent 55%),
+      radial-gradient(at 85% 85%, rgba(43, 54, 65, 0.65) 0px, transparent 50%),
+      radial-gradient(at 15% 85%, rgba(51, 63, 74, 0.8) 0px, transparent 50%),
+      linear-gradient(135deg, #263039 0%, #333f4a 40%, #3a4753 70%, #2b3641 100%);
     background-attachment: fixed;
     background-size: cover;
   }
@@ -202,25 +202,26 @@ html.light select[class*="bg-slate"] {
 }
 
 /* ==========================================================================
-   SYSTEM / AUTO MODE (الوضع التلقائي - رصاصي مموج وفاتح بالكامل)
+   SYSTEM / AUTO MODE (الوضع التلقائي - رصاصي داكن مموج يطابق الصورة المرجعية)
    ========================================================================== */
 html.system [class*="bg-slate-950"],
 html.system [class*="bg-slate-900"],
 html.system [class*="bg-slate-850"],
 html.system [class*="bg-black"] {
-  background-color: var(--bg-card) !important;
+  background-color: var(--bg-surface) !important;
 }
 
 html.system [class*="bg-slate-800"] {
   background-color: var(--bg-muted) !important;
 }
 
-/* Wavy light gray gradients in System mode */
+/* Dark slate gradients in System mode */
 html.system [class*="bg-gradient-"] {
-  background-image: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(226, 232, 240, 0.9) 50%, rgba(203, 213, 225, 0.85) 100%) !important;
+  background-image: linear-gradient(135deg, #263039 0%, #333f4a 50%, #3a4753 100%) !important;
   background-color: var(--bg-card) !important;
 }
 
+/* System mode — text is light since background is mid-dark slate */
 html.system [class*="text-white"],
 html.system [class*="text-slate-100"],
 html.system [class*="text-slate-200"] {
@@ -232,21 +233,37 @@ html.system [class*="text-slate-400"] {
   color: var(--text-muted) !important;
 }
 
+/* Dark text classes that should be light in system mode */
+html.system [class*="text-slate-900"],
+html.system [class*="text-slate-800"],
+html.system [class*="text-slate-700"] {
+  color: var(--text-muted) !important;
+}
+
 html.system [class*="border-slate-800"],
 html.system [class*="border-slate-700"],
 html.system [class*="border-slate-900"] {
   border-color: var(--border-main) !important;
 }
 
+html.system [class*="border-slate-200"],
+html.system [class*="border-slate-300"] {
+  border-color: var(--border-main) !important;
+}
+
 html.system [class*="divide-slate-800"] > :not(:last-child),
-html.system [class*="divide-slate-700"] > :not(:last-child) {
+html.system [class*="divide-slate-700"] > :not(:last-child),
+html.system [class*="divide-slate-200"] > :not(:last-child) {
   border-color: var(--border-main) !important;
 }
 
 html.system input[class*="bg-slate"],
 html.system textarea[class*="bg-slate"],
-html.system select[class*="bg-slate"] {
-  background-color: #ffffff !important;
+html.system select[class*="bg-slate"],
+html.system input[class*="bg-white"],
+html.system textarea[class*="bg-white"],
+html.system select[class*="bg-white"] {
+  background-color: var(--bg-muted) !important;
   border-color: var(--border-main) !important;
   color: var(--text-main) !important;
 }
