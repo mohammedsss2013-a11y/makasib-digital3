@@ -13,9 +13,14 @@ export function ThemeProvider({
       defaultTheme="dark"
       enableSystem={false}
       themes={["light", "dark", "system"]}
+      value={{
+        light: "light",
+        dark: "dark",
+        system: "system",
+      }}
       {...props}
     >
       {children}
     </NextThemesProvider>
   );
-}
+}

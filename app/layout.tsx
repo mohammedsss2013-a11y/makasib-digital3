@@ -58,7 +58,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[var(--bg-main)] text-[var(--text-main)] antialiased min-h-screen flex flex-col transition-colors duration-200">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={true}>
+        <ThemeProvider>
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:right-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-emerald-400 focus:px-4 focus:py-3 focus:font-bold focus:text-slate-950"
