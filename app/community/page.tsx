@@ -5,13 +5,14 @@ import Link from "next/link";
 import { Users, ThumbsUp, PlusCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import PostCard from "@/components/community/PostCard";
+import type { Json } from "@/types/database.types";
 
 interface CommunityPost {
   id: string;
   user_id: string;
   title: string;
   content: string;
-  attached_tool_data: Record<string, unknown> | null;
+  attached_tool_data: Json | null;
   likes_count: number;
   created_at: string;
   author: {
@@ -38,14 +39,14 @@ export default function CommunityPage() {
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const [showNewPostForm, setShowNewPostForm] = useState(false);
-  const [attachedToolData, setAttachedToolData] = useState<Record<string, unknown> | null>(null);
+  const [attachedToolData, setAttachedToolData] = useState<Json | null>(null);
 
   useEffect(() => {
     loadCommunity(0);
     try {
       const draft = localStorage.getItem("community_tool_draft");
       if (draft) {
-        const parsed = JSON.parse(draft) as { title?: string; content?: string; toolData?: Record<string, unknown> };
+        const parsed = JSON.parse(draft) as { title?: string; content?: string; toolData?: Json };
         setNewPostTitle(parsed.title ?? "");
         setNewPostContent(parsed.content ?? "");
         setAttachedToolData(parsed.toolData ?? null);
