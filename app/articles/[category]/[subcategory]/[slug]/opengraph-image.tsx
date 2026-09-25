@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { articlesService } from "@/services/articles.service";
 
 export const runtime = "edge";
 export const alt = "مكاسب رقمية - منصة تمكين رقمي وتوجيه عملي";
@@ -10,7 +11,10 @@ export const contentType = "image/png";
 
 export default async function Image({ params }: { params: Promise<{ category: string; subcategory: string; slug: string }> }) {
   const resolvedParams = await params;
-  const title = decodeURIComponent(resolvedParams.slug).replace(/-/g, " ");
+  const article = await articlesService.getBySlug(resolvedParams.category, resolvedParams.subcategory, resolvedParams.slug);
+  const title = article?.title ?? decodeURIComponent(resolvedParams.slug).replace(/-/g, " ");
+  const description = article?.description ?? "منصة تمكين رقمي وتوجيه عملي";
+  const author = article?.author ?? "فريق تحرير مكاسب";
 
   return new ImageResponse(
     (
@@ -82,6 +86,9 @@ export default async function Image({ params }: { params: Promise<{ category: st
           >
             {title}
           </h1>
+          <p style={{ fontSize: "24px", color: "#cbd5e1", margin: 0, overflow: "hidden", textOverflow: "ellipsis" }}>
+            {description}
+          </p>
         </div>
 
         <div
@@ -97,7 +104,7 @@ export default async function Image({ params }: { params: Promise<{ category: st
           }}
         >
           <span>makasib.digital</span>
-          <span>منصة تمكين رقمي وتوجيه عملي</span>
+          <span>{author}</span>
         </div>
       </div>
     ),

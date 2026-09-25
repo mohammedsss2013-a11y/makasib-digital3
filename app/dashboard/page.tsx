@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { getDashboardData, getUserRoleDisplayName } from "@/utils/dashboard";
 import AppImage from "@/components/ui/AppImage";
+import { NotificationsPanel } from "@/components/dashboard/NotificationsPanel";
 
 const dashboardLinks = [
   {
@@ -142,23 +143,7 @@ export default async function DashboardPage() {
       </section>
 
       {/* 3. الإشعارات الهامة والتحديثات */}
-      <section className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5">
-        <div className="flex items-center gap-2 text-sm font-bold text-white mb-3">
-          <Bell className="h-4 w-4 text-emerald-400" />
-          <span>التنبيهات والأخبار الهامة للمستخدمين</span>
-        </div>
-        <div className="space-y-2">
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs text-emerald-200">
-            مرحباً بك في منصة مكاسب! حسابك مسجل بصلاحيات <strong>{roleTitle}</strong> آمنة. يمكنك تعديل معلوماتك الشخصية، إدارة كلمات المرور، حفظ نتائج الحاسبات، ومراسلة الدعم الفني في أي وقت.
-          </div>
-          {notifications.map((notification) => (
-            <Link key={notification.id} href={notification.href ?? "/dashboard"} className="block rounded-xl border border-slate-800 bg-slate-950 p-4 transition-colors hover:border-emerald-500/40">
-              <div className="flex items-center justify-between gap-3"><strong className="text-xs text-white">{notification.title}</strong><time className="text-[10px] text-slate-500" dateTime={notification.created_at}>{new Date(notification.created_at).toLocaleDateString("ar-EG")}</time></div>
-              <p className="mt-1 text-xs leading-6 text-slate-400">{notification.message}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {user && <NotificationsPanel initialNotifications={notifications} userId={user.id} />}
 
       {/* 4. شبكة الوصول السريع لأقسام اللوحة */}
       <section className="grid gap-4 sm:grid-cols-2">

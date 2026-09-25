@@ -8,11 +8,14 @@ interface MediaFile {
   url: string;
   size: number;
   updatedAt: string | null;
+  unused: boolean;
 }
 
 async function listMediaFiles() {
   const supabase = await createClient();
   const files: MediaFile[] = [];
+  const { data: posts } = await supabase.from("posts").select("image_url").not("image_url", "is", null);
+  const usedUrls = new Set((posts ?? []).map((post) => post.image_url).filter((url): url is string => Boolean(url)));
 
   async function walk(prefix = "") {
     const { data, error } = await supabase.storage.from("article-images").list(prefix, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
@@ -20,7 +23,8 @@ async function listMediaFiles() {
     for (const item of data ?? []) {
       const path = prefix ? `${prefix}/${item.name}` : item.name;
       if (item.id) {
-        files.push({ name: item.name, path, url: supabase.storage.from("article-images").getPublicUrl(path).data.publicUrl, size: item.metadata?.size ?? 0, updatedAt: item.updated_at ?? item.created_at ?? null });
+        const url = supabase.storage.from("article-images").getPublicUrl(path).data.publicUrl;
+        files.push({ name: item.name, path, url, size: item.metadata?.size ?? 0, updatedAt: item.updated_at ?? item.created_at ?? null, unused: !usedUrls.has(url) });
       } else {
         await walk(path);
       }
@@ -55,6 +59,7 @@ export default async function AdminMediaPage() {
             <div className="space-y-3 p-4">
               <p className="truncate text-xs font-bold text-white" title={file.path}>{file.path}</p>
               <p className="text-[10px] text-slate-500">{Math.ceil(file.size / 1024)} KB · {file.updatedAt ? new Date(file.updatedAt).toLocaleDateString("ar-EG") : ""}</p>
+              <p className={`text-[10px] font-bold ${file.unused ? "text-amber-300" : "text-emerald-300"}`}>{file.unused ? "غير مستخدمة في المقالات" : "مستخدمة في مقال"}</p>
               <form action={deleteArticleMediaAction.bind(null, file.path)}>
                 <button type="submit" className="inline-flex items-center gap-2 rounded-lg border border-rose-500/30 px-3 py-2 text-xs font-bold text-rose-300 hover:bg-rose-500/10"><Trash2 className="h-3.5 w-3.5" /> حذف الملف</button>
               </form>
