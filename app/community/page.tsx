@@ -11,6 +11,7 @@ interface CommunityPost {
   user_id: string;
   title: string;
   content: string;
+  attached_tool_data: Record<string, unknown> | null;
   likes_count: number;
   created_at: string;
   author: {
@@ -37,9 +38,23 @@ export default function CommunityPage() {
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [attachedToolData, setAttachedToolData] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     loadCommunity(0);
+    try {
+      const draft = localStorage.getItem("community_tool_draft");
+      if (draft) {
+        const parsed = JSON.parse(draft) as { title?: string; content?: string; toolData?: Record<string, unknown> };
+        setNewPostTitle(parsed.title ?? "");
+        setNewPostContent(parsed.content ?? "");
+        setAttachedToolData(parsed.toolData ?? null);
+        setShowNewPostForm(true);
+        localStorage.removeItem("community_tool_draft");
+      }
+    } catch {
+      localStorage.removeItem("community_tool_draft");
+    }
   }, []);
 
   async function loadCommunity(pageNumber: number) {
@@ -47,7 +62,7 @@ export default function CommunityPage() {
     const from = pageNumber * PAGE_SIZE;
     const [{ data: authData }, { data, error }] = await Promise.all([
         supabase.auth.getUser(),
-        supabase.from("community_posts").select("id, user_id, title, content, likes_count, created_at").order("created_at", { ascending: false }).range(from, from + PAGE_SIZE - 1),
+        supabase.from("community_posts").select("id, user_id, title, content, attached_tool_data, likes_count, created_at").order("created_at", { ascending: false }).range(from, from + PAGE_SIZE - 1),
     ]);
 
     setUserId(authData.user?.id ?? null);
@@ -89,8 +104,8 @@ export default function CommunityPage() {
 
     const { data, error } = await supabase
       .from("community_posts")
-      .insert({ user_id: userId, category: "general", title: newPostTitle.trim(), content: newPostContent.trim() })
-      .select("id, user_id, title, content, likes_count, created_at")
+      .insert({ user_id: userId, category: "tool-results", title: newPostTitle.trim(), content: newPostContent.trim(), attached_tool_data: attachedToolData })
+      .select("id, user_id, title, content, attached_tool_data, likes_count, created_at")
       .single();
 
     if (error || !data) {
@@ -109,6 +124,7 @@ export default function CommunityPage() {
     setNewPostTitle("");
     setNewPostContent("");
     setShowNewPostForm(false);
+    setAttachedToolData(null);
   };
 
   const handleLike = async (id: string) => {
@@ -209,7 +225,7 @@ export default function CommunityPage() {
       {/* Posts List */}
       <div className="space-y-4" aria-live="polite" aria-busy={isLoading}>
         {isLoading ? <p className="text-center text-slate-400 py-8">جارٍ تحميل المنشورات...</p> : posts.length === 0 ? <p className="text-center text-slate-400 py-8">لا توجد منشورات بعد.</p> : posts.map((post) => (
-          <PostCard key={post.id} post={post} liked={likedPostIds.has(post.id)} likeDisabled={!userId || likingPostId === post.id || likedPostIds.has(post.id)} onLike={handleLike} />
+          <PostCard key={post.id} post={post} userId={userId} liked={likedPostIds.has(post.id)} likeDisabled={!userId || likingPostId === post.id || likedPostIds.has(post.id)} onLike={handleLike} />
         ))}
       </div>
       {hasMore && !isLoading && (

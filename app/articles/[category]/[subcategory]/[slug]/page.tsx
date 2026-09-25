@@ -8,9 +8,12 @@ import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
 import ArticleToolEmbedder from "@/components/articles/ArticleToolEmbedder";
 import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractiveBoundary";
+import { ArticleTableOfContents } from "@/components/articles/ArticleTableOfContents";
+import { ReadingProgress } from "@/components/articles/ReadingProgress";
+import { ArticleSpeechControls } from "@/components/articles/ArticleSpeechControls";
 
-// The article query uses the SSR Supabase client, which reads request cookies.
-export const dynamic = "force-dynamic";
+// تمكين إعادة التحقق التزايدي الذكي (Incremental Static Regeneration) كل ساعة
+export const revalidate = 3600;
 
 // السماح بتوليد الصفحات غير المُنشأة مسبقاً عند أول طلب (On-Demand ISR)
 export const dynamicParams = true;
@@ -76,7 +79,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   if (!article) notFound();
 
   return (
-    <article className="mx-auto max-w-4xl py-6 dir-rtl" dir="rtl">
+    <>
+      <ReadingProgress />
+      <article className="mx-auto max-w-6xl py-6 dir-rtl" dir="rtl">
       <nav aria-label="مسار المقال" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-slate-500">
         <Link href="/" className="hover:text-emerald-300">الرئيسية</Link>
         <ArrowRight className="h-3.5 w-3.5 rotate-180" />
@@ -96,16 +101,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-emerald-400" />{article.readTime}</span>
           <time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</time>
         </div>
+        <ArticleSpeechControls text={article.content} />
         <div className="relative mt-6 aspect-[16/7] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
           <AppImage src={article.coverImage} alt={article.coverImageAlt} fallbackType="article" fill priority sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
         </div>
       </header>
 
-      <div className="prose prose-invert prose-emerald mt-10 max-w-none text-slate-300">
-        <ArticleInteractiveBoundary>
-          <ArticleToolEmbedder content={article.content} />
-        </ArticleInteractiveBoundary>
-      </div>
+        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
+          <div className="prose prose-invert prose-emerald max-w-none text-slate-300">
+            <ArticleInteractiveBoundary>
+              <ArticleToolEmbedder content={article.content} />
+            </ArticleInteractiveBoundary>
+          </div>
+          <ArticleTableOfContents content={article.content} />
+        </div>
 
       {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
         <div className="mt-12 border-t border-slate-800 pt-10">
@@ -120,6 +129,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <ArrowRight className="h-4 w-4" /> العودة إلى مقالات القسم
         </Link>
       </div>
-    </article>
+      </article>
+    </>
   );
 }

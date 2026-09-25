@@ -3,13 +3,8 @@
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 
-const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
-
-export default function AdminNavButton({ userEmail }: { userEmail?: string | null }) {
-  const normalizedEmail = userEmail?.trim().toLowerCase();
-  const isAllowedAdmin = normalizedEmail === ADMIN_EMAIL.toLowerCase();
-
-  if (!isAllowedAdmin) {
+export default function AdminNavButton({ isAdmin }: { isAdmin?: boolean }) {
+  if (!isAdmin) {
     return null;
   }
 

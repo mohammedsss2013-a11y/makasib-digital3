@@ -23,6 +23,43 @@ type ToolConfig = {
 };
 
 const defaultConfigs: Record<string, ToolConfig> = {
+  "vat-calculator": {
+    title: "حاسبة ضريبة القيمة المضافة",
+    description: "احسب قيمة الضريبة والسعر النهائي أو استخرج السعر قبل الضريبة.",
+    fields: [
+      { id: "amount", label: "المبلغ ($)", type: "number", defaultValue: "1000" },
+      { id: "rate", label: "نسبة الضريبة (%)", type: "number", defaultValue: "15" },
+      { id: "mode", label: "طريقة الإدخال", type: "select", options: ["قبل الضريبة", "شامل الضريبة"], defaultValue: "قبل الضريبة" },
+    ],
+  },
+  "payment-gateway-comparator": {
+    title: "مقارن بوابات الدفع",
+    description: "قارن صافي المبلغ بعد رسوم بوابات الدفع الشائعة.",
+    fields: [
+      { id: "amount", label: "قيمة العملية ($)", type: "number", defaultValue: "1000" },
+      { id: "gateway", label: "البوابة", type: "select", options: ["Stripe", "PayPal", "Moyasar", "Tap"], defaultValue: "Stripe" },
+    ],
+  },
+  "ai-token-cost-calculator": {
+    title: "حاسبة تكلفة نماذج الذكاء الاصطناعي",
+    description: "قدّر تكلفة الإدخال والإخراج بناءً على عدد tokens والأسعار التقريبية.",
+    fields: [
+      { id: "inputTokens", label: "Tokens الإدخال لكل شهر", type: "number", defaultValue: "1000000" },
+      { id: "outputTokens", label: "Tokens الإخراج لكل شهر", type: "number", defaultValue: "250000" },
+      { id: "inputRate", label: "سعر مليون input tokens ($)", type: "number", defaultValue: "5" },
+      { id: "outputRate", label: "سعر مليون output tokens ($)", type: "number", defaultValue: "15" },
+    ],
+  },
+  "content-plan-generator": {
+    title: "مولد خطة المحتوى الشهرية",
+    description: "أنشئ إيقاع نشر عملياً من هدفك وجمهورك والمنصة الأساسية.",
+    fields: [
+      { id: "topic", label: "الموضوع الرئيسي", type: "text", defaultValue: "العمل الحر", required: true },
+      { id: "audience", label: "الجمهور المستهدف", type: "text", defaultValue: "المستقلون الجدد", required: true },
+      { id: "platform", label: "المنصة الأساسية", type: "select", options: ["إنستغرام", "لينكدإن", "يوتيوب", "إكس"], defaultValue: "لينكدإن" },
+      { id: "posts", label: "عدد المنشورات أسبوعياً", type: "number", defaultValue: "3" },
+    ],
+  },
   "break-even-calculator": {
     title: "حاسبة هامش الربح ونقطة التعادل",
     description: "اعرف عدد المبيعات المطلوبة لتغطية تكاليف مشروعك.",
@@ -155,6 +192,30 @@ function numberValue(values: Record<string, string>, id: string) {
 function generateResult(slug: string, values: Record<string, string>, config: ToolConfig) {
   const numbers = Object.values(values).map(Number).filter(Number.isFinite);
   const average = numbers.length ? numbers.reduce((sum, value) => sum + value, 0) / numbers.length : 0;
+
+  if (slug === "vat-calculator") {
+    const amount = numberValue(values, "amount");
+    const rate = numberValue(values, "rate") / 100;
+    const net = values.mode === "شامل الضريبة" ? amount / (1 + rate) : amount;
+    const tax = values.mode === "شامل الضريبة" ? amount - net : amount * rate;
+    return `المبلغ قبل الضريبة: ${net.toFixed(2)} $\nالضريبة: ${tax.toFixed(2)} $\nالإجمالي: ${(net + tax).toFixed(2)} $`;
+  }
+  if (slug === "payment-gateway-comparator") {
+    const rates: Record<string, [number, number]> = { Stripe: [2.9, 0.3], PayPal: [3.49, 0.49], Moyasar: [2.7, 1], Tap: [2.5, 1] };
+    const [percent, fixed] = rates[values.gateway] ?? rates.Stripe;
+    const amount = numberValue(values, "amount");
+    const fee = amount * percent / 100 + fixed;
+    return `البوابة: ${values.gateway}\nالرسوم التقديرية: ${fee.toFixed(2)} $\nالصافي المستلم: ${Math.max(0, amount - fee).toFixed(2)} $`;
+  }
+  if (slug === "ai-token-cost-calculator") {
+    const inputCost = numberValue(values, "inputTokens") / 1_000_000 * numberValue(values, "inputRate");
+    const outputCost = numberValue(values, "outputTokens") / 1_000_000 * numberValue(values, "outputRate");
+    return `تكلفة الإدخال: ${inputCost.toFixed(2)} $\nتكلفة الإخراج: ${outputCost.toFixed(2)} $\nالإجمالي الشهري: ${(inputCost + outputCost).toFixed(2)} $`;
+  }
+  if (slug === "content-plan-generator") {
+    const posts = Math.max(1, Math.round(numberValue(values, "posts")));
+    return `خطة ${values.topic} لجمهور ${values.audience} على ${values.platform}\n\nالأسبوع 1: سؤال شائع + دليل عملي\nالأسبوع 2: دراسة حالة + خطأ شائع\nالأسبوع 3: قائمة أدوات + رأي تحليلي\nالأسبوع 4: ملخص النتائج + دعوة للنقاش\n\nالإيقاع المقترح: ${posts} منشورات أسبوعياً.`;
+  }
 
   if (slug === "break-even-calculator") {
     const margin = numberValue(values, "price") - numberValue(values, "variableCost");

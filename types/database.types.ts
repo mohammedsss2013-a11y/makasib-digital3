@@ -391,6 +391,44 @@ export interface Database {
           }
         ]
       }
+      community_post_comments: {
+        Row: {
+          id: string
+          post_id: string
+          user_id: string
+          parent_id: string | null
+          content: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          post_id: string
+          user_id: string
+          parent_id?: string | null
+          content: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          post_id?: string
+          user_id?: string
+          parent_id?: string | null
+          content?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       support_tickets: {
         Row: {
           id: string
@@ -431,6 +469,42 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          actor_id: string | null
+          type: string
+          title: string
+          message: string
+          href: string | null
+          read_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          actor_id?: string | null
+          type: string
+          title: string
+          message: string
+          href?: string | null
+          read_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          actor_id?: string | null
+          type?: string
+          title?: string
+          message?: string
+          href?: string | null
+          read_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

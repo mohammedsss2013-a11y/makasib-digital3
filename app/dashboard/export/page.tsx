@@ -17,6 +17,10 @@ export default async function ExportCenterPage() {
         <p className="text-slate-300 text-sm leading-relaxed">
           جميع العقود التي قمت بتوليدها وتقارير الأداء القابلة للتنزيل بصيغ PDF أو Excel مباشرة.
         </p>
+        <a href="/api/dashboard/export" className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-bold text-slate-950 transition-colors hover:bg-emerald-400">
+          <FileOutput className="h-4 w-4" aria-hidden="true" />
+          تنزيل نسخة بياناتي JSON
+        </a>
       </div>
 
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">

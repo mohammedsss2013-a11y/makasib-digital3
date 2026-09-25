@@ -11,6 +11,9 @@ interface SubcategoryPageProps {
   }>;
 }
 
+export const revalidate = 3600;
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const paths = await articlesService.getAllSlugPaths();
 

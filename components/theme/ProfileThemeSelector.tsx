@@ -1,27 +1,31 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor, Check, Palette, Loader2 } from "lucide-react";
 import { ACCENT_COLORS, AccentColor, ThemeMode } from "@/lib/themes/theme-config";
 import { createClient } from "@/lib/supabase/client";
 
+const emptySubscribe = () => () => {};
+
 export function ProfileThemeSelector() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [accent, setAccent] = useState<AccentColor>("emerald");
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const [accent, setAccent] = useState<AccentColor>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("makasib_accent_theme") as AccentColor) || "emerald";
+    }
+    return "emerald";
+  });
   const [isSaving, setIsSaving] = useState(false);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   // 1. استرجاع التفضيلات من Supabase ومزامنتها مع المحلية
   useEffect(() => {
-    setMounted(true);
-
-    // تطبيق اللون المحلي أولاً لمنع التأخير
-    const savedAccent = (localStorage.getItem("makasib_accent_theme") as AccentColor) || "emerald";
-    setAccent(savedAccent);
-    document.documentElement.setAttribute("data-accent", savedAccent);
-
     // جلب التفضيلات من حساب المستخدم إن كان مسجلاً
     async function fetchUserTheme() {
       const {
@@ -36,10 +40,10 @@ export function ProfileThemeSelector() {
         .maybeSingle();
 
       if (profile) {
-        if (profile.theme_mode && profile.theme_mode !== theme) {
+        if (profile.theme_mode) {
           setTheme(profile.theme_mode);
         }
-        if (profile.theme_accent && profile.theme_accent !== savedAccent) {
+        if (profile.theme_accent) {
           setAccent(profile.theme_accent as AccentColor);
           localStorage.setItem("makasib_accent_theme", profile.theme_accent);
           document.documentElement.setAttribute("data-accent", profile.theme_accent);
@@ -48,7 +52,7 @@ export function ProfileThemeSelector() {
     }
 
     fetchUserTheme();
-  }, []);
+  }, [setTheme, supabase]);
 
   // 2. دالة حفظ التغييرات في Supabase
   const syncPreferencesToSupabase = useCallback(

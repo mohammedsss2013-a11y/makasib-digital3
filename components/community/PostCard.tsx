@@ -2,11 +2,13 @@
 
 import { Clock, Heart, MessageSquare, Share2 } from "lucide-react";
 import AppImage from "@/components/ui/AppImage";
+import { CommentsSection } from "@/components/community/CommentsSection";
 
 export interface CommunityPostCardData {
   id: string;
   title: string;
   content: string;
+  attached_tool_data?: Record<string, unknown> | null;
   created_at: string;
   likes_count: number;
   author: {
@@ -21,9 +23,10 @@ type PostCardProps = {
   liked?: boolean;
   likeDisabled?: boolean;
   onLike?: (id: string) => void;
+  userId?: string | null;
 };
 
-export default function PostCard({ post, liked = false, likeDisabled = false, onLike }: PostCardProps) {
+export default function PostCard({ post, liked = false, likeDisabled = false, onLike, userId = null }: PostCardProps) {
   return (
     <article className="space-y-4 rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] p-5 transition-colors hover:border-emerald-500/50" dir="rtl">
       <header className="flex items-center justify-between gap-4">
@@ -42,6 +45,16 @@ export default function PostCard({ post, liked = false, likeDisabled = false, on
       <div className="space-y-2">
         <h3 className="text-base font-bold leading-7 text-[var(--text-main)]">{post.title}</h3>
         <p className="whitespace-pre-line text-sm leading-7 text-[var(--text-muted)]">{post.content}</p>
+        {post.attached_tool_data && (
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
+            <p className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400">نتيجة أداة مرفقة</p>
+            <div className="mt-2 grid gap-1 sm:grid-cols-2">
+              {Object.entries(post.attached_tool_data).filter(([key]) => key !== "toolSlug").slice(-4).map(([key, value]) => (
+                <div key={key} className="flex justify-between gap-2 text-[10px]"><span className="text-[var(--text-subtle)]">{key}</span><strong className="text-[var(--text-main)]">{String(value)}</strong></div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <footer className="flex items-center justify-between border-t border-[var(--border-main)] pt-3 text-xs text-[var(--text-muted)]">
@@ -51,6 +64,7 @@ export default function PostCard({ post, liked = false, likeDisabled = false, on
         </div>
         <button type="button" aria-label="مشاركة المنشور" className="min-h-11 min-w-11 rounded-lg p-2 transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"><Share2 className="mx-auto h-4 w-4" aria-hidden="true" /></button>
       </footer>
+      <CommentsSection postId={post.id} userId={userId} />
     </article>
   );
 }

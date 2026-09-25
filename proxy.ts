@@ -2,8 +2,6 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { env } from '@/lib/env';
 
-const ADMIN_EMAIL = 'mohammed.sss2013@gmail.com';
-
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -46,7 +44,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (user.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+  if (process.env.ADMIN_EMAIL && user.email?.trim().toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()) {
     return response;
   }
 

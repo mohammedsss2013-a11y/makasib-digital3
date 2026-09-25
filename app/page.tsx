@@ -17,14 +17,19 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import AppImage from "@/components/ui/AppImage";
+import { articlesService } from "@/services/articles.service";
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const { data: communityPosts } = await supabase
-    .from("community_posts")
-    .select("id, title, content, created_at")
-    .order("created_at", { ascending: false })
-    .range(0, 1);
+  const [{ data: communityPosts }, latestArticles] = await Promise.all([
+    supabase
+      .from("community_posts")
+      .select("id, title, content, created_at")
+      .order("created_at", { ascending: false })
+      .range(0, 1),
+    articlesService.getAllArticles(),
+  ]);
 
   const sectors = [
     {
@@ -217,6 +222,34 @@ export default async function HomePage() {
             );
           })}
         </div>
+      </section>
+
+      <section aria-labelledby="latest-articles-title" className="space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 id="latest-articles-title" className="border-r-4 border-[var(--accent-primary)] pr-3 text-xl font-bold text-[var(--text-main)]">أحدث المقالات</h2>
+            <p className="mt-2 text-xs text-[var(--text-muted)]">قراءات عملية جديدة تساعدك على اتخاذ الخطوة التالية.</p>
+          </div>
+          <Link href="/articles" className="text-xs font-bold text-[var(--accent-primary)] hover:opacity-80">كل المقالات <ArrowLeft className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /></Link>
+        </div>
+        {latestArticles.length ? (
+          <div className="grid gap-4 md:grid-cols-3">
+            {latestArticles.slice(0, 3).map((article) => (
+              <Link key={article.id} href={`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`} className="group overflow-hidden rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] transition-colors hover:border-[var(--accent-primary)]/50">
+                <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-muted)]">
+                  <AppImage src={article.coverImage} alt={article.coverImageAlt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div className="space-y-2 p-4">
+                  <p className="text-[10px] text-[var(--accent-primary)]">{article.categoryLabel} · {article.readTime}</p>
+                  <h3 className="line-clamp-2 text-sm font-bold leading-6 text-[var(--text-main)] group-hover:text-[var(--accent-primary)]">{article.title}</h3>
+                  <time dateTime={article.publishedAt} className="block text-[10px] text-[var(--text-muted)]">{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</time>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-xl border border-dashed border-[var(--border-main)] p-5 text-center text-xs text-[var(--text-muted)]">ستظهر أحدث المقالات هنا بعد نشرها.</p>
+        )}
       </section>
 
       {/* Sectors */}

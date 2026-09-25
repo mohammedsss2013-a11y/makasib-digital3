@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
 
 export interface Article {
@@ -29,7 +29,7 @@ const articleFields = "id, title, content, category, subcategory, image_url, slu
 export const articlesService = {
   async getAllSlugPaths(): Promise<ArticleSlugPath[]> {
     try {
-      const supabase = await createClient();
+      const supabase = createPublicClient();
       const { data: posts } = await supabase
         .from("posts")
         .select("id, slug, category, subcategory, status")
@@ -53,7 +53,7 @@ export const articlesService = {
 
   async getBySlug(category: string, subcategory: string, slug: string): Promise<Article | null> {
     try {
-      const supabase = await createClient();
+      const supabase = createPublicClient();
 
       const { data: postBySlug } = await supabase
         .from("posts")
@@ -101,7 +101,7 @@ export const articlesService = {
 
   async getAllArticles(): Promise<Article[]> {
     try {
-      const supabase = await createClient();
+      const supabase = createPublicClient();
       const { data: posts } = await supabase
         .from("posts")
         .select(articleFields)

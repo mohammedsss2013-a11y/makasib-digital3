@@ -54,14 +54,13 @@ const navLinks = [
   { name: "مجتمع مكاسب", href: "/community", icon: Users },
 ];
 
-const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
-
 export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -72,19 +71,28 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
     async function loadUserData(email: string | null, userId?: string) {
       setUserEmail(email);
       if (userId) {
-        const { data: profile } = await supabase
-          .from("public_profiles")
-          .select("full_name, avatar_url")
-          .eq("id", userId)
-          .maybeSingle();
+        const [{ data: profile }, { data: roleRow }] = await Promise.all([
+          supabase
+            .from("public_profiles")
+            .select("full_name, avatar_url")
+            .eq("id", userId)
+            .maybeSingle(),
+          supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", userId)
+            .maybeSingle(),
+        ]);
 
         if (profile) {
           setAvatarUrl(profile.avatar_url ?? null);
           setFullName(profile.full_name ?? null);
         }
+        setIsAdmin(roleRow?.role === "admin" || roleRow?.role === "super_admin");
       } else {
         setAvatarUrl(null);
         setFullName(null);
+        setIsAdmin(false);
       }
     }
 
@@ -110,14 +118,13 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-
-
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
     setUserEmail(null);
     setAvatarUrl(null);
     setFullName(null);
+    setIsAdmin(false);
     setUserDropdownOpen(false);
     router.refresh();
   }
@@ -126,7 +133,6 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
     href === "/" ? pathname === href : pathname.startsWith(href);
 
   const displayName = fullName || userEmail?.split("@")[0] || "المستخدم";
-  const isAdmin = userEmail?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[var(--border-main)] bg-[var(--bg-surface)]/95 text-[var(--text-main)] backdrop-blur-xl dir-rtl">
@@ -166,6 +172,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             {userEmail ? (
               <div className="relative" ref={dropdownRef}>
                 <div className="flex items-center gap-2">
+                  <AdminNavButton isAdmin={isAdmin} />
                   <Link
                     href="/dashboard"
                     className="hidden sm:flex items-center gap-2 rounded-xl bg-emerald-400 px-3 py-2 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/10 transition-colors hover:bg-emerald-300"

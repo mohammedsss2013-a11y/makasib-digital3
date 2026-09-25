@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState, useId } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm, useWatch, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { DollarSign, Calculator, Bookmark, Check, Copy, Expand, Minimize2, BookOpen, Sparkles } from "lucide-react";
+import { DollarSign, Calculator, Bookmark, Check, Copy, Expand, Minimize2, BookOpen, Sparkles, Share2, MessageSquare } from "lucide-react";
 import { recordToolUsage } from "@/config/toolsRegistry";
 import { ArticleDrawer } from "@/components/drawers/ArticleDrawer";
 import { saveToolResult } from "@/utils/savedTools";
@@ -29,6 +30,7 @@ export const FreelancePricingCalculator = () => {
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const { showToast } = useToast();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     recordToolUsage("freelance-pricing");
@@ -38,6 +40,7 @@ export const FreelancePricingCalculator = () => {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FreelancePricingInput, undefined, FreelancePricingFormData>({
     resolver: zodResolver(freelancePricingSchema),
@@ -50,6 +53,17 @@ export const FreelancePricingCalculator = () => {
       taxReserve: 15,
     },
   });
+
+  useEffect(() => {
+    const sharedValues = Object.fromEntries(
+      ["targetIncome", "fixedExpenses", "hoursPerWeek", "adminRatio", "taxReserve"]
+        .map((key) => [key, searchParams.get(key)])
+        .filter((entry): entry is [string, string] => entry[1] !== null),
+    );
+    if (Object.keys(sharedValues).length) {
+      reset(sharedValues as FreelancePricingInput);
+    }
+  }, [reset, searchParams]);
 
   const formValues = useWatch({ control });
   const targetIncome = Number(formValues.targetIncome) || 0;
@@ -112,6 +126,33 @@ export const FreelancePricingCalculator = () => {
     }
   };
 
+  const handleShare = async () => {
+    const url = new URL(window.location.href);
+    [
+      ["targetIncome", targetIncome],
+      ["fixedExpenses", fixedExpenses],
+      ["hoursPerWeek", hoursPerWeek],
+      ["adminRatio", adminRatio],
+      ["taxReserve", taxReserve],
+    ].forEach(([key, value]) => url.searchParams.set(String(key), String(value)));
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      showToast("تم نسخ رابط النتيجة", "success");
+    } catch {
+      showToast("تعذر نسخ رابط النتيجة", "error");
+    }
+  };
+
+  const handleShareToCommunity = () => {
+    localStorage.setItem("community_tool_draft", JSON.stringify({
+      title: "نتيجة حاسبة تسعير الخدمات",
+      content: `أحسب سعري الموصى به بـ ${hourlyRateRecommended} $ للساعة، والحد الأدنى بـ ${hourlyRateMinimum} $. ما رأيكم في الافتراضات؟`,
+      toolData: { toolSlug: "freelance-pricing", targetIncome, fixedExpenses, hoursPerWeek, adminRatio, taxReserve, hourlyRateRecommended, hourlyRateMinimum },
+    }));
+    window.location.assign("/community?compose=tool");
+  };
+
   return (
     <div className={cn(
       "bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 dir-rtl text-slate-100 shadow-xl",
@@ -141,6 +182,18 @@ export const FreelancePricingCalculator = () => {
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
             <span>{copied ? "تم النسخ" : "نسخ"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
+            title="نسخ رابط النتيجة"
+            aria-label="نسخ رابط النتيجة"
+          >
+            <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
+          </button>
+          <button type="button" onClick={handleShareToCommunity} className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors" title="مشاركة النتيجة في المجتمع" aria-label="مشاركة النتيجة في المجتمع">
+            <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
           <button
             onClick={handleSubmit(onSubmit)}

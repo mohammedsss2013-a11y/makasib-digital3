@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 
-const ADMIN_EMAIL = "mohammed.sss2013@gmail.com";
-
 export interface SavedTool {
   id: string;
   category: string;
@@ -27,6 +25,16 @@ export interface Profile {
   two_factor_enabled: boolean;
 }
 
+export interface DashboardNotification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  href: string | null;
+  read_at: string | null;
+  created_at: string;
+}
+
 export function getUserRoleDisplayName(role?: string | null): string {
   switch (role ?? "user") {
     case "super_admin":
@@ -46,14 +54,15 @@ export async function getDashboardData() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { user: null, profile: null, savedTools: [] as SavedTool[], communityCount: 0, ticketsCount: 0, userRole: 'user' };
+  if (!user) return { user: null, profile: null, savedTools: [] as SavedTool[], communityCount: 0, ticketsCount: 0, notifications: [] as DashboardNotification[], userRole: 'user' };
 
-  const [{ data: profile }, { data: savedTools }, { count: communityCount }, { count: ticketsCount }, { data: roleRow }] = await Promise.all([
+  const [{ data: profile }, { data: savedTools }, { count: communityCount }, { count: ticketsCount }, { data: roleRow }, { data: notifications }] = await Promise.all([
     supabase.from("profiles").select("id, full_name, username, avatar_url, specialty, bio, notification_settings, two_factor_enabled").eq("id", user.id).maybeSingle(),
     supabase.from("saved_tools").select("id, category, tool_slug, tool_title, inputs, outputs, created_at").eq("user_id", user.id).order("created_at", { ascending: false }),
     supabase.from("community_posts").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("support_tickets").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("user_roles").select("role").eq("user_id", user.id).maybeSingle(),
+    supabase.from("notifications").select("id, type, title, message, href, read_at, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
   ]);
 
   return {
@@ -62,9 +71,11 @@ export async function getDashboardData() {
     savedTools: (savedTools ?? []) as SavedTool[],
     communityCount: communityCount ?? 0,
     ticketsCount: ticketsCount ?? 0,
+    notifications: (notifications ?? []) as DashboardNotification[],
     userRole:
-      user.email?.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()
+      roleRow?.role ||
+      (process.env.ADMIN_EMAIL && user.email?.trim().toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase()
         ? "super_admin"
-        : roleRow?.role || "member",
+        : "member"),
   };
 }

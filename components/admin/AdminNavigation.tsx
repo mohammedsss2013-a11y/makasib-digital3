@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import {
   CreditCard,
   FileText,
+  Image,
+  BarChart3,
   Headphones,
   LayoutDashboard,
   Settings,
@@ -21,7 +23,9 @@ const navigationItems = [
   { name: "6. المعاملات المالية", href: "/admin/finance", icon: CreditCard },
   { name: "7. الدعم الفني", href: "/admin/support", icon: Headphones },
   { name: "8. المراقبة والسجلات", href: "/admin/logs", icon: ShieldCheck },
-  { name: "9. إعدادات النظام", href: "/admin/settings", icon: Settings },
+  { name: "9. التحليلات", href: "/admin/analytics", icon: BarChart3 },
+  { name: "10. مكتبة الوسائط", href: "/admin/media", icon: Image },
+  { name: "11. إعدادات النظام", href: "/admin/settings", icon: Settings },
 ];
 
 export default function AdminNavigation() {
