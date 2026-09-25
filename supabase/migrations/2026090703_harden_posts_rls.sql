@@ -22,6 +22,7 @@ GRANT EXECUTE ON FUNCTION public.is_admin_user() TO authenticated;
 DROP POLICY IF EXISTS "Published posts are viewable by everyone" ON public.posts;
 DROP POLICY IF EXISTS "Allow public read access" ON public.posts;
 DROP POLICY IF EXISTS "Allow public read published posts" ON public.posts;
+DROP POLICY IF EXISTS "Public can read published posts" ON public.posts;
 DROP POLICY IF EXISTS "Admins can manage posts" ON public.posts;
 DROP POLICY IF EXISTS "Allow admins full access to posts" ON public.posts;
 DROP POLICY IF EXISTS "Admins can read posts" ON public.posts;
