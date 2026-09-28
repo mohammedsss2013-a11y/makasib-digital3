@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { createPostSchema, parsePostFormData, updatePostSchema } from "@/lib/validations/post.schema";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { getUserRoleDisplayName } from "@/utils/dashboard";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
+import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -66,5 +68,22 @@ describe("Dashboard role labels", () => {
     expect(getUserRoleDisplayName("user")).toBe("عضو (Member)");
     expect(getUserRoleDisplayName("member")).toBe("عضو (Member)");
     expect(getUserRoleDisplayName(null)).toBe("عضو (Member)");
+  });
+});
+
+describe("Article taxonomy", () => {
+  it("keeps the approved 4x3x3 taxonomy shape", () => {
+    expect(ARTICLE_SECTORS).toHaveLength(4);
+    for (const sector of ARTICLE_SECTORS) {
+      expect(sector.branches).toHaveLength(3);
+      for (const branch of sector.branches) expect(branch.topics).toHaveLength(3);
+    }
+  });
+
+  it("maps legacy branches into the approved taxonomy without dropping content", () => {
+    expect(toCategorySlug("التكنولوجيا والابتكار")).toBe("tech");
+    expect(toSubcategorySlug("finance", "التجارة الإلكترونية")).toBe("freelance-economy");
+    expect(toSubcategorySlug("media", "البودكاست")).toBe("content-creation");
+    expect(toSubcategorySlug("digital-lifestyle", "إدارة الحياة الرقمية")).toBe("remote-work");
   });
 });

@@ -1,16 +1,17 @@
 "use client";
 
 import React from "react";
-import { Bot, LockKeyhole, CloudCog, Gauge, BrainCircuit } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
-const techSubcategories = [
-  { key: "تطبيقات الذكاء الاصطناعي", title: "الذكاء الاصطناعي", href: "/tech?sub=ai-apps", icon: Bot },
-  { key: "الأمن السيبراني", title: "الأمن السيبراني", href: "/tech?sub=cybersecurity", icon: LockKeyhole },
-  { key: "الحوسبة السحابية", title: "السحابة والعمل عن بُعد", href: "/tech?sub=cloud-remote", icon: CloudCog },
-  { key: "البنية التحتية", title: "البنية التقنية", href: "/tech?sub=infra", icon: Gauge },
-  { key: "الإنترنت والتقنيات الناشئة", title: "التقنيات الناشئة", href: "/tech?sub=iot-emerging", icon: BrainCircuit },
-];
+const tech = ARTICLE_SECTORS.find((sector) => sector.id === "technology")!;
+const techSubcategories = tech.branches.map((branch) => ({
+  key: branch.slug,
+  title: branch.title,
+  icon: branch.icon,
+  href: `/articles/tech/${branch.slug}`,
+  topics: branch.topics.map((topic) => ({ title: topic.title, href: `/articles/tech/${branch.slug}?topic=${topic.slug}` })),
+}));
 
 export default function TechLayout({ children }: { children: React.ReactNode }) {
   return (

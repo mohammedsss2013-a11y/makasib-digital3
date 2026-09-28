@@ -4,7 +4,7 @@ import type { CreatePostInput, UpdatePostInput } from "@/lib/validations/post.sc
 import { sanitizeHtml } from "@/lib/sanitize";
 import { cache } from "react";
 
-const postFields = "id, title, content, category, subcategory, image_url, slug, description, image_alt, article_type, tool_slug, status, published_at, updated_at, created_at";
+const postFields = "id, title, content, category, subcategory, topic, image_url, slug, description, image_alt, article_type, tool_slug, status, published_at, updated_at, created_at";
 
 export const getPostsService = cache(async function getPostsService({
   page = 1,

@@ -1,5 +1,5 @@
 import { createPublicClient } from "@/lib/supabase/public";
-import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
+import { toCategorySlug, toSubcategorySlug, toTopicSlug } from "@/lib/articlePaths";
 
 export interface Article {
   id: string;
@@ -8,8 +8,10 @@ export interface Article {
   description: string;
   categorySlug: string;
   subcategorySlug: string;
+  topicSlug: string;
   categoryLabel: string;
   subcategoryLabel: string;
+  topicLabel: string;
   author: string;
   publishedAt: string;
   readTime: string;
@@ -24,7 +26,16 @@ export interface ArticleSlugPath {
   slug: string;
 }
 
-const articleFields = "id, title, content, category, subcategory, image_url, slug, description, image_alt, created_at";
+const articleFields = "id, title, content, category, subcategory, topic, image_url, slug, description, image_alt, created_at";
+
+function getCategoryLabel(category: string | null, fallback: string) {
+  const normalized = toCategorySlug(category);
+  if (normalized === "finance") return "المال والأعمال";
+  if (normalized === "tech") return "التكنولوجيا والابتكار";
+  if (normalized === "media") return "الإعلام الجديد";
+  if (normalized === "digital-lifestyle") return "رقميون - أسلوب الحياة الرقمي";
+  return category || fallback;
+}
 
 export const articlesService = {
   async getAllSlugPaths(): Promise<ArticleSlugPath[]> {
@@ -60,7 +71,6 @@ export const articlesService = {
         .select(articleFields)
         .eq("slug", slug)
         .eq("category", category)
-        .eq("subcategory", subcategory)
         .eq("status", "published")
         .maybeSingle();
 
@@ -74,6 +84,7 @@ export const articlesService = {
       if (!post) {
         return null;
       }
+      if (toSubcategorySlug(post.category, post.subcategory) !== subcategory) return null;
 
       const content = typeof post.content === "string" ? post.content : "";
       const description = post.description || `${content.slice(0, 150).replace(/<[^>]*>/g, "").trim()}...`;
@@ -85,8 +96,10 @@ export const articlesService = {
         description,
         categorySlug: toCategorySlug(post.category) || category,
         subcategorySlug: toSubcategorySlug(post.category, post.subcategory) || subcategory,
-        categoryLabel: post.category || category,
+        categoryLabel: getCategoryLabel(post.category, category),
         subcategoryLabel: post.subcategory || subcategory,
+        topicSlug: toTopicSlug(post.topic),
+        topicLabel: post.topic || "",
         author: "فريق تحرير مكاسب",
         publishedAt: post.created_at || new Date().toISOString(),
         readTime: "5 دقائق",
@@ -122,8 +135,10 @@ export const articlesService = {
           description: post.description || `${content.slice(0, 150).replace(/<[^>]*>/g, "").trim()}...`,
           categorySlug: toCategorySlug(post.category),
           subcategorySlug: toSubcategorySlug(post.category, post.subcategory),
-          categoryLabel: post.category || "عام",
+          categoryLabel: getCategoryLabel(post.category, "عام"),
           subcategoryLabel: post.subcategory || "عام",
+          topicSlug: toTopicSlug(post.topic),
+          topicLabel: post.topic || "",
           author: "فريق تحرير مكاسب",
           publishedAt: post.created_at || new Date().toISOString(),
           readTime: "5 دقائق",

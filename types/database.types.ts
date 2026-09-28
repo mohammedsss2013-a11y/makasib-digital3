@@ -22,6 +22,9 @@ export interface Database {
           content: string
           category: string | null
           subcategory: string | null
+          topic: string | null
+          legacy_category: string | null
+          legacy_subcategory: string | null
           image_url: string | null
           slug: string | null
           description: string | null
@@ -39,6 +42,9 @@ export interface Database {
           content: string
           category?: string | null
           subcategory?: string | null
+          topic?: string | null
+          legacy_category?: string | null
+          legacy_subcategory?: string | null
           image_url?: string | null
           slug?: string | null
           description?: string | null
@@ -56,6 +62,9 @@ export interface Database {
           content?: string
           category?: string | null
           subcategory?: string | null
+          topic?: string | null
+          legacy_category?: string | null
+          legacy_subcategory?: string | null
           image_url?: string | null
           slug?: string | null
           description?: string | null

@@ -2,7 +2,7 @@ import Link from "next/link";
 import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
 import { ArrowRight, BookOpen, Clock3, UserRound } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { articlesService } from "@/services/articles.service";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
@@ -77,6 +77,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   if (!article) notFound();
+  if (article.categorySlug !== category || article.subcategorySlug !== subcategory) {
+    redirect(`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`);
+  }
 
   return (
     <>

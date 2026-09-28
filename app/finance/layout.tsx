@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import { BriefcaseBusiness, ShoppingCart, Megaphone, BadgePercent, Bitcoin, Building2 } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
-const financeSubcategories = [
-  { key: "العمل الحر والخدمات", title: "العمل الحر", href: "/finance?sub=freelancing", icon: BriefcaseBusiness },
-  { key: "التجارة الإلكترونية", title: "التجارة الإلكترونية", href: "/finance?sub=ecommerce", icon: ShoppingCart },
-  { key: "التسويق الرقمي", title: "التسويق الرقمي", href: "/finance?sub=marketing", icon: Megaphone },
-  { key: "اقتصاد صناعة المحتوى", title: "صناعة المحتوى", href: "/finance?sub=content-economy", icon: BadgePercent },
-  { key: "العملات الرقمية والبلوكشين", title: "العملات الرقمية", href: "/finance?sub=crypto", icon: Bitcoin },
-  { key: "العتاد والإنتاجية المالية", title: "العتاد والإنتاجية", href: "/finance?sub=hardware", icon: Building2 },
-];
+const finance = ARTICLE_SECTORS.find((sector) => sector.id === "finance")!;
+const financeSubcategories = finance.branches.map((branch) => ({
+  key: branch.slug,
+  title: branch.title,
+  icon: branch.icon,
+  href: `/articles/finance/${branch.slug}`,
+  topics: branch.topics.map((topic) => ({ title: topic.title, href: `/articles/finance/${branch.slug}?topic=${topic.slug}` })),
+}));
 
 export default function FinanceLayout({ children }: { children: React.ReactNode }) {
   return (

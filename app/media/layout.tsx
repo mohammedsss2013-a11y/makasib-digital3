@@ -1,16 +1,17 @@
 "use client";
 
 import React from "react";
-import { Camera, Newspaper, Mic, Radio, Clapperboard } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
-const mediaSubcategories = [
-  { key: "صناعة المحتوى المرئي والمكتوب", title: "صناعة المحتوى", href: "/media?sub=creation", icon: Camera },
-  { key: "الأخبار والتحليلات", title: "الأخبار والتحليلات", href: "/media?sub=news", icon: Newspaper },
-  { key: "البودكاست", title: "البودكاست", href: "/media?sub=podcasting", icon: Mic },
-  { key: "البث المباشر", title: "البث المباشر", href: "/media?sub=streaming", icon: Radio },
-  { key: "صناعة الألعاب والترفيه", title: "صناعة الألعاب", href: "/media?sub=gaming", icon: Clapperboard },
-];
+const media = ARTICLE_SECTORS.find((sector) => sector.id === "media")!;
+const mediaSubcategories = media.branches.map((branch) => ({
+  key: branch.slug,
+  title: branch.title,
+  icon: branch.icon,
+  href: `/articles/media/${branch.slug}`,
+  topics: branch.topics.map((topic) => ({ title: topic.title, href: `/articles/media/${branch.slug}?topic=${topic.slug}` })),
+}));
 
 export default function MediaLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   Sparkles
 } from "lucide-react";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
 export default function SitemapPage() {
   const fullSitemap = [
@@ -154,7 +155,30 @@ export default function SitemapPage() {
 
       {/* استعراض الأقسام الهيكلية */}
       <div className="space-y-10">
-        {fullSitemap.map((sec, idx) => {
+        <section className="space-y-6 rounded-3xl border border-emerald-500/20 bg-slate-900/60 p-6 sm:p-8">
+          <div>
+            <h2 className="text-xl font-black text-white">شجرة المقالات والتصنيفات</h2>
+            <p className="mt-2 text-sm text-slate-400">أربعة أقسام رئيسية، ثلاثة فروع لكل قسم، وثلاثة موضوعات داخل كل فرع.</p>
+          </div>
+          <div className="grid gap-5 xl:grid-cols-2">
+            {ARTICLE_SECTORS.map((sector) => (
+              <section key={sector.id} className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
+                <h3 className="mb-4 text-base font-black text-emerald-300">{sector.title}</h3>
+                <div className="space-y-4">
+                  {sector.branches.map((branch) => (
+                    <div key={branch.slug} className="border-r-2 border-emerald-500/40 pr-3">
+                      <Link href={`/articles/${sector.id === "technology" ? "tech" : sector.id === "digitalists" ? "digital-lifestyle" : sector.id}/${branch.slug}`} className="text-sm font-bold text-white hover:text-emerald-300">{branch.title}</Link>
+                      <ul className="mt-2 grid gap-1 sm:grid-cols-3">
+                        {branch.topics.map((topic) => <li key={topic.slug}><Link href={`/articles/${sector.id === "technology" ? "tech" : sector.id === "digitalists" ? "digital-lifestyle" : sector.id}/${branch.slug}?topic=${topic.slug}`} className="text-xs leading-6 text-slate-400 hover:text-emerald-300">{topic.title}</Link></li>)}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </section>
+        {fullSitemap.filter((sec) => !["2.1", "2.2", "2.3", "2.4"].includes(sec.sectionNumber)).map((sec, idx) => {
           const SecIcon = sec.icon;
           return (
             <div key={idx} className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">

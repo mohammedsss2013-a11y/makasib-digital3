@@ -7,7 +7,7 @@ export default async function AdminContentManagerPage() {
   const [{ data: posts }, { data: tools }] = await Promise.all([
     supabase
       .from("posts")
-      .select("id, title, category, status, created_at")
+      .select("id, title, category, subcategory, topic, status, created_at")
       .order("created_at", { ascending: false })
       .limit(12),
     supabase

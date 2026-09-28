@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, PlusCircle, Save, Wrench } from "lucide-react";
 import { createToolAction } from "@/actions/admin-tools.actions";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
 type Post = {
   id: number;
   title: string;
   category: string | null;
+  subcategory: string | null;
+  topic: string | null;
   status: string;
   created_at: string;
 };
@@ -112,7 +115,7 @@ function ArticlesPanel({ posts, createPostAction, deletePostAction, updatePostAc
           <h2 className="text-lg font-bold text-white">مقال جديد</h2>
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm text-slate-300 md:col-span-2"><span>العنوان</span><input name="title" required className={fieldClassName} placeholder="عنوان المقال" /></label>
-            <label className="space-y-2 text-sm text-slate-300"><span>الفئة</span><input name="category" defaultValue="finance" className={fieldClassName} /></label>
+            <TaxonomyFields />
             <label className="space-y-2 text-sm text-slate-300"><span>الحالة</span><select name="status" defaultValue="draft" className={fieldClassName}><option value="draft">مسودة</option><option value="published">منشور</option><option value="archived">مؤرشف</option></select></label>
             <label className="space-y-2 text-sm text-slate-300 md:col-span-2"><span>Slug</span><input name="slug" className={fieldClassName} placeholder="example-article" /></label>
             <label className="space-y-2 text-sm text-slate-300 md:col-span-2"><span>وصف مختصر</span><textarea name="description" rows={2} className={fieldClassName} placeholder="وصف موجز للمقال" /></label>
@@ -141,12 +144,38 @@ function ArticlesPanel({ posts, createPostAction, deletePostAction, updatePostAc
             <form key={post.id} action={updatePostAction} className="grid gap-3 rounded-xl border border-slate-800 bg-slate-950/60 p-3 md:grid-cols-[1.2fr_0.8fr_0.8fr_auto]">
               <input type="hidden" name="postId" value={String(post.id)} /><input name="title" defaultValue={post.title} className={fieldClassName} />
               <select name="status" defaultValue={post.status} className={fieldClassName}><option value="draft">مسودة</option><option value="published">منشور</option><option value="archived">مؤرشف</option></select>
-              <input name="category" defaultValue={post.category ?? "finance"} className={fieldClassName} /><button type="submit" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-black text-emerald-300">تحديث</button>
+              <TaxonomyFields defaultCategory={post.category ?? "finance"} defaultBranch={post.subcategory ?? undefined} defaultTopic={post.topic ?? undefined} />
+              <button type="submit" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-black text-emerald-300">تحديث</button>
             </form>
           ))}
         </div>
       </section>
     </div>
+  );
+}
+
+function TaxonomyFields({ defaultCategory = "finance", defaultBranch, defaultTopic }: { defaultCategory?: string; defaultBranch?: string; defaultTopic?: string }) {
+  const initialSectorId = defaultCategory === "tech" ? "technology" : defaultCategory === "digital-lifestyle" ? "digitalists" : defaultCategory;
+  const [sectorId, setSectorId] = useState(initialSectorId);
+  const sector = ARTICLE_SECTORS.find((item) => item.id === sectorId) ?? ARTICLE_SECTORS[0];
+  const [branchTitle, setBranchTitle] = useState(defaultBranch ?? sector.branches[0].title);
+  const branch = sector.branches.find((item) => item.title === branchTitle) ?? sector.branches[0];
+  const [topicTitle, setTopicTitle] = useState(defaultTopic ?? branch.topics[0].title);
+
+  useEffect(() => {
+    const nextBranch = sector.branches.find((item) => item.title === defaultBranch) ?? sector.branches[0];
+    setBranchTitle(nextBranch.title);
+    setTopicTitle(nextBranch.topics.find((topic) => topic.title === defaultTopic)?.title ?? nextBranch.topics[0].title);
+  }, [sectorId, defaultBranch, defaultTopic, sector]);
+
+  const categoryValue = sector.id === "technology" ? "tech" : sector.id === "digitalists" ? "digital-lifestyle" : sector.id;
+
+  return (
+    <>
+      <label className="space-y-2 text-sm text-slate-300"><span>القسم الرئيسي</span><select name="category" value={categoryValue} onChange={(event) => setSectorId(event.target.value === "tech" ? "technology" : event.target.value === "digital-lifestyle" ? "digitalists" : event.target.value)} className={fieldClassName}>{ARTICLE_SECTORS.map((item) => <option key={item.id} value={item.id === "technology" ? "tech" : item.id === "digitalists" ? "digital-lifestyle" : item.id}>{item.title}</option>)}</select></label>
+      <label className="space-y-2 text-sm text-slate-300"><span>الفرع الرئيسي</span><select name="subcategory" value={branch.title} onChange={(event) => { setBranchTitle(event.target.value); const selected = sector.branches.find((item) => item.title === event.target.value); setTopicTitle(selected?.topics[0].title ?? ""); }} className={fieldClassName}>{sector.branches.map((item) => <option key={item.slug} value={item.title}>{item.title}</option>)}</select></label>
+      <label className="space-y-2 text-sm text-slate-300"><span>الفرع المستقل</span><select name="topic" value={branch.topics.some((item) => item.title === topicTitle) ? topicTitle : branch.topics[0].title} onChange={(event) => setTopicTitle(event.target.value)} className={fieldClassName}>{branch.topics.map((item) => <option key={item.slug} value={item.title}>{item.title}</option>)}</select></label>
+    </>
   );
 }
 

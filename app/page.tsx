@@ -34,31 +34,31 @@ export default async function HomePage() {
   const sectors = [
     {
       title: "المال والأعمال",
-      description: "حاسبات التسعير، التجارة الإلكترونية، والتسويق الرقمي وعائد الإعلانات.",
+      description: "الاستثمار، الاقتصاد الحر، وريادة الأعمال.",
       icon: TrendingUp,
       href: "/finance",
-      badge: "6 أقسام",
+      badge: "3 فروع",
     },
     {
       title: "التكنولوجيا والابتكار",
-      description: "أدوات فحص كلمات المرور وتكاليف الـ API والـ Tokens وسير السحابة.",
+      description: "الذكاء الاصطناعي، الأمن السيبراني، والتقنيات الناشئة.",
       icon: Cpu,
       href: "/tech",
-      badge: "5 أقسام",
+      badge: "3 فروع",
     },
     {
       title: "الإعلام الجديد",
-      description: "صناعة المحتوى، البودكاست المرئي، ومنصات البث الحي والتفاعل.",
+      description: "صناعة المحتوى، منصات التواصل الاجتماعي، والألعاب.",
       icon: Tv,
       href: "/media",
-      badge: "5 أقسام",
+      badge: "3 فروع",
     },
     {
       title: "رقميون - أسلوب الحياة",
-      description: "إدارة الحياة الرقمية، الصحة النفسية والوقاية من الاحتراق الرقمي.",
+      description: "العمل عن بعد، الواقع الافتراضي، والصحة الرقمية.",
       icon: Brain,
       href: "/digital-lifestyle",
-      badge: "5 أقسام",
+      badge: "3 فروع",
     },
   ];
 

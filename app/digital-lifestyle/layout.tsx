@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import { Target, HeartPulse, BookOpen, Sparkles } from "lucide-react";
 import { CategorySubnav } from "@/components/layout/CategorySubnav";
+import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 
-const digitalLifestyleSubcategories = [
-  { key: "إدارة الحياة الرقمية", title: "إدارة الحياة الرقمية", href: "/digital-lifestyle?sub=life-management", icon: Target },
-  { key: "الصحة الرقمية", title: "الصحة الرقمية", href: "/digital-lifestyle?sub=health", icon: HeartPulse },
-  { key: "التعليم والتعلم الرقمي", title: "التعليم والتعلم", href: "/digital-lifestyle?sub=learning", icon: BookOpen },
-  { key: "الثقافة الرقمية", title: "الثقافة الرقمية", href: "/digital-lifestyle?sub=culture", icon: Sparkles },
-];
+const digitalLifestyle = ARTICLE_SECTORS.find((sector) => sector.id === "digitalists")!;
+const digitalLifestyleSubcategories = digitalLifestyle.branches.map((branch) => ({
+  key: branch.slug,
+  title: branch.title,
+  icon: branch.icon,
+  href: `/articles/digital-lifestyle/${branch.slug}`,
+  topics: branch.topics.map((topic) => ({ title: topic.title, href: `/articles/digital-lifestyle/${branch.slug}?topic=${topic.slug}` })),
+}));
 
 export default function DigitalLifestyleLayout({ children }: { children: React.ReactNode }) {
   return (

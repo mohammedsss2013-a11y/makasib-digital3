@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS public.posts (
   content TEXT NOT NULL,
   category TEXT,
   subcategory TEXT,
+  topic TEXT,
+  legacy_category TEXT,
+  legacy_subcategory TEXT,
   image_url TEXT,
   slug TEXT,
   description TEXT,
@@ -19,6 +22,9 @@ CREATE TABLE IF NOT EXISTS public.posts (
 
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS category TEXT;
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS subcategory TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS topic TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS legacy_category TEXT;
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS legacy_subcategory TEXT;
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS image_url TEXT;
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS slug TEXT;
 ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS description TEXT;

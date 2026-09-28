@@ -3,12 +3,15 @@ import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { articlesService } from "@/services/articles.service";
+import { redirect } from "next/navigation";
+import { toSubcategorySlug } from "@/lib/articlePaths";
 
 interface SubcategoryPageProps {
   params: Promise<{
     category: string;
     subcategory: string;
   }>;
+  searchParams: Promise<{ topic?: string }>;
 }
 
 export const revalidate = 3600;
@@ -24,8 +27,13 @@ export async function generateStaticParams() {
   );
 }
 
-export async function generateMetadata({ params }: SubcategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: SubcategoryPageProps): Promise<Metadata> {
   const { category, subcategory } = await params;
+  const { topic } = await searchParams;
+  const canonicalSubcategory = toSubcategorySlug(category, subcategory);
+  if (canonicalSubcategory !== subcategory) {
+    redirect(`/articles/${category}/${canonicalSubcategory}${topic ? `?topic=${topic}` : ""}`);
+  }
   const article = (await articlesService.getAllArticles()).find(
     (item) => item.categorySlug === category && item.subcategorySlug === subcategory,
   );
@@ -33,7 +41,7 @@ export async function generateMetadata({ params }: SubcategoryPageProps): Promis
   return {
     title: `${article?.subcategoryLabel ?? subcategory} | مكاسب رقمية`,
     description: "أدلة ومقالات عملية تساعدك على اتخاذ خطوة رقمية أوضح.",
-    alternates: { canonical: `/articles/${category}/${subcategory}` },
+    alternates: { canonical: `/articles/${category}/${subcategory}${topic ? `?topic=${topic}` : ""}` },
   };
 }
 
@@ -76,31 +84,14 @@ const subcategoryAliases: Record<string, Record<string, string[]>> = {
   },
 };
 
-export default async function SubcategoryPage({ params }: SubcategoryPageProps) {
+export default async function SubcategoryPage({ params, searchParams }: SubcategoryPageProps) {
   const { category, subcategory } = await params;
+  const { topic } = await searchParams;
   const allArticles = await articlesService.getAllArticles();
-  const relatedTerms = subcategoryAliases[category]?.[subcategory] ?? [subcategory];
-
   const articles = allArticles.filter((item) => {
-    if (item.categorySlug !== category) return false;
-
-    const directMatch = item.subcategorySlug === subcategory;
-    if (directMatch) return true;
-
-    const haystack = [
-      item.title,
-      item.description,
-      item.content,
-      item.subcategoryLabel,
-      item.categoryLabel,
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    return relatedTerms.some((term) => {
-      const normalizedTerm = normalizeText(term);
-      return normalizedTerm && haystack.includes(normalizedTerm);
-    });
+    return item.categorySlug === category
+      && item.subcategorySlug === subcategory
+      && (!topic || item.topicSlug === topic);
   });
   const section = articles[0];
 
@@ -108,7 +99,7 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
     <div className="mx-auto max-w-6xl space-y-8 py-6 dir-rtl">
       <header className="border-b border-slate-800/80 pb-8">
         <h1 className="text-3xl font-black text-white sm:text-4xl">
-          {section?.subcategoryLabel ?? `قسم: ${subcategory}`}
+          {topic ? (articles[0]?.topicLabel ?? `موضوع: ${topic}`) : (section?.subcategoryLabel ?? `قسم: ${subcategory}`)}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">
           المقالات المرتبطة بهذا الفرع، بما في ذلك المقالات التي تذكره أو تتناول موضوعاته بشكل مباشر.
@@ -134,6 +125,7 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
                 <div className="mb-4 flex flex-wrap gap-2 text-xs">
                   <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">{article.categoryLabel}</span>
                   <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{article.subcategoryLabel}</span>
+                  {article.topicLabel && <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{article.topicLabel}</span>}
                 </div>
                 <h2 className="text-xl font-bold leading-8 text-white transition-colors group-hover:text-emerald-300">{article.title}</h2>
                 <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{article.description}</p>
