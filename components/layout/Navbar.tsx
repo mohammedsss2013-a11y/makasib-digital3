@@ -50,8 +50,8 @@ const navLinks = [
     href: sector.href,
     icon: sectorIcons[sector.id],
   })),
-  { name: "أدوات رقمية", href: "/tools", icon: Sparkles },
-  { name: "مجتمع مكاسب", href: "/community", icon: Users },
+  { name: "أدوات", href: "/tools", icon: Sparkles },
+  { name: "المجتمع", href: "/community", icon: Users },
 ];
 
 export const Navbar = ({ onOpenSearch }: NavbarProps) => {
@@ -107,7 +107,6 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
     return () => authListener.subscription.unsubscribe();
   }, []);
 
-  // إغلاق المستطيل المنبثق عند النقر خارجه
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -137,126 +136,126 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[var(--border-main)] bg-[var(--bg-surface)]/95 text-[var(--text-main)] backdrop-blur-xl dir-rtl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3">
-          <BrandLogo />
+        <div className="flex h-16 items-center justify-between gap-4">
+          {/* Logo */}
+          <BrandLogo compact />
 
-          <button
-            type="button"
-            onClick={onOpenSearch}
-            className="group relative hidden w-full max-w-md items-center md:flex"
-            title="البحث السريع (Cmd+K)"
-            aria-label="فتح البحث السريع"
-          >
-            <span className="flex w-full items-center rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 py-2.5 pr-10 pl-16 text-right text-xs text-[var(--text-muted)] transition-colors group-hover:border-emerald-500/70">
-              للبحث السريع
-            </span>
-            <Search className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
-            <kbd className="pointer-events-none absolute left-3 rounded border border-[var(--border-main)] bg-[var(--bg-muted)] px-2 py-0.5 font-mono text-xs text-[var(--text-muted)]">
-              Cmd+K
-            </kbd>
-          </button>
+          {/* Navigation Links for Desktop */}
+          <nav aria-label="التصفح الرئيسي" className="hidden items-center gap-1 text-xs font-semibold lg:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-colors ${
+                  isActive(link.href)
+                    ? "bg-[var(--accent-light)] font-bold text-[var(--accent-primary)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"
+                }`}
+              >
+                <link.icon className="h-3.5 w-3.5" />
+                {link.name}
+              </Link>
+            ))}
+          </nav>
 
+          {/* Action Tools & User Profile */}
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-
+            {/* Search Trigger Button */}
             <button
               type="button"
               onClick={onOpenSearch}
-              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2.5 text-[var(--text-muted)] transition-colors hover:border-emerald-500/70 hover:text-emerald-300 md:hidden"
+              className="flex items-center gap-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2 text-xs font-semibold text-[var(--text-muted)] transition-colors hover:border-[var(--accent-primary)]/70 hover:text-[var(--text-main)]"
               title="البحث السريع (Cmd+K)"
               aria-label="فتح البحث السريع"
             >
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 text-[var(--accent-primary)]" />
+              <span className="hidden sm:inline">بحث</span>
+              <kbd className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline-block border border-[var(--border-main)] rounded px-1">
+                Cmd+K
+              </kbd>
             </button>
 
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
+            {/* User Dropdown / Login */}
             {userEmail ? (
               <div className="relative" ref={dropdownRef}>
                 <div className="flex items-center gap-2">
                   <AdminNavButton isAdmin={isAdmin} />
-                  <Link
-                    href="/dashboard"
-                    className="hidden sm:flex items-center gap-2 rounded-xl bg-emerald-400 px-3 py-2 text-xs font-bold text-slate-950 shadow-md shadow-emerald-500/10 transition-colors hover:bg-emerald-300"
-                    title="لوحة التحكم"
-                  >
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>لوحة التحكم</span>
-                  </Link>
-
-                  {/* زر صورة البروفايل الذي يفتح المستطيل المنبثق */}
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen((open) => !open)}
-                    className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/80 p-1.5 transition-all hover:border-emerald-500/60 focus-ring"
+                    className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/80 p-1.5 transition-all hover:border-[var(--accent-primary)]/60 focus-ring"
                     aria-label="قائمة الملف الشخصي"
                     aria-expanded={userDropdownOpen}
                   >
-                    <div className="relative h-8 w-8 flex-shrink-0 rounded-lg overflow-hidden border border-emerald-500/30 bg-[var(--bg-muted)] flex items-center justify-center">
+                    <div className="relative h-7 w-7 flex-shrink-0 rounded-lg overflow-hidden border border-[var(--accent-primary)]/30 bg-[var(--bg-muted)] flex items-center justify-center">
                       {avatarUrl ? (
-                        <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="32px" className="object-cover" />
+                        <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="28px" className="object-cover" />
                       ) : (
-                        <UserCircle className="h-5 w-5 text-emerald-400" />
+                        <UserCircle className="h-4 w-4 text-[var(--accent-primary)]" />
                       )}
                     </div>
-                    <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${userDropdownOpen ? "rotate-180 text-emerald-400" : ""}`} />
+                    <ChevronDown className={`h-3.5 w-3.5 text-[var(--text-muted)] transition-transform ${userDropdownOpen ? "rotate-180 text-[var(--accent-primary)]" : ""}`} />
                   </button>
                 </div>
 
-                {/* المستطيل المنبثق المصغر عند الضغط على صورة البروفايل */}
+                {/* Profile Popup Menu */}
                 {userDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/95 p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95 text-slate-900 dark:text-white">
-                    {/* أعلى المستطيل: صورة البروفايل والبريد */}
-                    <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
-                      <div className="relative h-12 w-12 flex-shrink-0 rounded-xl border-2 border-emerald-500/40 bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center shadow-inner">
+                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95 text-[var(--text-main)]">
+                    <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-main)]">
+                      <div className="relative h-11 w-11 flex-shrink-0 rounded-xl border border-[var(--accent-primary)]/40 bg-[var(--bg-muted)] overflow-hidden flex items-center justify-center">
                         {avatarUrl ? (
-                          <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="48px" className="object-cover" />
+                          <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="44px" className="object-cover" />
                         ) : (
-                          <UserCircle className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
+                          <UserCircle className="h-7 w-7 text-[var(--accent-primary)]" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-black text-slate-900 dark:text-white truncate">{displayName}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate dir-ltr text-right">{userEmail}</p>
-                        <span className="mt-1 inline-block rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-300">
+                        <p className="text-sm font-bold truncate">{displayName}</p>
+                        <p className="text-xs text-[var(--text-muted)] truncate dir-ltr text-right">{userEmail}</p>
+                        <span className="mt-1 inline-block rounded-full bg-[var(--accent-light)] border border-[var(--accent-primary)]/30 px-2 py-0.5 text-[10px] font-bold text-[var(--accent-primary)]">
                           {isAdmin ? "مدير النظام (Admin)" : "عضو (Member)"}
                         </span>
                       </div>
                     </div>
 
-                    {/* قائمة الخيارات السريعة */}
                     <div className="py-2 space-y-1">
                       <Link
                         href="/dashboard"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent-primary)]"
                       >
-                        <LayoutDashboard className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+                        <LayoutDashboard className="h-4 w-4 text-[var(--accent-primary)]" />
                         <span>لوحة التحكم الرئيسية</span>
                       </Link>
 
                       <Link
                         href="/dashboard/settings"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent-primary)]"
                       >
-                        <Settings className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+                        <Settings className="h-4 w-4 text-[var(--accent-primary)]" />
                         <span>تعديل وإعدادات الحساب</span>
                       </Link>
 
                       <Link
                         href="/dashboard/bookmarks"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent-primary)]"
                       >
-                        <Bookmark className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+                        <Bookmark className="h-4 w-4 text-[var(--accent-primary)]" />
                         <span>المفضلة والنتائج المحفوظة</span>
                       </Link>
 
                       <Link
                         href="/dashboard/support"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-emerald-600 dark:hover:text-emerald-300"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-muted)] hover:text-[var(--accent-primary)]"
                       >
-                        <Headphones className="h-4 w-4 text-teal-500 dark:text-teal-400" />
+                        <Headphones className="h-4 w-4 text-teal-500" />
                         <span>الدعم الفني والمساعدة</span>
                       </Link>
 
@@ -264,23 +263,21 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                         <Link
                           href="/admin"
                           onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-red-600 dark:text-red-300 bg-red-500/10 border border-red-500/20 transition-colors hover:bg-red-500/20"
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold text-rose-600 bg-rose-500/10 border border-rose-500/20 transition-colors hover:bg-rose-500/20"
                         >
-                          <ShieldAlert className="h-4 w-4 text-red-500 dark:text-red-400" />
+                          <ShieldAlert className="h-4 w-4 text-rose-500" />
                           <span>لوحة الإدارة التنفيذية</span>
                         </Link>
                       )}
                     </div>
 
-                    {/* محول الثيمات التفاعلي */}
                     <ProfileThemeSelector />
 
-                    {/* زر تسجيل الخروج */}
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800 mt-2">
+                    <div className="pt-2 border-t border-[var(--border-main)] mt-2">
                       <button
                         type="button"
                         onClick={handleSignOut}
-                        className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-red-500 transition-colors hover:bg-red-500/10 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                        className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-rose-500 transition-colors hover:bg-rose-500/10"
                       >
                         <span className="flex items-center gap-2">
                           <LogOut className="h-4 w-4" />
@@ -294,53 +291,44 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2.5 text-xs font-bold text-[var(--text-main)] transition-colors hover:border-emerald-500/70 hover:text-emerald-300 sm:px-4 sm:text-sm"
+                className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
                 title="تسجيل الدخول"
               >
                 <LogIn className="h-4 w-4" />
-                <span className="hidden sm:inline">تسجيل الدخول</span>
+                <span>دخول</span>
               </Link>
             )}
 
+            {/* Mobile Navigation Trigger */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen((open) => !open)}
-              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2.5 text-[var(--text-muted)] hover:text-[var(--text-main)] lg:hidden"
+              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] lg:hidden"
               aria-label="القائمة الرئيسية"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
             >
-              {mobileMenuOpen ? <X className="h-4 w-4" aria-hidden="true" /> : <Menu className="h-4 w-4" aria-hidden="true" />}
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
-
-        <nav aria-label="التصفح الرئيسي" className="hidden items-center justify-center gap-4 border-t border-white/5 py-3 text-sm font-medium lg:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              aria-current={isActive(link.href) ? "page" : undefined}
-              className={`flex items-center gap-2 whitespace-nowrap transition-colors ${isActive(link.href) ? "font-bold text-emerald-400" : "text-slate-300 hover:text-white"}`}
-            >
-              <link.icon className="h-4 w-4" />
-              {link.name}
-            </Link>
-          ))}
-        </nav>
       </div>
 
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <nav id="mobile-navigation" aria-label="التصفح الرئيسي" className="border-t border-[var(--border-main)] bg-[var(--bg-surface)]/95 px-4 py-3 lg:hidden">
-          <div className="mx-auto grid max-w-7xl gap-1 sm:grid-cols-2">
+        <nav id="mobile-navigation" aria-label="التصفح المحمول" className="border-t border-[var(--border-main)] bg-[var(--bg-surface)] px-4 py-3 lg:hidden">
+          <div className="grid gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
                 aria-current={isActive(link.href) ? "page" : undefined}
-                className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive(link.href) ? "bg-emerald-500/10 font-bold text-emerald-400" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}
+                className={`rounded-xl px-3 py-2.5 text-xs font-bold transition-colors ${
+                  isActive(link.href)
+                    ? "bg-[var(--accent-light)] text-[var(--accent-primary)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"
+                }`}
               >
                 <span className="flex items-center gap-2">
                   <link.icon className="h-4 w-4" />
