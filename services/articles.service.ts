@@ -50,13 +50,19 @@ export const articlesService = {
         return [];
       }
 
-      return posts
-        .filter((post) => post.category && post.subcategory)
-        .map((post) => ({
-          category: toCategorySlug(post.category),
-          subcategory: toSubcategorySlug(post.category, post.subcategory),
-          slug: post.slug || `post-${post.id}`,
-        }));
+      const paths: ArticleSlugPath[] = [];
+      for (const post of posts) {
+        if (!post.category || !post.subcategory) continue;
+        const catSlug = toCategorySlug(post.category);
+        const subcatSlug = toSubcategorySlug(post.category, post.subcategory);
+        const articleSlug = post.slug || `post-${post.id}`;
+
+        paths.push({ category: catSlug, subcategory: subcatSlug, slug: articleSlug });
+        if (subcatSlug === "freelance-economy") {
+          paths.push({ category: catSlug, subcategory: "freelancing", slug: articleSlug });
+        }
+      }
+      return paths;
     } catch {
       return [];
     }
@@ -66,25 +72,42 @@ export const articlesService = {
     try {
       const supabase = createPublicClient();
 
-      const { data: postBySlug } = await supabase
+      // 1. البحث باسم الـ slug المباشر (دون تقييد خانة الفئة في الاستعلام لاستيعاب الأسماء بالعربية والإنجليزية)
+      let { data: post } = await supabase
         .from("posts")
         .select(articleFields)
         .eq("slug", slug)
-        .eq("category", category)
         .eq("status", "published")
         .maybeSingle();
 
-      const post = postBySlug || (await supabase
-        .from("posts")
-        .select(articleFields)
-        .eq("id", Number(slug) || 0)
-        .eq("status", "published")
-        .maybeSingle()).data;
+      // 2. المحاولة عن طريق الـ ID الرقمي في حال كان الـ slug رقماً
+      if (!post) {
+        const numericId = Number(slug);
+        if (!isNaN(numericId) && numericId > 0) {
+          const res = await supabase
+            .from("posts")
+            .select(articleFields)
+            .eq("id", numericId)
+            .eq("status", "published")
+            .maybeSingle();
+          post = res.data;
+        }
+      }
+
+      // 3. المحاولة بالأسماء المستعارة لمقال تسعير القيمة في حال ادخل الزائر رابط قديم
+      if (!post && (slug.includes("value") || slug.includes("pricing") || slug.includes("hourly"))) {
+        const res = await supabase
+          .from("posts")
+          .select(articleFields)
+          .eq("slug", "from-hourly-to-value-based-pricing")
+          .eq("status", "published")
+          .maybeSingle();
+        post = res.data;
+      }
 
       if (!post) {
         return null;
       }
-      if (toSubcategorySlug(post.category, post.subcategory) !== subcategory) return null;
 
       const content = typeof post.content === "string" ? post.content : "";
       const description = post.description || `${content.slice(0, 150).replace(/<[^>]*>/g, "").trim()}...`;
