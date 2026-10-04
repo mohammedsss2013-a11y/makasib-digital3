@@ -12,7 +12,7 @@ type Post = {
   subcategory: string | null;
   topic: string | null;
   status: string;
-  created_at: string;
+  created_at: string | null;
 };
 
 type Tool = {

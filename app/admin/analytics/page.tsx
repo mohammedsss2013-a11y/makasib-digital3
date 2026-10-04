@@ -7,7 +7,7 @@ export default async function AdminAnalyticsPage() {
     supabase.from("posts").select("category, created_at").order("created_at", { ascending: false }).limit(500),
     supabase.from("tools").select("slug, title, created_at").order("created_at", { ascending: false }).limit(100),
     supabase.from("community_posts").select("created_at, likes_count").order("created_at", { ascending: false }).limit(500),
-    supabase.from("support_tickets").select("status, created_at, updated_at").order("created_at", { ascending: false }).limit(500),
+    supabase.from("support_tickets").select("status, created_at").order("created_at", { ascending: false }).limit(500),
   ]);
   const categoryCounts = Object.entries((posts ?? []).reduce<Record<string, number>>((counts, post) => { const key = post.category ?? "عام"; counts[key] = (counts[key] ?? 0) + 1; return counts; }, {})).sort((a, b) => b[1] - a[1]);
   const toolCounts = (tools ?? []).reduce<Record<string, number>>((counts, tool) => { const month = new Date(tool.created_at).toLocaleDateString("ar-EG", { year: "numeric", month: "long" }); counts[month] = (counts[month] ?? 0) + 1; return counts; }, {});

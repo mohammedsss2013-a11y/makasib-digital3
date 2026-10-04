@@ -80,7 +80,7 @@ export async function CategoryArticles({ category, categoryLabel, description, a
                 <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">{getHtmlExcerpt(post.content)}</p>
               </div>
               <div className="mt-6 flex items-center justify-between border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
-                <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleDateString("ar-EG")}</time>
+                <time dateTime={post.created_at || undefined}>{post.created_at ? new Date(post.created_at).toLocaleDateString("ar-EG") : ""}</time>
                 <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
               </div>
             </article>

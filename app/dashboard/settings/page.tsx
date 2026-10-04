@@ -139,10 +139,11 @@ export default function SettingsPage() {
         setSpecialty(profile.specialty ?? "");
         setTwoFactorEnabled(Boolean(profile.two_factor_enabled));
 
-        if (profile.notification_settings) {
-          setEmailArticles(profile.notification_settings.email_articles ?? true);
-          setEmailUpdates(profile.notification_settings.email_updates ?? true);
-          setCommunityAlerts(profile.notification_settings.community_alerts ?? true);
+        if (profile.notification_settings && typeof profile.notification_settings === "object" && !Array.isArray(profile.notification_settings)) {
+          const settings = profile.notification_settings as Record<string, boolean>;
+          setEmailArticles(settings.email_articles ?? true);
+          setEmailUpdates(settings.email_updates ?? true);
+          setCommunityAlerts(settings.community_alerts ?? true);
         }
       }
       setIsLoading(false);
