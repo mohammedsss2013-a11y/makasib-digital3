@@ -29,6 +29,14 @@ const toolsMap: Record<string, ToolComponent> = {
     () => import("@/components/tools/generators/ContractGenerator").then((module) => module.ContractGenerator),
     { loading: () => <ToolLoader /> },
   ),
+  "value-based-pricing-calculator": dynamic(
+    () => import("@/components/tools/calculators/ValueBasedPricingCalculator").then((module) => module.ValueBasedPricingCalculator),
+    { loading: () => <ToolLoader /> },
+  ),
+  "proposal-package-generator": dynamic(
+    () => import("@/components/tools/generators/ProposalPackageGenerator").then((module) => module.ProposalPackageGenerator),
+    { loading: () => <ToolLoader /> },
+  ),
 };
 
 function UnavailableTool({ slug, reason }: { slug: string; reason: string }) {
