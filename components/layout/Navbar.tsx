@@ -134,10 +134,10 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
   const displayName = fullName || userEmail?.split("@")[0] || "المستخدم";
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[var(--border-main)] bg-[var(--bg-surface)]/95 text-[var(--text-main)] backdrop-blur-xl dir-rtl">
+    <header className="sticky top-0 z-50 w-full border-b border-[var(--border-main)]/60 bg-[var(--bg-surface)]/75 text-[var(--text-main)] backdrop-blur-md backdrop-saturate-150 transition-colors duration-200 dir-rtl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Brand Logo */}
           <BrandLogo compact />
 
           {/* Navigation Links for Desktop */}
@@ -147,10 +147,10 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-colors ${
+                className={`relative flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all duration-200 ${
                   isActive(link.href)
-                    ? "bg-[var(--accent-light)] font-bold text-[var(--accent-primary)]"
-                    : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"
+                    ? "bg-[var(--accent-light)] font-bold text-[var(--accent-primary)] shadow-sm"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)]/70 hover:text-[var(--text-main)]"
                 }`}
               >
                 <link.icon className="h-3.5 w-3.5" />
@@ -159,27 +159,27 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             ))}
           </nav>
 
-          {/* Action Tools & User Profile */}
+          {/* Actions: Search, Theme Toggle & User Auth */}
           <div className="flex items-center gap-2">
-            {/* Search Trigger Button */}
+            {/* Search Trigger (Smart Modal Opener) */}
             <button
               type="button"
               onClick={onOpenSearch}
-              className="flex items-center gap-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2 text-xs font-semibold text-[var(--text-muted)] transition-colors hover:border-[var(--accent-primary)]/70 hover:text-[var(--text-main)]"
-              title="البحث السريع (Cmd+K)"
-              aria-label="فتح البحث السريع"
+              className="flex items-center gap-2 rounded-xl border border-[var(--border-main)]/60 bg-[var(--bg-card)]/80 px-3 py-2 text-xs font-semibold text-[var(--text-muted)] shadow-sm backdrop-blur-md transition-all duration-200 hover:border-[var(--accent-primary)]/50 hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)] active:scale-95"
+              title="البحث الفوري الذكي (Cmd+K)"
+              aria-label="فتح نافذة البحث السريع"
             >
               <Search className="h-4 w-4 text-[var(--accent-primary)]" />
               <span className="hidden sm:inline">بحث</span>
-              <kbd className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline-block border border-[var(--border-main)] rounded px-1">
-                Cmd+K
+              <kbd className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline-block border border-[var(--border-main)]/80 rounded px-1.5 py-0.5 bg-[var(--bg-muted)]">
+                ⌘K
               </kbd>
             </button>
 
-            {/* Theme Toggle */}
+            {/* Dark / Light Mode Toggle */}
             <ThemeToggle />
 
-            {/* User Dropdown / Login */}
+            {/* User Dropdown / Login Button */}
             {userEmail ? (
               <div className="relative" ref={dropdownRef}>
                 <div className="flex items-center gap-2">
@@ -187,7 +187,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen((open) => !open)}
-                    className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/80 p-1.5 transition-all hover:border-[var(--accent-primary)]/60 focus-ring"
+                    className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)]/60 bg-[var(--bg-card)]/80 p-1.5 shadow-sm transition-all hover:border-[var(--accent-primary)]/60 focus-ring"
                     aria-label="قائمة الملف الشخصي"
                     aria-expanded={userDropdownOpen}
                   >
@@ -204,8 +204,8 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
                 {/* Profile Popup Menu */}
                 {userDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-[var(--border-main)] bg-[var(--bg-card)] p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95 text-[var(--text-main)]">
-                    <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-main)]">
+                  <div className="absolute left-0 top-full mt-2 w-72 rounded-2xl border border-[var(--border-main)]/80 bg-[var(--bg-card)]/95 p-4 shadow-2xl backdrop-blur-2xl z-50 dir-rtl animate-in fade-in zoom-in-95 text-[var(--text-main)]">
+                    <div className="flex items-center gap-3 pb-3 border-b border-[var(--border-main)]/60">
                       <div className="relative h-11 w-11 flex-shrink-0 rounded-xl border border-[var(--accent-primary)]/40 bg-[var(--bg-muted)] overflow-hidden flex items-center justify-center">
                         {avatarUrl ? (
                           <AppImage src={avatarUrl} alt={displayName} fallbackType="avatar" fill sizes="44px" className="object-cover" />
@@ -273,7 +273,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
                     <ProfileThemeSelector />
 
-                    <div className="pt-2 border-t border-[var(--border-main)] mt-2">
+                    <div className="pt-2 border-t border-[var(--border-main)]/60 mt-2">
                       <button
                         type="button"
                         onClick={handleSignOut}
@@ -291,7 +291,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 px-3 py-2 text-xs font-bold text-[var(--text-main)] transition-colors hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
+                className="flex items-center gap-1.5 rounded-xl border border-[var(--border-main)]/60 bg-[var(--bg-card)]/80 px-3.5 py-2 text-xs font-bold text-[var(--text-main)] shadow-sm backdrop-blur-md transition-all hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
                 title="تسجيل الدخول"
               >
                 <LogIn className="h-4 w-4" />
@@ -303,7 +303,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen((open) => !open)}
-              className="rounded-xl border border-[var(--border-main)] bg-[var(--bg-muted)]/70 p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] lg:hidden"
+              className="rounded-xl border border-[var(--border-main)]/60 bg-[var(--bg-card)]/80 p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] lg:hidden"
               aria-label="القائمة الرئيسية"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -316,7 +316,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <nav id="mobile-navigation" aria-label="التصفح المحمول" className="border-t border-[var(--border-main)] bg-[var(--bg-surface)] px-4 py-3 lg:hidden">
+        <nav id="mobile-navigation" aria-label="التصفح المحمول" className="border-t border-[var(--border-main)]/60 bg-[var(--bg-surface)]/95 backdrop-blur-xl px-4 py-3 lg:hidden">
           <div className="grid gap-1">
             {navLinks.map((link) => (
               <Link
@@ -324,7 +324,7 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
                 aria-current={isActive(link.href) ? "page" : undefined}
-                className={`rounded-xl px-3 py-2.5 text-xs font-bold transition-colors ${
+                className={`rounded-xl px-3.5 py-2.5 text-xs font-bold transition-colors ${
                   isActive(link.href)
                     ? "bg-[var(--accent-light)] text-[var(--accent-primary)]"
                     : "text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text-main)]"
@@ -342,3 +342,5 @@ export const Navbar = ({ onOpenSearch }: NavbarProps) => {
     </header>
   );
 };
+
+export default Navbar;

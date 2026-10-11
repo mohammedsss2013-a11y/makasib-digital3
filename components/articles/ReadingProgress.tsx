@@ -21,8 +21,13 @@ export function ReadingProgress() {
   }, []);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 h-1 bg-transparent" aria-hidden="true">
-      <div className="h-full bg-[var(--accent-primary)] transition-[width] duration-100" style={{ width: `${progress}%` }} />
+    <div className="fixed inset-x-0 top-0 z-[60] h-1 bg-transparent pointer-events-none" aria-hidden="true">
+      <div
+        className="h-full bg-gradient-to-r from-[var(--accent-primary)] via-emerald-400 to-teal-300 shadow-[0_0_8px_var(--accent-primary)] transition-[width] duration-150 ease-out"
+        style={{ width: `${progress}%` }}
+      />
     </div>
   );
 }
+
+export default ReadingProgress;

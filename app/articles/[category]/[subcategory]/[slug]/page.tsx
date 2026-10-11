@@ -1,24 +1,21 @@
 import Link from "next/link";
 import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, Clock3, UserRound } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3, UserRound, Calendar, Share2 } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { articlesService } from "@/services/articles.service";
-import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
 import ArticleToolEmbedder from "@/components/articles/ArticleToolEmbedder";
 import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractiveBoundary";
 import { ArticleTableOfContents } from "@/components/articles/ArticleTableOfContents";
 import { ReadingProgress } from "@/components/articles/ReadingProgress";
 import { ArticleSpeechControls } from "@/components/articles/ArticleSpeechControls";
+import { Badge } from "@/components/ui/Badge";
 
-// تمكين إعادة التحقق التزايدي الذكي (Incremental Static Regeneration) كل ساعة
+// تمكين إعادة التحقق التزايدي الذكي (ISR) كل ساعة
 export const revalidate = 3600;
-
-// السماح بتوليد الصفحات غير المُنشأة مسبقاً عند أول طلب (On-Demand ISR)
 export const dynamicParams = true;
 
-// إنشاء المسارات الثابتة أثناء عملية الـ Build
 export async function generateStaticParams() {
   try {
     const articles = await articlesService.getAllSlugPaths();
@@ -83,55 +80,126 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <>
+      {/* ── Fixed Reading Progress Bar ── */}
       <ReadingProgress />
-      <article className="mx-auto max-w-6xl py-6 dir-rtl" dir="rtl">
-      <nav aria-label="مسار المقال" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-        <Link href="/" className="hover:text-emerald-300">الرئيسية</Link>
-        <ArrowRight className="h-3.5 w-3.5 rotate-180" />
-        <Link href={`/${article.categorySlug}`} className="hover:text-emerald-300">{article.categoryLabel}</Link>
-        <ArrowRight className="h-3.5 w-3.5 rotate-180" />
-        <Link href={`/articles/${article.categorySlug}/${article.subcategorySlug}`} className="hover:text-emerald-300">{article.subcategoryLabel}</Link>
-      </nav>
 
-      <header className="space-y-5 border-b border-slate-800/80 pb-8">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300">
-          <BookOpen className="h-4 w-4" /> مقال تطبيقي
-        </div>
-        <h1 className="text-3xl font-black leading-tight text-white sm:text-5xl">{article.title}</h1>
-        <p className="text-base leading-8 text-slate-400 sm:text-lg">{article.description}</p>
-        <div className="flex flex-wrap items-center gap-5 text-xs text-slate-400">
-          <span className="flex items-center gap-2"><UserRound className="h-4 w-4 text-emerald-400" />{article.author}</span>
-          <span className="flex items-center gap-2"><Clock3 className="h-4 w-4 text-emerald-400" />{article.readTime}</span>
-          <time dateTime={article.publishedAt}>{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</time>
-        </div>
-        <ArticleSpeechControls text={article.content} />
-        <div className="relative mt-6 aspect-[16/7] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-          <AppImage src={article.coverImage} alt={article.coverImageAlt} fallbackType="article" fill priority sizes="(max-width: 768px) 100vw, 896px" className="object-cover" />
-        </div>
-      </header>
+      {/* ── Single-Column Optimized Reading Container (65-75 chars per line) ── */}
+      <article className="mx-auto max-w-3xl px-4 sm:px-6 py-8 dir-rtl space-y-10" dir="rtl">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="مسار المقال" className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
+          <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">
+            الرئيسية
+          </Link>
+          <ArrowRight className="h-3.5 w-3.5 rotate-180 opacity-60" />
+          <Link href={`/${article.categorySlug}`} className="hover:text-[var(--accent-primary)] transition-colors">
+            {article.categoryLabel}
+          </Link>
+          <ArrowRight className="h-3.5 w-3.5 rotate-180 opacity-60" />
+          <Link href={`/articles/${article.categorySlug}/${article.subcategorySlug}`} className="hover:text-[var(--accent-primary)] transition-colors">
+            {article.subcategoryLabel}
+          </Link>
+        </nav>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
-          <div className="prose prose-invert prose-emerald max-w-none text-slate-300">
-            <ArticleInteractiveBoundary>
-              <ArticleToolEmbedder content={article.content} />
-            </ArticleInteractiveBoundary>
+        {/* Article Header */}
+        <header className="space-y-6">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="accent" size="sm" className="font-bold">
+              <BookOpen className="h-3 w-3" />
+              {article.categoryLabel}
+            </Badge>
+            <span className="text-xs text-[var(--text-muted)]">•</span>
+            <span className="text-xs font-semibold text-[var(--text-muted)]">{article.subcategoryLabel}</span>
           </div>
-          <ArticleTableOfContents content={article.content} />
-        </div>
 
-      {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
-        <div className="mt-12 border-t border-slate-800 pt-10">
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-[var(--text-main)] sm:text-5xl">
+            {article.title}
+          </h1>
+
+          {article.description && (
+            <p className="text-base sm:text-xl leading-relaxed text-[var(--text-muted)] font-normal">
+              {article.description}
+            </p>
+          )}
+
+          {/* Author, Read Time & Date Bar directly under title */}
+          <div className="flex flex-wrap items-center justify-between gap-4 border-y border-[var(--border-main)]/70 py-4 text-xs">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-light)] text-[var(--accent-primary)] font-bold text-sm shadow-xs">
+                <UserRound className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-bold text-[var(--text-main)] text-sm">{article.author}</p>
+                <div className="flex items-center gap-3 text-[11px] text-[var(--text-muted)] mt-0.5">
+                  <span className="flex items-center gap-1 font-medium">
+                    <Clock3 className="h-3 w-3 text-[var(--accent-primary)]" />
+                    وقت القراءة: {article.readTime}
+                  </span>
+                  <span>•</span>
+                  <time dateTime={article.publishedAt} className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(article.publishedAt).toLocaleDateString("ar-EG", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                </div>
+              </div>
+            </div>
+
+            <ArticleSpeechControls text={article.content} />
+          </div>
+
+          {/* Immersive Cover Image */}
+          <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-[var(--border-main)]/70 bg-[var(--bg-muted)] shadow-md">
+            <AppImage
+              src={article.coverImage}
+              alt={article.coverImageAlt}
+              fallbackType="article"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+            />
+          </div>
+        </header>
+
+        {/* Table of Contents (Single Column Friendly Overview) */}
+        <ArticleTableOfContents content={article.content} />
+
+        {/* ── Main Single-Column Content Body ── */}
+        <div className="prose prose-lg dark:prose-invert prose-emerald max-w-none text-[var(--text-main)] prose-headings:font-black prose-headings:tracking-tight prose-p:leading-loose prose-p:text-[var(--text-muted)] prose-li:leading-relaxed prose-img:rounded-2xl">
           <ArticleInteractiveBoundary>
-            <SectionInteractiveTools section="finance" />
+            <ArticleToolEmbedder content={article.content} />
           </ArticleInteractiveBoundary>
         </div>
-      )}
 
-      <div className="mt-12 border-t border-slate-800 pt-6">
-        <Link href={`/articles/${article.categorySlug}/${article.subcategorySlug}`} className="inline-flex items-center gap-2 text-sm font-bold text-emerald-300 hover:text-emerald-200">
-          <ArrowRight className="h-4 w-4" /> العودة إلى مقالات القسم
-        </Link>
-      </div>
+        {/* Optional Interactive Section Tools */}
+        {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
+          <div className="border-t border-[var(--border-main)]/70 pt-8 not-prose">
+            <ArticleInteractiveBoundary>
+              <SectionInteractiveTools section="finance" />
+            </ArticleInteractiveBoundary>
+          </div>
+        )}
+
+        {/* Article Footer & Return Nav */}
+        <footer className="border-t border-[var(--border-main)]/70 pt-8 not-prose flex flex-wrap items-center justify-between gap-4">
+          <Link
+            href={`/articles/${article.categorySlug}/${article.subcategorySlug}`}
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-main)]/80 bg-[var(--bg-card)] px-4 py-2.5 text-xs font-bold text-[var(--text-main)] shadow-xs transition-all hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
+          >
+            <ArrowRight className="h-4 w-4" />
+            العودة إلى مقالات {article.subcategoryLabel}
+          </Link>
+
+          <Link
+            href="/articles"
+            className="inline-flex items-center gap-2 text-xs font-bold text-[var(--accent-primary)] hover:underline"
+          >
+            تصفح جميع المقالات ←
+          </Link>
+        </footer>
       </article>
     </>
   );
