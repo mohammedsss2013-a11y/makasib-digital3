@@ -72,7 +72,7 @@ export const articlesService = {
     try {
       const supabase = createPublicClient();
 
-      // 1. البحث باسم الـ slug المباشر (دون تقييد خانة الفئة في الاستعلام لاستيعاب الأسماء بالعربية والإنجليزية)
+      // 1. البحث الدقيق بحقل slug أولاً
       let { data: post } = await supabase
         .from("posts")
         .select(articleFields)
@@ -80,22 +80,25 @@ export const articlesService = {
         .eq("status", "published")
         .maybeSingle();
 
-      // 2. المحاولة عن طريق الـ ID الرقمي في حال كان الـ slug رقماً
+      // 2. إذا لم يُعثر عليه بالـ slug وكان رقماً أو بمعرف post- / article-
       if (!post) {
-        const numericId = Number(slug);
-        if (!isNaN(numericId) && numericId > 0) {
-          const res = await supabase
-            .from("posts")
-            .select(articleFields)
-            .eq("id", numericId)
-            .eq("status", "published")
-            .maybeSingle();
-          post = res.data;
+        const idMatch = slug.match(/^(?:post-|article-)?(\d+)(?:-.*)?$/);
+        if (idMatch) {
+          const numericId = Number(idMatch[1]);
+          if (!isNaN(numericId) && numericId > 0) {
+            const res = await supabase
+              .from("posts")
+              .select(articleFields)
+              .eq("id", numericId)
+              .eq("status", "published")
+              .maybeSingle();
+            post = res.data;
+          }
         }
       }
 
-      // 3. المحاولة بالأسماء المستعارة لمقال تسعير القيمة في حال ادخل الزائر رابط قديم
-      if (!post && (slug.includes("value") || slug.includes("pricing") || slug.includes("hourly"))) {
+      // 3. دعم محدد وحصري لرابط المقال الجديد المستعار دون التأثير على بقية المقالات
+      if (!post && (slug === "value-pricing-freelancing" || slug === "value-based-pricing")) {
         const res = await supabase
           .from("posts")
           .select(articleFields)
