@@ -2,34 +2,35 @@
 
 import type { ReactNode } from "react";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
+import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
 import { DynamicToolRenderer } from "@/components/tools/DynamicToolRenderer";
 
 type ArticleToolEmbedderProps = {
   content: string;
 };
 
-function renderTextBlock(block: string, key: string): ReactNode {
-  const isList = /^\d+\./.test(block.trim());
-  if (isList) {
-    return (
-      <ol key={key} className="list-decimal space-y-2 pr-6 leading-8 marker:text-emerald-400">
-        {block.split("\n").map((item) => <li key={`${key}-${item}`}>{item.replace(/^\d+\.\s*/, "")}</li>)}
-      </ol>
-    );
-  }
-
-  return <div key={key} className="leading-9" dangerouslySetInnerHTML={{ __html: sanitizeHtml(block) }} />;
+function renderHtmlBlock(html: string, key: string): ReactNode {
+  return (
+    <div
+      key={key}
+      className="leading-9"
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
+    />
+  );
 }
 
 export default function ArticleToolEmbedder({ content }: ArticleToolEmbedderProps) {
+  // Auto-detect format and convert Markdown → HTML if needed
+  const processedContent = isMarkdown(content) ? markdownToHtml(content) : content;
+
   const tokenPattern = /\[tool:([a-zA-Z0-9-]+)\]/g;
-  const blocks = content.split("\n\n");
+  const blocks = processedContent.split("\n\n");
 
   return (
     <>
       {blocks.map((block, blockIndex) => {
         const parts = block.split(tokenPattern);
-        if (parts.length === 1) return renderTextBlock(block, `text-${blockIndex}`);
+        if (parts.length === 1) return renderHtmlBlock(block, `text-${blockIndex}`);
 
         return parts.map((part, partIndex) => {
           if (partIndex % 2 === 1) {
@@ -39,7 +40,7 @@ export default function ArticleToolEmbedder({ content }: ArticleToolEmbedderProp
               </div>
             );
           }
-          return part ? renderTextBlock(part, `text-${blockIndex}-${partIndex}`) : null;
+          return part ? renderHtmlBlock(part, `text-${blockIndex}-${partIndex}`) : null;
         });
       })}
     </>

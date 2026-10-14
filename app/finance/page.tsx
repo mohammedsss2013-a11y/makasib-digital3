@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BadgePercent,
@@ -17,6 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import InstantReportCard from "@/components/sections/InstantReportCard";
+import { articlesService } from "@/services/articles.service";
+import { getCanonicalArticlePath } from "@/lib/articlePaths";
 
 type FinancePost = {
   id: string | number;
@@ -26,6 +24,8 @@ type FinancePost = {
   image_url?: string | null;
   slug?: string | null;
   created_at?: string;
+  description?: string;
+  href: string;
 };
 
 const subcategoryCards: Array<{
@@ -132,56 +132,29 @@ const heroContentBySub: Record<string, HeroContent> = {
 };
 
 function getArticlePath(post: FinancePost) {
-  const slug = post.slug || `post-${post.id}`;
-  const subcategorySlug =
-    post.subcategory === "العمل الحر والخدمات" || post.subcategory === "العمل الحر والمشاريع المصغرة"
-      ? "freelancing"
-      : post.subcategory === "التجارة الإلكترونية"
-        ? "ecommerce"
-        : post.subcategory === "التسويق الرقمي"
-          ? "marketing"
-          : post.subcategory === "اقتصاد صناعة المحتوى"
-            ? "content-economy"
-            : post.subcategory === "العملات الرقمية والبلوكشين"
-              ? "crypto"
-              : post.subcategory === "العتاد والإنتاجية المالية"
-                ? "hardware"
-                : "general";
-
-  return `/articles/finance/${subcategorySlug}/${slug}`;
+  return post.href;
 }
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function FinanceSectorPageContent({ posts }: { posts: FinancePost[] }) {
-  const searchParams = useSearchParams();
-  const activeSub = searchParams.get("sub") ?? "all";
-  const activeKey = {
+function FinanceSectorPageContent({ posts, activeSub }: { posts: FinancePost[]; activeSub: string }) {
+  const activeKey = ({
     freelancing: "العمل الحر والخدمات",
     ecommerce: "التجارة الإلكترونية",
     marketing: "التسويق الرقمي",
     "content-economy": "اقتصاد صناعة المحتوى",
     crypto: "العملات الرقمية والبلوكشين",
     hardware: "العتاد والإنتاجية المالية",
-  }[searchParams.get("sub") ?? ""] ?? "الكل";
+  } as Record<string, string>)[activeSub] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
 
-  const articleCounts = useMemo(() => {
-    const counts: Record<string, number> = { "الكل": posts.length };
-
-    subcategoryCards.forEach((item) => {
-      counts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
-    });
-
-    return counts;
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    if (activeKey === "الكل") return posts;
-    return posts.filter((post) => post.subcategory === activeKey);
-  }, [activeKey, posts]);
+  const articleCounts: Record<string, number> = { "الكل": posts.length };
+  subcategoryCards.forEach((item) => {
+    articleCounts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
+  });
+  const filteredPosts = activeKey === "الكل" ? posts : posts.filter((post) => post.subcategory === activeKey);
 
   return (
     <div className="space-y-8 py-2 dir-rtl" dir="rtl">
@@ -257,7 +230,7 @@ function FinanceSectorPageContent({ posts }: { posts: FinancePost[] }) {
                     </h3>
 
                     <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">
-                      {stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
+                      {post.description || stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
                     </p>
                   </div>
 
@@ -299,54 +272,21 @@ function FinanceSectorPageContent({ posts }: { posts: FinancePost[] }) {
   );
 }
 
-export default function FinanceSectorPage() {
-  const posts: FinancePost[] = [
-    {
-      id: 1,
-      title: "من نظام الساعة إلى نظام القيمة: المعادلة الذهبية",
-      content: "<p>كيف ترفع أرباحك بتقديم تسعير مبني على العوائد بدلاً من حساب الساعات.</p>",
-      subcategory: "العمل الحر والخدمات",
-      slug: "value-pricing-freelancing",
-      image_url: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-20T10:00:00.000Z",
-    },
-    {
-      id: 2,
-      title: "هل يجب أن تبدأ متجرًا إلكترونيًا أم تبيع عبر المنصات؟",
-      content: "<p>قارن بين الربحية، التعقيد، والتسليم عند بناء نموذج تجارة إلكترونية ناجح.</p>",
-      subcategory: "التجارة الإلكترونية",
-      slug: "ecommerce-vs-marketplace",
-      image_url: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-15T10:00:00.000Z",
-    },
-    {
-      id: 3,
-      title: "تسعير الحملات الرقمية: ROAS أم CAC أم نقطة التعادل؟",
-      content: "<p>تعلم كيف تقرر ما إذا كانت الحملة تستحق التوسع على أساس الربح الحقيقي لا مجرد التفاعل.</p>",
-      subcategory: "التسويق الرقمي",
-      slug: "roas-cac-decision-framework",
-      image_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-12T10:00:00.000Z",
-    },
-    {
-      id: 4,
-      title: "إطلاق صفحة رعاية محتوى: من الفكرة إلى أول عميل مستقر",
-      content: "<p>نموذج عملي لبناء عرض محتوى قابل للبيع مع التركيز على الربحية بدلًا من مجرد التغطية.</p>",
-      subcategory: "اقتصاد صناعة المحتوى",
-      slug: "content-sponsorship-pricing",
-      image_url: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-10T10:00:00.000Z",
-    },
-    {
-      id: 5,
-      title: "كيفية بناء محفظة رقمية آمنة دون الإفراط في التشدد",
-      content: "<p>بعض الممارسات الأساسية لزيادة الأمان مع الحفاظ على قابلية الاستخدام والمرونة.</p>",
-      subcategory: "العملات الرقمية والبلوكشين",
-      slug: "crypto-wallet-safety",
-      image_url: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-08T10:00:00.000Z",
-    },
-  ];
+export default async function FinanceSectorPage({ searchParams }: { searchParams: Promise<{ sub?: string }> }) {
+  const [{ sub = "all" }, articles] = await Promise.all([searchParams, articlesService.getAllArticles()]);
+  const posts: FinancePost[] = articles
+    .filter((article) => article.categorySlug === "finance")
+    .map((article) => ({
+      id: article.id,
+      title: article.title,
+      content: article.content,
+      subcategory: article.subcategoryLabel,
+      image_url: article.coverImage,
+      slug: article.slug,
+      created_at: article.publishedAt,
+      description: article.description,
+      href: getCanonicalArticlePath(article),
+    }));
 
-  return <FinanceSectorPageContent posts={posts} />;
+  return <FinanceSectorPageContent posts={posts} activeSub={sub} />;
 }

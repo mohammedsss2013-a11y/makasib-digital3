@@ -132,3 +132,11 @@ export function getArticlePath(post: {
 }) {
   return `/articles/${toCategorySlug(post.category)}/${toSubcategorySlug(post.category, post.subcategory)}/${post.slug || `post-${post.id}`}`;
 }
+
+export function getCanonicalArticlePath(article: {
+  categorySlug: string;
+  subcategorySlug: string;
+  slug: string;
+}) {
+  return `/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`;
+}

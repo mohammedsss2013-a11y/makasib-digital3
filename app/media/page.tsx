@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Camera,
@@ -16,6 +12,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import InstantReportCard from "@/components/sections/InstantReportCard";
+import { articlesService } from "@/services/articles.service";
+import { getCanonicalArticlePath } from "@/lib/articlePaths";
 
 type SectorPost = {
   id: string | number;
@@ -25,6 +23,8 @@ type SectorPost = {
   image_url?: string | null;
   slug?: string | null;
   created_at?: string;
+  description?: string;
+  href: string;
 };
 
 const subcategoryCards: Array<{
@@ -118,51 +118,28 @@ const heroContentBySub: Record<string, HeroContent> = {
 };
 
 function getArticlePath(post: SectorPost) {
-  const slug = post.slug || `post-${post.id}`;
-  const subcategorySlug =
-    post.subcategory === "صناعة المحتوى المرئي والمكتوب"
-      ? "creation"
-      : post.subcategory === "الأخبار والتحليلات"
-        ? "news"
-        : post.subcategory === "البودكاست"
-          ? "podcasting"
-          : post.subcategory === "البث المباشر"
-            ? "streaming"
-            : post.subcategory === "الترفيه الرقمي"
-              ? "gaming"
-              : "general";
-
-  return `/articles/media/${subcategorySlug}/${slug}`;
+  return post.href;
 }
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
-  const searchParams = useSearchParams();
-  const activeSub = searchParams.get("sub") ?? "all";
-  const activeKey = {
+function MediaSectorPageContent({ posts, activeSub }: { posts: SectorPost[]; activeSub: string }) {
+  const activeKey = ({
     creation: "صناعة المحتوى المرئي والمكتوب",
     news: "الأخبار والتحليلات",
     podcasting: "البودكاست",
     streaming: "البث المباشر",
     gaming: "الترفيه الرقمي",
-  }[searchParams.get("sub") ?? ""] ?? "الكل";
+  } as Record<string, string>)[activeSub] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
 
-  const articleCounts = useMemo(() => {
-    const counts: Record<string, number> = { "الكل": posts.length };
-    subcategoryCards.forEach((item) => {
-      counts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
-    });
-    return counts;
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    if (activeKey === "الكل") return posts;
-    return posts.filter((post) => post.subcategory === activeKey);
-  }, [activeKey, posts]);
+  const articleCounts: Record<string, number> = { "الكل": posts.length };
+  subcategoryCards.forEach((item) => {
+    articleCounts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
+  });
+  const filteredPosts = activeKey === "الكل" ? posts : posts.filter((post) => post.subcategory === activeKey);
 
   return (
     <div className="space-y-8 py-2 dir-rtl" dir="rtl">
@@ -238,7 +215,7 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
                     </h3>
 
                     <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">
-                      {stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
+                      {post.description || stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
                     </p>
                   </div>
 
@@ -280,54 +257,21 @@ function MediaSectorPageContent({ posts }: { posts: SectorPost[] }) {
   );
 }
 
-export default function MediaSectorPage() {
-  const posts: SectorPost[] = [
-    {
-      id: 1,
-      title: "كيف تبني شبكة محتوى قابلة للاستمرار عبر منصات متعددة؟",
-      content: "<p>أطر عمل للتوزيع، التحسين، وقياس التفاعل على القنوات المتعددة دون إهدار الوقت.</p>",
-      subcategory: "صناعة المحتوى المرئي والمكتوب",
-      slug: "content-distribution-system",
-      image_url: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-20T10:00:00.000Z",
-    },
-    {
-      id: 2,
-      title: "أساسيات تحليل الأخبار الرقمية عند التدفق المستمر",
-      content: "<p>كيف تميز بين الأخبار الحقيقية، الاتجاهات، والتأثيرات الاجتماعية في البيئة الرقمية السريعة.</p>",
-      subcategory: "الأخبار والتحليلات",
-      slug: "digital-news-analysis",
-      image_url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-19T10:00:00.000Z",
-    },
-    {
-      id: 3,
-      title: "خطّة إطلاق بودكاست من غرفة صغيرة بموارد محدودة",
-      content: "<p>تخطيط الإنتاج، الصوت، الإخراج، والتوزيع لمحتوى صوتي مستدام مع أقل كلفة.</p>",
-      subcategory: "البودكاست",
-      slug: "podcast-launch-small-room",
-      image_url: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-15T10:00:00.000Z",
-    },
-    {
-      id: 4,
-      title: "مؤشرات البث المباشر: متى تكون الحلقة فعلاً قابلة للتوسع؟",
-      content: "<p>مقاييس البقاء، التفاعل، والوقت الحقيقي للقبول عند تحويل الخطة المحتوى إلى تجربة مباشرة.</p>",
-      subcategory: "البث المباشر",
-      slug: "live-stream-success-signals",
-      image_url: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-11T10:00:00.000Z",
-    },
-    {
-      id: 5,
-      title: "إطلاق قناة ترفيهية رقمية: من الفكرة إلى المتابع المستقر",
-      content: "<p>نهج واضح لتحديد الشكل المناسب للتفاعل، بناء الحدث، والصياغة الهادفة دون فقدان الثبات.</p>",
-      subcategory: "الترفيه الرقمي",
-      slug: "digital-entertainment-channel",
-      image_url: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-07T10:00:00.000Z",
-    },
-  ];
+export default async function MediaSectorPage({ searchParams }: { searchParams: Promise<{ sub?: string }> }) {
+  const [{ sub = "all" }, articles] = await Promise.all([searchParams, articlesService.getAllArticles()]);
+  const posts: SectorPost[] = articles
+    .filter((article) => article.categorySlug === "media")
+    .map((article) => ({
+      id: article.id,
+      title: article.title,
+      content: article.content,
+      subcategory: article.subcategoryLabel,
+      image_url: article.coverImage,
+      slug: article.slug,
+      created_at: article.publishedAt,
+      description: article.description,
+      href: getCanonicalArticlePath(article),
+    }));
 
-  return <MediaSectorPageContent posts={posts} />;
+  return <MediaSectorPageContent posts={posts} activeSub={sub} />;
 }

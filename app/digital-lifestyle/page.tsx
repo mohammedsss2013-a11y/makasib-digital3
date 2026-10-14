@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
@@ -15,6 +11,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import InstantReportCard from "@/components/sections/InstantReportCard";
+import { articlesService } from "@/services/articles.service";
+import { getCanonicalArticlePath } from "@/lib/articlePaths";
 
 type SectorPost = {
   id: string | number;
@@ -24,6 +22,8 @@ type SectorPost = {
   image_url?: string | null;
   slug?: string | null;
   created_at?: string;
+  description?: string;
+  href: string;
 };
 
 const subcategoryCards: Array<{
@@ -104,48 +104,27 @@ const heroContentBySub: Record<string, HeroContent> = {
 };
 
 function getArticlePath(post: SectorPost) {
-  const slug = post.slug || `post-${post.id}`;
-  const subcategorySlug =
-    post.subcategory === "إدارة الحياة الرقمية"
-      ? "life-management"
-      : post.subcategory === "الصحة الرقمية"
-        ? "health"
-        : post.subcategory === "التعليم والتعلم الرقمي"
-          ? "learning"
-          : post.subcategory === "الثقافة الرقمية"
-            ? "culture"
-            : "general";
-
-  return `/articles/digital-lifestyle/${subcategorySlug}/${slug}`;
+  return post.href;
 }
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function DigitalLifestylePageContent({ posts }: { posts: SectorPost[] }) {
-  const searchParams = useSearchParams();
-  const activeSub = searchParams.get("sub") ?? "all";
-  const activeKey = {
+function DigitalLifestylePageContent({ posts, activeSub }: { posts: SectorPost[]; activeSub: string }) {
+  const activeKey = ({
     "life-management": "إدارة الحياة الرقمية",
     health: "الصحة الرقمية",
     learning: "التعليم والتعلم الرقمي",
     culture: "الثقافة الرقمية",
-  }[searchParams.get("sub") ?? ""] ?? "الكل";
+  } as Record<string, string>)[activeSub] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
 
-  const articleCounts = useMemo(() => {
-    const counts: Record<string, number> = { "الكل": posts.length };
-    subcategoryCards.forEach((item) => {
-      counts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
-    });
-    return counts;
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    if (activeKey === "الكل") return posts;
-    return posts.filter((post) => post.subcategory === activeKey);
-  }, [activeKey, posts]);
+  const articleCounts: Record<string, number> = { "الكل": posts.length };
+  subcategoryCards.forEach((item) => {
+    articleCounts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
+  });
+  const filteredPosts = activeKey === "الكل" ? posts : posts.filter((post) => post.subcategory === activeKey);
 
   return (
     <div className="space-y-8 py-2 dir-rtl" dir="rtl">
@@ -221,7 +200,7 @@ function DigitalLifestylePageContent({ posts }: { posts: SectorPost[] }) {
                     </h3>
 
                     <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">
-                      {stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
+                      {post.description || stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
                     </p>
                   </div>
 
@@ -263,45 +242,21 @@ function DigitalLifestylePageContent({ posts }: { posts: SectorPost[] }) {
   );
 }
 
-export default function DigitalLifestylePage() {
-  const posts: SectorPost[] = [
-    {
-      id: 1,
-      title: 'كيف تتحول من "استجابة سريعة" إلى "إنتاجية مدروسة"؟',
-      content: "<p>نظام عملي لتقليل التشتيت وتحويل الطاقة الرقمية إلى نتائج ذات معنى في الحياة اليومية.</p>",
-      subcategory: "إدارة الحياة الرقمية",
-      slug: "digital-life-organization",
-      image_url: "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-20T10:00:00.000Z",
-    },
-    {
-      id: 2,
-      title: "مؤشر الإرهاق الرقمي: متى تحتاج إلى استراحة فعالة؟",
-      content: "<p>علامات التوتر، تجاوز الشاشات، وطرق إعادة ضبط الطاقة دون الانسحاب الكامل.</p>",
-      subcategory: "الصحة الرقمية",
-      slug: "digital-burnout-checklist",
-      image_url: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-18T10:00:00.000Z",
-    },
-    {
-      id: 4,
-      title: "تعلم سريع دون إهدار الوقت: بناء نظام مهارات شخصي",
-      content: "<p>خريطة طريقة لتحديد المهارة المناسبة، فترات التعلم، ومعايير التقييم السريعة.</p>",
-      subcategory: "التعليم والتعلم الرقمي",
-      slug: "personal-skill-system",
-      image_url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-10T10:00:00.000Z",
-    },
-    {
-      id: 5,
-      title: "الثقافة الرقمية: كيف تبني حضورك بوعي بدلًا من التلقين؟",
-      content: "<p>استراتيجية لبناء هوية رقمية ذات معنى مع حماية الوقت والقرارات الشخصية.</p>",
-      subcategory: "الثقافة الرقمية",
-      slug: "digital-culture-identity",
-      image_url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-07T10:00:00.000Z",
-    },
-  ];
+export default async function DigitalLifestylePage({ searchParams }: { searchParams: Promise<{ sub?: string }> }) {
+  const [{ sub = "all" }, articles] = await Promise.all([searchParams, articlesService.getAllArticles()]);
+  const posts: SectorPost[] = articles
+    .filter((article) => article.categorySlug === "digital-lifestyle")
+    .map((article) => ({
+      id: article.id,
+      title: article.title,
+      content: article.content,
+      subcategory: article.subcategoryLabel,
+      image_url: article.coverImage,
+      slug: article.slug,
+      created_at: article.publishedAt,
+      description: article.description,
+      href: getCanonicalArticlePath(article),
+    }));
 
-  return <DigitalLifestylePageContent posts={posts} />;
+  return <DigitalLifestylePageContent posts={posts} activeSub={sub} />;
 }

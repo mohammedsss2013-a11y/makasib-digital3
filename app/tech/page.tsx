@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Bot,
@@ -17,6 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import InstantReportCard from "@/components/sections/InstantReportCard";
+import { articlesService } from "@/services/articles.service";
+import { getCanonicalArticlePath } from "@/lib/articlePaths";
 
 type SectorPost = {
   id: string | number;
@@ -26,6 +24,8 @@ type SectorPost = {
   image_url?: string | null;
   slug?: string | null;
   created_at?: string;
+  description?: string;
+  href: string;
 };
 
 const subcategoryCards: Array<{
@@ -119,51 +119,28 @@ const heroContentBySub: Record<string, HeroContent> = {
 };
 
 function getArticlePath(post: SectorPost) {
-  const slug = post.slug || `post-${post.id}`;
-  const subcategorySlug =
-    post.subcategory === "تطبيقات الذكاء الاصطناعي"
-      ? "ai-apps"
-      : post.subcategory === "الأمن السيبراني"
-        ? "cybersecurity"
-        : post.subcategory === "الحوسبة السحابية"
-          ? "cloud-remote"
-          : post.subcategory === "البنية التحتية"
-            ? "infra"
-            : post.subcategory === "إنترنت الأشياء"
-              ? "iot-emerging"
-              : "general";
-
-  return `/articles/tech/${subcategorySlug}/${slug}`;
+  return post.href;
 }
 
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
-  const searchParams = useSearchParams();
-  const activeSub = searchParams.get("sub") ?? "all";
-  const activeKey = {
+function TechSectorPageContent({ posts, activeSub }: { posts: SectorPost[]; activeSub: string }) {
+  const activeKey = ({
     "ai-apps": "تطبيقات الذكاء الاصطناعي",
     cybersecurity: "الأمن السيبراني",
     "cloud-remote": "الحوسبة السحابية",
     infra: "البنية التحتية",
     "iot-emerging": "إنترنت الأشياء",
-  }[searchParams.get("sub") ?? ""] ?? "الكل";
+  } as Record<string, string>)[activeSub] ?? "الكل";
   const heroContent = heroContentBySub[activeSub] ?? heroContentBySub.all;
 
-  const articleCounts = useMemo(() => {
-    const counts: Record<string, number> = { "الكل": posts.length };
-    subcategoryCards.forEach((item) => {
-      counts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
-    });
-    return counts;
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    if (activeKey === "الكل") return posts;
-    return posts.filter((post) => post.subcategory === activeKey);
-  }, [activeKey, posts]);
+  const articleCounts: Record<string, number> = { "الكل": posts.length };
+  subcategoryCards.forEach((item) => {
+    articleCounts[item.key] = posts.filter((post) => post.subcategory === item.key).length;
+  });
+  const filteredPosts = activeKey === "الكل" ? posts : posts.filter((post) => post.subcategory === activeKey);
 
   return (
     <div className="space-y-8 py-2 dir-rtl" dir="rtl">
@@ -239,7 +216,7 @@ function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
                     </h3>
 
                     <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">
-                      {stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
+                      {post.description || stripHtml(post.content || "") || "محتوى عملي يشرح الفكرة الأساسية، الخطوات، والأدوات اللازمة."}
                     </p>
                   </div>
 
@@ -281,54 +258,21 @@ function TechSectorPageContent({ posts }: { posts: SectorPost[] }) {
   );
 }
 
-export default function TechSectorPage() {
-  const posts: SectorPost[] = [
-    {
-      id: 1,
-      title: "كيف تختار نموذج الذكاء الاصطناعي المناسب لمنتجك؟",
-      content: "<p>قارن النماذج المفتوحة والمغلقة، والتكلفة، وسرعة التنفيذ، قبل اعتماد الذكاء الاصطناعي في التشغيل.</p>",
-      subcategory: "تطبيقات الذكاء الاصطناعي",
-      slug: "choosing-ai-model",
-      image_url: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-20T10:00:00.000Z",
-    },
-    {
-      id: 2,
-      title: "خطة أمان أولية لعامل مستقل أو فريق صغير",
-      content: "<p>خوارزمية بسيطة لتقليل الثغرات وتقييم الجوانب التي تحتاج إلى أولوية فورية.</p>",
-      subcategory: "الأمن السيبراني",
-      slug: "small-team-security-plan",
-      image_url: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-17T10:00:00.000Z",
-    },
-    {
-      id: 3,
-      title: "السحابة أم الخادم الخاص؟ دليل القرار السريع",
-      content: "<p>معيار العمق والمخاطر للتنقل بين السحابة المحلية والمستضافة مع الحفاظ على القرارات الاقتصادية.</p>",
-      subcategory: "الحوسبة السحابية",
-      slug: "cloud-vs-self-hosted",
-      image_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-15T10:00:00.000Z",
-    },
-    {
-      id: 4,
-      title: "مقاييس الأداء الأساسية قبل إطلاق تطبيق جديد",
-      content: "<p>راجع Core Web Vitals واستجابة الخادم والتخزين قبل الاعتماد على المنتج في الإنتاج.</p>",
-      subcategory: "البنية التحتية",
-      slug: "performance-metrics-launch",
-      image_url: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-12T10:00:00.000Z",
-    },
-    {
-      id: 5,
-      title: "أين تبدأ في بناء نظام IoT صغير؟",
-      content: "<p>من جمع البيانات إلى الحماية والمحطات المنطقية، وقائمة أولية للخطوات التنفيذية.</p>",
-      subcategory: "إنترنت الأشياء",
-      slug: "iot-starter-guide",
-      image_url: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
-      created_at: "2026-08-08T10:00:00.000Z",
-    },
-  ];
+export default async function TechSectorPage({ searchParams }: { searchParams: Promise<{ sub?: string }> }) {
+  const [{ sub = "all" }, articles] = await Promise.all([searchParams, articlesService.getAllArticles()]);
+  const posts: SectorPost[] = articles
+    .filter((article) => article.categorySlug === "tech")
+    .map((article) => ({
+      id: article.id,
+      title: article.title,
+      content: article.content,
+      subcategory: article.subcategoryLabel,
+      image_url: article.coverImage,
+      slug: article.slug,
+      created_at: article.publishedAt,
+      description: article.description,
+      href: getCanonicalArticlePath(article),
+    }));
 
-  return <TechSectorPageContent posts={posts} />;
+  return <TechSectorPageContent posts={posts} activeSub={sub} />;
 }

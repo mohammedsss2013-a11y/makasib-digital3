@@ -3,7 +3,7 @@ import { createPostSchema, parsePostFormData, updatePostSchema } from "@/lib/val
 import { sanitizeHtml } from "@/lib/sanitize";
 import { getUserRoleDisplayName } from "@/utils/dashboard";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
-import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
+import { getCanonicalArticlePath, toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
 import { generateArticleContent } from "@/utils/generatedArticleContent";
 
 const validPost = {
@@ -86,6 +86,14 @@ describe("Article taxonomy", () => {
     expect(toSubcategorySlug("finance", "التجارة الإلكترونية")).toBe("freelance-economy");
     expect(toSubcategorySlug("media", "البودكاست")).toBe("content-creation");
     expect(toSubcategorySlug("digital-lifestyle", "إدارة الحياة الرقمية")).toBe("remote-work");
+  });
+
+  it("builds article links from canonical category, subcategory, and article slugs", () => {
+    expect(getCanonicalArticlePath({
+      categorySlug: "tech",
+      subcategorySlug: "artificial-intelligence",
+      slug: "active-article",
+    })).toBe("/articles/tech/artificial-intelligence/active-article");
   });
 });
 
