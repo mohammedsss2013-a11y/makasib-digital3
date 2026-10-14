@@ -1,10 +1,11 @@
 import Link from "next/link";
 import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft, Clock, BookOpen } from "lucide-react";
 import { articlesService } from "@/services/articles.service";
 import { redirect } from "next/navigation";
 import { toSubcategorySlug } from "@/lib/articlePaths";
+import { Badge } from "@/components/ui/Badge";
 
 interface SubcategoryPageProps {
   params: Promise<{
@@ -45,45 +46,6 @@ export async function generateMetadata({ params, searchParams }: SubcategoryPage
   };
 }
 
-function normalizeText(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-const subcategoryAliases: Record<string, Record<string, string[]>> = {
-  finance: {
-    freelancing: ["العمل الحر", "المشاريع المصغرة", "freelancing", "تسعير الخدمات", "العقود", "السعر", "العميل"],
-    ecommerce: ["التجارة الإلكترونية", "ecommerce", "البيع", "المتجر", "هوامش الربح", "المنتج"],
-    marketing: ["التسويق الرقمي", "marketing", "الإعلانات", "الحملات", "الـ ROAS", "CAC", "التسويق"],
-    "content-economy": ["صناعة المحتوى", "content economy", "العضويات", "الرعاية", "الإيرادات", "المحتوى"],
-    crypto: ["العملات الرقمية", "crypto", "البلوكشين", "المحفظة", "الأمان", "التشفير"],
-    hardware: ["العتاد", "hardware", "الإنتاجية", "الشاشة", "الكمبيوتر", "الجهاز"],
-  },
-  tech: {
-    "ai-apps": ["الذكاء الاصطناعي", "ai apps", "النماذج", "openai", "claude", "gpt", "llm"],
-    cybersecurity: ["الأمن السيبراني", "cybersecurity", "الحماية", "الخصوصية", "الاختراق", "2fa", "الهوية"],
-    "cloud-remote": ["السحابة", "cloud", "العمل عن بعد", "remote", "الخادم", "server"],
-    infra: ["البنية التقنية", "infra", "الخادم", "الاستضافة", "الأداء", "الـ VPS"],
-    "iot-emerging": ["iot", "التقنيات الناشئة", "الإنترنت", "الأجهزة", "الاستشعار", "المستشعر"],
-  },
-  media: {
-    creation: ["صناعة المحتوى", "content creation", "المرئي", "المكتوب", "السرد", "التسويق"],
-    news: ["الأخبار", "التحليلات", "industry news", "المنصات", "التحليل"],
-    podcasting: ["البودكاست", "podcast", "الصوت", "الحلقة", "الاستماع"],
-    streaming: ["البث المباشر", "streaming", "الـ live", "التفاعل", "البث"],
-    gaming: ["الترفيه", "الألعاب", "gaming", "اللعب", "المجتمع"],
-  },
-  "digital-lifestyle": {
-    "life-management": ["إدارة الحياة الرقمية", "life management", "التنظيم", "الوقت", "الاستخدام"],
-    health: ["الصحة الرقمية", "health", "التوازن", "النوم", "الإرهاق"],
-    learning: ["التعليم", "learning", "التعلم", "المهارات", "المحتوى التعليمي"],
-    culture: ["الثقافة الرقمية", "culture", "الهوية", "الوعي", "الرقمي"],
-  },
-};
-
 export default async function SubcategoryPage({ params, searchParams }: SubcategoryPageProps) {
   const { category, subcategory } = await params;
   const { topic } = await searchParams;
@@ -97,42 +59,122 @@ export default async function SubcategoryPage({ params, searchParams }: Subcateg
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 py-6 dir-rtl">
-      <header className="border-b border-slate-800/80 pb-8">
-        <h1 className="text-3xl font-black text-white sm:text-4xl">
-          {topic ? (articles[0]?.topicLabel ?? `موضوع: ${topic}`) : (section?.subcategoryLabel ?? `قسم: ${subcategory}`)}
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-400">
-          المقالات المرتبطة بهذا الفرع، بما في ذلك المقالات التي تذكره أو تتناول موضوعاته بشكل مباشر.
-        </p>
+      {/* Page Header */}
+      <header className="border-b border-[var(--border-main)]/70 pb-8">
+        {/* Breadcrumb */}
+        <nav className="mb-4 flex items-center gap-2 text-xs text-[var(--text-muted)]" aria-label="مسار التنقل">
+          <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">الرئيسية</Link>
+          <span className="opacity-50">/</span>
+          <Link href="/articles" className="hover:text-[var(--accent-primary)] transition-colors">المقالات</Link>
+          <span className="opacity-50">/</span>
+          <span className="text-[var(--text-main)] font-semibold">
+            {topic ? (articles[0]?.topicLabel ?? `موضوع: ${topic}`) : (section?.subcategoryLabel ?? `قسم: ${subcategory}`)}
+          </span>
+        </nav>
+
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-black text-[var(--text-main)] sm:text-4xl">
+              {topic ? (articles[0]?.topicLabel ?? `موضوع: ${topic}`) : (section?.subcategoryLabel ?? `قسم: ${subcategory}`)}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--text-muted)]">
+              المقالات المرتبطة بهذا الفرع، بما في ذلك المقالات التي تذكره أو تتناول موضوعاته بشكل مباشر.
+            </p>
+          </div>
+
+          {articles.length > 0 && (
+            <Badge variant="accent" size="sm" className="font-bold mt-2">
+              <BookOpen className="h-3.5 w-3.5" />
+              {articles.length} مقال{articles.length !== 1 ? "ات" : ""}
+            </Badge>
+          )}
+        </div>
       </header>
 
       {articles.length === 0 ? (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center text-slate-400">
-          لا توجد مقالات مرتبطة بهذا الفرع حاليًا.
+        <div className="rounded-2xl border border-dashed border-[var(--border-main)] bg-[var(--bg-card)]/50 p-12 text-center">
+          <BookOpen className="h-12 w-12 mx-auto mb-4 text-[var(--text-muted)] opacity-40" />
+          <p className="text-sm font-semibold text-[var(--text-muted)]">لا توجد مقالات مرتبطة بهذا الفرع حاليًا.</p>
+          <p className="mt-1 text-xs text-[var(--text-subtle)]">يتم إضافة مقالات جديدة بشكل منتظم، تابعونا!</p>
+          <Link
+            href="/articles"
+            className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[var(--border-main)] bg-[var(--bg-card)] px-4 py-2 text-xs font-bold text-[var(--text-main)] transition-all hover:border-[var(--accent-primary)]/50 hover:text-[var(--accent-primary)]"
+          >
+            تصفح جميع المقالات
+            <ArrowLeft className="h-3.5 w-3.5" />
+          </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {articles.map((article) => (
             <Link
               key={article.id}
               href={`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`}
-              className="group flex min-h-64 flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition-all hover:-translate-y-1 hover:border-emerald-500/50 hover:bg-slate-900"
+              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--border-main)]/70 bg-[var(--bg-card)]/90 backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-primary)]/50 hover:shadow-xl"
             >
-              <div className="relative mb-5 aspect-[16/8] overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
-                <AppImage src={article.coverImage} alt={article.coverImageAlt} fallbackType="article" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-              </div>
-              <div>
-                <div className="mb-4 flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-emerald-300">{article.categoryLabel}</span>
-                  <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{article.subcategoryLabel}</span>
-                  {article.topicLabel && <span className="rounded-full border border-slate-800 bg-slate-950 px-2.5 py-1 text-slate-400">{article.topicLabel}</span>}
+              {/* Thumbnail Image */}
+              <div className="relative aspect-[16/8] overflow-hidden bg-[var(--bg-muted)]">
+                <AppImage
+                  src={article.coverImage}
+                  alt={article.coverImageAlt}
+                  fallbackType="article"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                {/* Category badge overlay */}
+                <div className="absolute top-3 right-3">
+                  <Badge variant="accent" size="sm" className="backdrop-blur-md bg-[var(--bg-surface)]/90 font-bold shadow-xs">
+                    {article.categoryLabel}
+                  </Badge>
                 </div>
-                <h2 className="text-xl font-bold leading-8 text-white transition-colors group-hover:text-emerald-300">{article.title}</h2>
-                <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{article.description}</p>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-4 text-xs text-slate-500">
-                <span>{new Date(article.publishedAt).toLocaleDateString("ar-EG")}</span>
-                <span className="flex items-center gap-2 font-bold text-emerald-300">قراءة المقال <ArrowLeft className="h-4 w-4" /></span>
+
+              {/* Content */}
+              <div className="flex flex-col justify-between flex-1 p-6 space-y-4">
+                <div className="space-y-3">
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full border border-[var(--accent-primary)]/20 bg-[var(--accent-light)] px-2.5 py-1 text-[var(--accent-primary)] font-semibold">
+                      {article.subcategoryLabel}
+                    </span>
+                    {article.topicLabel && (
+                      <span className="rounded-full border border-[var(--border-main)]/80 bg-[var(--bg-muted)] px-2.5 py-1 text-[var(--text-muted)]">
+                        {article.topicLabel}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-lg font-bold leading-snug text-[var(--text-main)] transition-colors group-hover:text-[var(--accent-primary)]">
+                    {article.title}
+                  </h2>
+
+                  {/* Description */}
+                  {article.description && (
+                    <p className="line-clamp-2 text-xs leading-relaxed text-[var(--text-muted)]">
+                      {article.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Footer meta */}
+                <div className="flex items-center justify-between border-t border-[var(--border-main)]/60 pt-4 text-xs">
+                  <div className="flex items-center gap-3 text-[var(--text-muted)]">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {article.readTime}
+                    </span>
+                    <span>•</span>
+                    <time dateTime={article.publishedAt}>
+                      {new Date(article.publishedAt).toLocaleDateString("ar-EG")}
+                    </time>
+                  </div>
+                  <span className="inline-flex items-center gap-1 font-bold text-[var(--accent-primary)] transition-transform group-hover:-translate-x-1">
+                    اقرأ المقال
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

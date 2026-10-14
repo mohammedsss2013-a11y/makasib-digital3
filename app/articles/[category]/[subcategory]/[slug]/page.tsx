@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppImage from "@/components/ui/AppImage";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, Clock3, UserRound, Calendar, Share2 } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3, UserRound, Calendar, Sparkles } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { articlesService } from "@/services/articles.service";
 import { SectionInteractiveTools } from "@/components/articles/SectionInteractiveTools";
@@ -11,6 +11,8 @@ import { ArticleTableOfContents } from "@/components/articles/ArticleTableOfCont
 import { ReadingProgress } from "@/components/articles/ReadingProgress";
 import { ArticleSpeechControls } from "@/components/articles/ArticleSpeechControls";
 import { Badge } from "@/components/ui/Badge";
+import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
+import { generateArticleContent } from "@/utils/generatedArticleContent";
 
 // تمكين إعادة التحقق التزايدي الذكي (ISR) كل ساعة
 export const revalidate = 3600;
@@ -62,6 +64,14 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
 }
 
+/** Short seeded summaries are not complete article bodies. */
+function isContentRich(content: string): boolean {
+  if (!content) return false;
+  // Strip HTML tags
+  const stripped = content.replace(/<[^>]*>/g, " ").replace(/[#*_`>~\[\]]/g, " ").replace(/\s+/g, " ").trim();
+  return stripped.length > 1200;
+}
+
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { category, subcategory, slug } = await params;
   let article;
@@ -70,13 +80,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     article = await articlesService.getBySlug(category, subcategory, slug);
   } catch (error) {
     console.error("تعذر جلب المقال:", error);
-    notFound();
+    throw error;
   }
 
   if (!article) notFound();
   if (article.categorySlug !== category || article.subcategorySlug !== subcategory) {
     redirect(`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`);
   }
+
+  // Pre-process content: convert Markdown → HTML for both TOC and renderer
+  const hasRichContent = isContentRich(article.content);
+  const articleContent = hasRichContent
+    ? article.content
+    : generateArticleContent(article);
+  const processedContent = isMarkdown(articleContent) ? markdownToHtml(articleContent) : articleContent;
+  const speechText = processedContent.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
   return (
     <>
@@ -147,7 +165,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             </div>
 
-            <ArticleSpeechControls text={article.content} />
+            <ArticleSpeechControls text={speechText} />
           </div>
 
           {/* Immersive Cover Image */}
@@ -164,17 +182,22 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </header>
 
-        {/* Table of Contents (Single Column Friendly Overview) */}
-        <ArticleTableOfContents content={article.content} />
+        {/* ── Content Area ── */}
+        {!hasRichContent && (
+          <aside className="flex items-start gap-3 rounded-xl border border-[var(--accent-primary)]/25 bg-[var(--accent-light)]/60 p-4 text-sm leading-relaxed text-[var(--text-muted)]" aria-label="حالة المحتوى">
+            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent-primary)]" />
+            <p>مسودة تحريرية أولية أُعدت بناءً على عنوان المقال وتصنيفه، وتحتاج إلى مراجعة تحريرية قبل اعتمادها.</p>
+          </aside>
+        )}
 
-        {/* ── Main Single-Column Content Body ── */}
+        <ArticleTableOfContents content={processedContent} />
+
         <div className="prose prose-lg dark:prose-invert prose-emerald max-w-none text-[var(--text-main)] prose-headings:font-black prose-headings:tracking-tight prose-p:leading-loose prose-p:text-[var(--text-muted)] prose-li:leading-relaxed prose-img:rounded-2xl">
           <ArticleInteractiveBoundary>
-            <ArticleToolEmbedder content={article.content} />
+            <ArticleToolEmbedder content={processedContent} />
           </ArticleInteractiveBoundary>
         </div>
 
-        {/* Optional Interactive Section Tools */}
         {article.categorySlug === "finance" && article.subcategorySlug === "freelancing" && (
           <div className="border-t border-[var(--border-main)]/70 pt-8 not-prose">
             <ArticleInteractiveBoundary>

@@ -28,6 +28,31 @@ export interface ArticleSlugPath {
 
 const articleFields = "id, title, content, category, subcategory, topic, image_url, slug, description, image_alt, created_at";
 
+type ArticleRouteRow = {
+  id: number | string;
+  slug: string | null;
+  category: string | null;
+  subcategory: string | null;
+};
+
+function getUniqueArticleSlugs(posts: ArticleRouteRow[]) {
+  const slugs = posts.map((post) => post.slug || `post-${post.id}`);
+  const routeKeys = posts.map((post, index) =>
+    `${toCategorySlug(post.category)}/${toSubcategorySlug(post.category, post.subcategory)}/${slugs[index]}`,
+  );
+  const routeCounts = new Map<string, number>();
+
+  for (const routeKey of routeKeys) {
+    routeCounts.set(routeKey, (routeCounts.get(routeKey) ?? 0) + 1);
+  }
+
+  return posts.map((post, index) =>
+    (routeCounts.get(routeKeys[index]) ?? 0) > 1
+      ? `post-${post.id}-${slugs[index]}`
+      : slugs[index],
+  );
+}
+
 function getCategoryLabel(category: string | null, fallback: string) {
   const normalized = toCategorySlug(category);
   if (normalized === "finance") return "المال والأعمال";
@@ -51,11 +76,12 @@ export const articlesService = {
       }
 
       const paths: ArticleSlugPath[] = [];
-      for (const post of posts) {
+      const routeSlugs = getUniqueArticleSlugs(posts);
+      for (const [index, post] of posts.entries()) {
         if (!post.category || !post.subcategory) continue;
         const catSlug = toCategorySlug(post.category);
         const subcatSlug = toSubcategorySlug(post.category, post.subcategory);
-        const articleSlug = post.slug || `post-${post.id}`;
+        const articleSlug = routeSlugs[index];
 
         paths.push({ category: catSlug, subcategory: subcatSlug, slug: articleSlug });
         if (subcatSlug === "freelance-economy") {
@@ -72,13 +98,21 @@ export const articlesService = {
     try {
       const supabase = createPublicClient();
 
-      // 1. البحث الدقيق بحقل slug أولاً
-      let { data: post } = await supabase
+      // A slug may be shared by posts in different categories; resolve it in route context.
+      const { data: slugMatches, error: slugError } = await supabase
         .from("posts")
         .select(articleFields)
         .eq("slug", slug)
-        .eq("status", "published")
-        .maybeSingle();
+        .eq("status", "published");
+
+      if (slugError) throw slugError;
+
+      const matchingPosts = slugMatches ?? [];
+      let post = matchingPosts.find((candidate) =>
+        toCategorySlug(candidate.category) === toCategorySlug(category)
+        && toSubcategorySlug(candidate.category, subcategory) === toSubcategorySlug(candidate.category, candidate.subcategory),
+      ) ?? (matchingPosts.length === 1 ? matchingPosts[0] : null);
+      let resolvedRouteSlug: string | null = null;
 
       // 2. إذا لم يُعثر عليه بالـ slug وكان رقماً أو بمعرف post- / article-
       if (!post) {
@@ -92,7 +126,9 @@ export const articlesService = {
               .eq("id", numericId)
               .eq("status", "published")
               .maybeSingle();
+            if (res.error) throw res.error;
             post = res.data;
+            if (post) resolvedRouteSlug = slug;
           }
         }
       }
@@ -105,6 +141,7 @@ export const articlesService = {
           .eq("slug", "from-hourly-to-value-based-pricing")
           .eq("status", "published")
           .maybeSingle();
+        if (res.error) throw res.error;
         post = res.data;
       }
 
@@ -117,7 +154,7 @@ export const articlesService = {
 
       return {
         id: String(post.id),
-        slug: post.slug || `post-${post.id}`,
+        slug: resolvedRouteSlug || post.slug || `post-${post.id}`,
         title: post.title,
         description,
         categorySlug: toCategorySlug(post.category) || category,
@@ -133,8 +170,9 @@ export const articlesService = {
         coverImageAlt: post.title,
         content,
       };
-    } catch {
-      return null;
+    } catch (error) {
+      console.error("تعذر جلب المقال من قاعدة البيانات:", error);
+      throw error;
     }
   },
 
@@ -151,12 +189,13 @@ export const articlesService = {
         return [];
       }
 
-      return posts.map((post) => {
+      const routeSlugs = getUniqueArticleSlugs(posts);
+      return posts.map((post, index) => {
         const content = typeof post.content === "string" ? post.content : "";
 
         return {
           id: String(post.id),
-          slug: post.slug || `post-${post.id}`,
+          slug: routeSlugs[index],
           title: post.title,
           description: post.description || `${content.slice(0, 150).replace(/<[^>]*>/g, "").trim()}...`,
           categorySlug: toCategorySlug(post.category),

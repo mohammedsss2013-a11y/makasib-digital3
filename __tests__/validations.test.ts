@@ -4,6 +4,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import { getUserRoleDisplayName } from "@/utils/dashboard";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 import { toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
+import { generateArticleContent } from "@/utils/generatedArticleContent";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -85,5 +86,42 @@ describe("Article taxonomy", () => {
     expect(toSubcategorySlug("finance", "التجارة الإلكترونية")).toBe("freelance-economy");
     expect(toSubcategorySlug("media", "البودكاست")).toBe("content-creation");
     expect(toSubcategorySlug("digital-lifestyle", "إدارة الحياة الرقمية")).toBe("remote-work");
+  });
+});
+
+describe("Generated article drafts", () => {
+  it("creates structured, category-specific Arabic drafts", () => {
+    const categories = [
+      ["finance", "المال والأعمال"],
+      ["tech", "التكنولوجيا والابتكار"],
+      ["media", "الإعلام الجديد"],
+      ["digital-lifestyle", "أسلوب الحياة الرقمي"],
+    ] as const;
+
+    for (const [categorySlug, categoryLabel] of categories) {
+      const content = generateArticleContent({
+        title: "دليل عملي للنمو المستدام",
+        description: "خطوات تساعد على اتخاذ قرار أوضح.",
+        categorySlug,
+        categoryLabel,
+        subcategoryLabel: "مسار متخصص",
+        topicLabel: "موضوع المقال",
+      });
+
+      expect(content).toContain("## مقدمة");
+      expect(content).toContain("### ابدأ بالسياق");
+      expect(content).toContain("- ");
+      expect(content).toContain("## خلاصة");
+      expect(content.length).toBeGreaterThan(1800);
+    }
+
+    expect(generateArticleContent({
+      title: "اختبار التقنية",
+      description: "",
+      categorySlug: "tech",
+      categoryLabel: "التكنولوجيا والابتكار",
+      subcategoryLabel: "الابتكار",
+      topicLabel: "",
+    })).toContain("الخصوصية");
   });
 });
