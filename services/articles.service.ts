@@ -167,7 +167,7 @@ export const articlesService = {
         publishedAt: post.created_at || new Date().toISOString(),
         readTime: "5 دقائق",
         coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
-        coverImageAlt: post.title,
+        coverImageAlt: post.image_alt?.trim() || post.title,
         content,
       };
     } catch (error) {
@@ -208,7 +208,7 @@ export const articlesService = {
           publishedAt: post.created_at || new Date().toISOString(),
           readTime: "5 دقائق",
           coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
-          coverImageAlt: post.title,
+          coverImageAlt: post.image_alt?.trim() || post.title,
           content,
         };
       });

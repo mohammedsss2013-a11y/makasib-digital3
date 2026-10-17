@@ -113,7 +113,7 @@ export default async function SubcategoryPage({ params, searchParams }: Subcateg
               className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--border-main)]/70 bg-[var(--bg-card)]/90 backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-primary)]/50 hover:shadow-xl"
             >
               {/* Thumbnail Image */}
-              <div className="relative aspect-[16/8] overflow-hidden bg-[var(--bg-muted)]">
+              <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-muted)]">
                 <AppImage
                   src={article.coverImage}
                   alt={article.coverImageAlt}

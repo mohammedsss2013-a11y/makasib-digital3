@@ -6,6 +6,7 @@ const categorySlugs: Record<string, string> = {
   التكنولوجيا: "tech",
   "قطاع التكنولوجيا": "tech",
   tech: "tech",
+  technology: "tech",
   "الإعلام الجديد": "media",
   "قطاع الإعلام": "media",
   media: "media",
@@ -16,9 +17,46 @@ const categorySlugs: Record<string, string> = {
   digitalists: "digital-lifestyle",
 };
 
+function normalizeSlugValue(value: string | null | undefined) {
+  if (!value) return "";
+
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[_\s]+/g, "-")
+    .replace(/[^\p{L}\p{N}\-]+/gu, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function getNormalizedLookupValue<T extends Record<string, string>>(lookup: T, value: string | null | undefined) {
+  if (!value) return undefined;
+
+  const direct = lookup[value];
+  if (direct) return direct;
+
+  const normalizedValue = normalizeSlugValue(value);
+  if (!normalizedValue) return undefined;
+
+  for (const [lookupKey, routeSlug] of Object.entries(lookup)) {
+    if (normalizeSlugValue(lookupKey) === normalizedValue) return routeSlug;
+  }
+
+  return undefined;
+}
+
 const subcategorySlugs: Record<string, Record<string, string>> = {
   finance: {
-    الاستثمار: "investment",
+    INVESTMENT: "investment",
+    investment: "investment",
+    freelancing: "freelancing",
+    ecommerce: "ecommerce",
+    marketing: "marketing",
+    "content-economy": "content-economy",
+    crypto: "crypto",
+    hardware: "hardware",
+    "freelance-economy": "freelance-economy",
+    "الاستثمار": "investment",
     "الاقتصاد الحر": "freelance-economy",
     "ريادة الأعمال": "entrepreneurship",
     "العمل الحر والخدمات": "freelance-economy",
@@ -32,15 +70,13 @@ const subcategorySlugs: Record<string, Record<string, string>> = {
     "العملات الرقمية والبلوكشين": "investment",
     "الأسواق المالية": "investment",
     "الاستثمار العقاري الرقمي": "investment",
-    freelancing: "freelance-economy",
-    ecommerce: "freelance-economy",
-    marketing: "freelance-economy",
-    "content-economy": "freelance-economy",
-    crypto: "investment",
-    hardware: "entrepreneurship",
-    "freelance-economy": "freelance-economy",
   },
   tech: {
+    "ai-apps": "ai-apps",
+    "cloud-remote": "cloud-remote",
+    infra: "infra",
+    "iot-emerging": "iot-emerging",
+    cybersecurity: "cybersecurity",
     "الذكاء الاصطناعي": "artificial-intelligence",
     "التقنيات الناشئة": "emerging-tech",
     "تطبيقات الذكاء الاصطناعي": "artificial-intelligence",
@@ -53,12 +89,13 @@ const subcategorySlugs: Record<string, Record<string, string>> = {
     "إنترنت الأشياء والتقنيات الناشئة": "emerging-tech",
     "الأمن السيبراني": "cybersecurity",
     "الأمن السيبراني والخصوصية الرقمية": "cybersecurity",
-    "ai-apps": "artificial-intelligence",
-    "cloud-remote": "emerging-tech",
-    infra: "emerging-tech",
-    "iot-emerging": "emerging-tech",
   },
   media: {
+    creation: "creation",
+    news: "news",
+    podcasting: "podcasting",
+    streaming: "streaming",
+    gaming: "gaming",
     "صناعة المحتوى": "content-creation",
     "صناعة المحتوى المرئي والمكتوب": "content-creation",
     "أخبار وتحليلات الصناعة الرقمية": "social-platforms",
@@ -69,12 +106,14 @@ const subcategorySlugs: Record<string, Record<string, string>> = {
     "منصات البث الحي والتفاعل": "content-creation",
     "الترفيه الرقمي والألعاب": "gaming",
     "صناعة الألعاب والترفيه": "gaming",
-    creation: "content-creation",
-    news: "social-platforms",
-    podcasting: "content-creation",
-    streaming: "content-creation",
   },
   "digital-lifestyle": {
+    culture: "culture",
+    health: "health",
+    learning: "learning",
+    "life-management": "life-management",
+    philosophy: "philosophy",
+    psychology: "psychology",
     "العمل عن بعد": "remote-work",
     "الواقع الافتراضي": "virtual-reality",
     "الصحة الرقمية": "digital-health",
@@ -86,10 +125,6 @@ const subcategorySlugs: Record<string, Record<string, string>> = {
     "الثقافة الرقمية": "remote-work",
     "الثقافة الرقمية العابرة للمستقبل": "remote-work",
     "مجتمع مكاسب": "remote-work",
-    "life-management": "remote-work",
-    health: "digital-health",
-    learning: "virtual-reality",
-    culture: "remote-work",
   },
 };
 
@@ -110,18 +145,30 @@ const topicSlugs: Record<string, string> = {
 
 export function toCategorySlug(category: string | null | undefined) {
   if (!category) return "general";
-  return categorySlugs[category] ?? category.trim().toLowerCase().replace(/\s+/g, "-");
+
+  const direct = getNormalizedLookupValue(categorySlugs, category);
+  if (direct) return direct;
+
+  return normalizeSlugValue(category) || "general";
 }
 
 export function toSubcategorySlug(category: string | null | undefined, subcategory: string | null | undefined) {
   if (!subcategory) return "general";
+
   const categorySlug = toCategorySlug(category);
-  return subcategorySlugs[categorySlug]?.[subcategory] ?? subcategory.trim().toLowerCase().replace(/\s+/g, "-");
+  const direct = getNormalizedLookupValue(subcategorySlugs[categorySlug] ?? {}, subcategory);
+  if (direct) return direct;
+
+  return normalizeSlugValue(subcategory) || "general";
 }
 
 export function toTopicSlug(topic: string | null | undefined) {
   if (!topic) return "";
-  return topicSlugs[topic] ?? topic.trim().toLowerCase().replace(/\s+/g, "-");
+
+  const direct = getNormalizedLookupValue(topicSlugs, topic);
+  if (direct) return direct;
+
+  return normalizeSlugValue(topic);
 }
 
 export function getArticlePath(post: {

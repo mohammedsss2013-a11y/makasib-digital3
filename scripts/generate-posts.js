@@ -7,9 +7,13 @@ const articles = [
     title: 'كيف تختار أدوات الذكاء الاصطناعي لفريقك؟',
     slug: 'choosing-ai-tools-for-your-team',
     category: 'التكنولوجيا والابتكار',
+    categorySlug: 'tech',
     subcategory: 'تطبيقات وأنظمة الذكاء الاصطناعي',
+    subcategorySlug: 'artificial-intelligence',
     topic: 'الذكاء الاصطناعي في بيئة العمل',
-    description: 'إطار عملي لتقييم أدوات الذكاء الاصطناعي ودمجها في سير العمل مع حماية البيانات وقياس النتائج.',
+    focusKeyword: 'أدوات الذكاء الاصطناعي',
+    description: 'أدوات الذكاء الاصطناعي تساعد الفرق على إنجاز المهام بكفاءة؛ تعرّف إلى تقييم الجودة والتكلفة وحماية البيانات وقياس الأثر قبل اعتمادها في العمل اليومي.',
+    relatedSlugs: ['cybersecurity-plan-for-startups', 'editorial-calendar-that-builds-audience'],
     image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'تصور بصري لتقنيات الذكاء الاصطناعي',
     intro: 'تتسابق الفرق إلى تجربة أدوات الذكاء الاصطناعي، لكن كثرة الخيارات لا تعني تلقائيًا تحسن الأداء. الاختيار السليم يبدأ من مهمة محددة ومشكلة متكررة، ثم يقارن بين جودة النتيجة والتكلفة والمخاطر.',
@@ -24,9 +28,13 @@ const articles = [
     title: 'خطة أمن سيبراني عملية للشركات الناشئة',
     slug: 'cybersecurity-plan-for-startups',
     category: 'التكنولوجيا والابتكار',
+    categorySlug: 'tech',
     subcategory: 'الأمن السيبراني والخصوصية الرقمية',
+    subcategorySlug: 'cybersecurity',
     topic: 'حماية الشركات الناشئة',
-    description: 'خطوات مرتبة لحماية حسابات الفريق وأجهزته ونسخه الاحتياطية دون تعقيد تشغيلي مبكر.',
+    focusKeyword: 'الأمن السيبراني',
+    description: 'الأمن السيبراني للشركات الناشئة يبدأ بحماية الحسابات والأجهزة والنسخ الاحتياطية؛ تعرّف إلى خطة عملية لتقليل المخاطر والاستعداد للحوادث الرقمية.',
+    relatedSlugs: ['choosing-ai-tools-for-your-team', 'healthy-screen-boundaries-remote-work'],
     image_url: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'قفل رقمي يرمز إلى حماية الأنظمة والبيانات',
     intro: 'لا تحتاج الشركة الناشئة إلى بنية أمنية ضخمة كي تقلل مخاطرها الأساسية. الأولوية هي حماية الحسابات التي تفتح بقية الأنظمة، وضبط الأجهزة، والتأكد من إمكانية استعادة البيانات عند وقوع حادث.',
@@ -41,9 +49,13 @@ const articles = [
     title: 'كيف تحسب السعر الحقيقي لخدمة العمل الحر؟',
     slug: 'calculate-freelance-service-pricing',
     category: 'المال والأعمال',
+    categorySlug: 'finance',
     subcategory: 'العمل الحر والمشاريع المصغرة',
+    subcategorySlug: 'freelance-economy',
     topic: 'التسعير وإدارة المشاريع',
-    description: 'طريقة لحساب تكلفة الوقت والنفقات ونطاق العمل قبل إرسال عرض سعر قابل للاستمرار.',
+    focusKeyword: 'تسعير العمل الحر',
+    description: 'تسعير العمل الحر يحتاج إلى حساب الوقت والتكاليف ونطاق الخدمة؛ اتبع خطوات عملية لإعداد عرض واضح يحقق الاستدامة ويمنع توسع العمل بلا مقابل.',
+    relatedSlugs: ['ecommerce-store-profitability-metrics', 'editorial-calendar-that-builds-audience'],
     image_url: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'دفتر حسابات وآلة حاسبة لتخطيط سعر الخدمة',
     intro: 'السعر الذي يغطي ساعات التنفيذ فقط قد يترك المستقل أمام عمل غير مربح. التسعير المتماسك يأخذ في الحسبان وقت التواصل والمراجعات والتكاليف غير المباشرة، ويشرح للعميل ما الذي سيستلمه.',
@@ -58,9 +70,13 @@ const articles = [
     title: 'مؤشرات بسيطة لقياس ربحية المتجر الإلكتروني',
     slug: 'ecommerce-store-profitability-metrics',
     category: 'المال والأعمال',
+    categorySlug: 'finance',
     subcategory: 'التجارة الإلكترونية والبيع الرقمي',
+    subcategorySlug: 'freelance-economy',
     topic: 'تحليل أداء المتاجر',
-    description: 'دليل لقراءة هامش المساهمة وتكلفة اكتساب العميل والتحويل بعيدًا عن أرقام الزيارات وحدها.',
+    focusKeyword: 'ربحية المتجر الإلكتروني',
+    description: 'ربحية المتجر الإلكتروني لا تقاس بالمبيعات وحدها؛ تعرّف إلى هامش المساهمة وتكلفة اكتساب العميل ومؤشرات التحويل لتحسين قرارات التسويق والبيع.',
+    relatedSlugs: ['calculate-freelance-service-pricing', 'verify-digital-news-before-sharing'],
     image_url: 'https://images.unsplash.com/photo-1556742049-0a67d577c4d3?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'تجربة شراء عبر الإنترنت من هاتف ذكي',
     intro: 'قد يرتفع عدد الزيارات والطلبات بينما تتراجع الأرباح بسبب الخصومات أو الشحن أو تكلفة الإعلان. قياس المتجر يبدأ بربط كل طلب بتكلفته، ثم فهم موضع التسرب في رحلة الشراء.',
@@ -75,9 +91,13 @@ const articles = [
     title: 'تقويم محتوى يبني جمهورًا لا ضجيجًا',
     slug: 'editorial-calendar-that-builds-audience',
     category: 'الإعلام الجديد',
+    categorySlug: 'media',
     subcategory: 'صناعة المحتوى المرئي والمكتوب',
+    subcategorySlug: 'content-creation',
     topic: 'التخطيط التحريري',
-    description: 'طريقة لبناء تقويم محتوى يرتكز على أسئلة الجمهور ورسالة واضحة وإيقاع نشر واقعي.',
+    focusKeyword: 'تقويم المحتوى',
+    description: 'تقويم المحتوى الفعال يربط أسئلة الجمهور برسالة وإيقاع نشر واقعي؛ تعرّف إلى تخطيط الموضوعات وقياس أثرها وبناء جمهور مهتم على المدى الطويل.',
+    relatedSlugs: ['verify-digital-news-before-sharing', 'weekly-system-for-digital-organization'],
     image_url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'أدوات صناعة المحتوى وإدارة النشر الرقمي',
     intro: 'التقويم التحريري ليس جدولًا لملء الأيام، بل وسيلة لربط ما تنشره بحاجة حقيقية لدى الجمهور. حين تتضح الرسالة والإيقاع، يصبح إنتاج محتوى مفيد أكثر استدامة من مطاردة كل اتجاه عابر.',
@@ -92,9 +112,13 @@ const articles = [
     title: 'خطوات التحقق من الأخبار قبل إعادة نشرها',
     slug: 'verify-digital-news-before-sharing',
     category: 'الإعلام الجديد',
+    categorySlug: 'media',
     subcategory: 'أخبار وتحليلات الصناعة الرقمية',
+    subcategorySlug: 'social-platforms',
     topic: 'التحقق من المعلومات',
-    description: 'منهج عملي لفحص مصدر الخبر وتاريخه وسياقه والصورة المرتبطة به قبل مشاركته.',
+    focusKeyword: 'التحقق من الأخبار',
+    description: 'التحقق من الأخبار قبل النشر يبدأ بمراجعة المصدر والتاريخ والسياق؛ اتبع خطوات عملية لفحص الادعاءات والصور والاقتباسات وحماية ثقة جمهورك.',
+    relatedSlugs: ['editorial-calendar-that-builds-audience', 'choosing-ai-tools-for-your-team'],
     image_url: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'صحيفة ومصادر إخبارية على مكتب تحرير',
     intro: 'سرعة النشر تجعل الادعاء غير المؤكد يبدو حقيقة بمجرد تكراره. دقائق من الفحص تساعد على اكتشاف صورة قديمة أو اقتباس مبتور أو عنوان لا يطابق المصدر الأصلي.',
@@ -109,9 +133,13 @@ const articles = [
     title: 'نظام أسبوعي لترتيب المهام والملفات الرقمية',
     slug: 'weekly-system-for-digital-organization',
     category: 'رقميون - أسلوب الحياة',
+    categorySlug: 'digital-lifestyle',
     subcategory: 'إدارة الحياة الرقمية والتنظيم',
+    subcategorySlug: 'remote-work',
     topic: 'التنظيم الرقمي الشخصي',
-    description: 'روتين أسبوعي خفيف لتجميع المهام وتنظيم الملفات وتقليل الإشعارات المتراكمة.',
+    focusKeyword: 'التنظيم الرقمي',
+    description: 'التنظيم الرقمي للمهام والملفات يبدأ بمصدر موحد وقواعد بسيطة؛ جرّب روتينًا أسبوعيًا يقلل التشتت وينظم الالتزامات والنسخ الاحتياطية والإشعارات.',
+    relatedSlugs: ['healthy-screen-boundaries-remote-work', 'calculate-freelance-service-pricing'],
     image_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'مفكرة وأدوات مكتبية للتخطيط الأسبوعي',
     intro: 'التشتت الرقمي لا يُحل عادة بتطبيق جديد، بل بمكان موثوق لحفظ الالتزامات وقاعدة بسيطة لتسمية الملفات ومراجعة دورية قصيرة. الهدف أن تقلل القرارات الصغيرة التي تعيد اتخاذها كل يوم.',
@@ -126,9 +154,13 @@ const articles = [
     title: 'حدود صحية للشاشات أثناء العمل عن بُعد',
     slug: 'healthy-screen-boundaries-remote-work',
     category: 'رقميون - أسلوب الحياة',
+    categorySlug: 'digital-lifestyle',
     subcategory: 'الصحة الرقمية والوقاية من الاحتراق',
+    subcategorySlug: 'digital-health',
     topic: 'الصحة الرقمية والعمل عن بعد',
-    description: 'عادات قابلة للتطبيق لحماية التركيز والراحة والنوم في يوم العمل المتصل بالشاشات.',
+    focusKeyword: 'الصحة الرقمية',
+    description: 'الصحة الرقمية أثناء العمل عن بُعد تعتمد على حدود واضحة وفواصل منتظمة؛ تعرّف إلى عادات تحمي التركيز والراحة والنوم في يومك المتصل بالشاشات.',
+    relatedSlugs: ['weekly-system-for-digital-organization', 'cybersecurity-plan-for-startups'],
     image_url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
     image_alt: 'مساحة هادئة تساعد على الراحة والتوازن اليومي',
     intro: 'العمل عن بُعد يسهّل المرونة، لكنه قد يمدد يوم العمل ويجعل الاستراحة غير واضحة. حدود بسيطة حول الوقت والإشعارات والحركة تساعد على فصل العمل عن بقية اليوم.',
@@ -147,27 +179,47 @@ function escapeHtml(value) {
   })[character]);
 }
 
-function toHtml(article) {
+function toHtml(article, articlesBySlug) {
   const sections = article.sections.map(({ heading, body, detail }) =>
     `<section><h2>${escapeHtml(heading)}</h2><p>${escapeHtml(body)}</p><h3>خطوة عملية</h3><p>${escapeHtml(detail)}</p></section>`,
   ).join('\n');
+  const keyPoints = article.sections.map(({ detail }) => `<li>${escapeHtml(detail)}</li>`).join('');
+  const relatedArticles = article.relatedSlugs.map((slug) => {
+    const related = articlesBySlug.get(slug);
+    if (!related) throw new Error(`مقال مرتبط غير موجود: ${slug}`);
+    const href = `/articles/${related.categorySlug}/${related.subcategorySlug}/${related.slug}`;
+    return `<li><a href="${href}">${escapeHtml(related.title)}</a></li>`;
+  }).join('');
 
-  return `<article dir="rtl"><h1>${escapeHtml(article.title)}</h1><p>${escapeHtml(article.intro)}</p><img src="${escapeHtml(article.image_url)}" alt="${escapeHtml(article.image_alt)}" />${sections}<section><h2>الخلاصة</h2><p>${escapeHtml(article.conclusion)}</p></section></article>`;
+  return `<p>${escapeHtml(article.intro)}</p>\n${sections}\n<section><h2>نقاط سريعة</h2><ul>${keyPoints}</ul></section>\n<section><h2>اقرأ أيضاً</h2><ul>${relatedArticles}</ul></section>\n<section><h2>الخلاصة</h2><p>${escapeHtml(article.conclusion)}</p></section>`;
 }
 
 function createArticles() {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   const seenSlugs = new Set();
   const seenImages = new Set();
+  const articlesBySlug = new Map(articles.map((article) => [article.slug, article]));
+  const categoryCounts = new Map();
 
   const output = articles.map((article) => {
     if (seenSlugs.has(article.slug) || seenImages.has(article.image_url)) {
       throw new Error(`تكرار slug أو صورة في بيانات المقال: ${article.slug}`);
     }
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug)) {
+      throw new Error(`رابط المقال غير منسق: ${article.slug}`);
+    }
+    if (article.description.length > 160 || !article.description.includes(article.focusKeyword)) {
+      throw new Error(`وصف SEO يجب ألا يتجاوز 160 حرفًا وأن يتضمن الكلمة المفتاحية: ${article.slug}`);
+    }
     seenSlugs.add(article.slug);
     seenImages.add(article.image_url);
-    return { ...article, content: toHtml(article), article_type: 'guide', status: 'published' };
+    categoryCounts.set(article.category, (categoryCounts.get(article.category) ?? 0) + 1);
+    return { ...article, content: toHtml(article, articlesBySlug), article_type: 'guide', status: 'published' };
   });
+
+  if (categoryCounts.size !== 4 || [...categoryCounts.values()].some((count) => count !== 2)) {
+    throw new Error('يجب توزيع المقالات بالتساوي على الأقسام الأربعة.');
+  }
 
   fs.writeFileSync(path.join(OUTPUT_DIR, 'articles.json'), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
   console.log(`تم إنشاء ${output.length} مقالات تحريرية موزعة على أربعة أقسام في posts_test/articles.json.`);

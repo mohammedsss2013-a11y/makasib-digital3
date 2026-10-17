@@ -88,6 +88,14 @@ describe("Article taxonomy", () => {
     expect(toSubcategorySlug("digital-lifestyle", "إدارة الحياة الرقمية")).toBe("remote-work");
   });
 
+  it("supports the live route slugs used by the app while preserving legacy aliases", () => {
+    expect(toCategorySlug("technology")).toBe("tech");
+    expect(toCategorySlug("digitalists")).toBe("digital-lifestyle");
+    expect(toSubcategorySlug("finance", "ecommerce")).toBe("ecommerce");
+    expect(toSubcategorySlug("media", "podcasting")).toBe("podcasting");
+    expect(toSubcategorySlug("digital-lifestyle", "culture")).toBe("culture");
+  });
+
   it("builds article links from canonical category, subcategory, and article slugs", () => {
     expect(getCanonicalArticlePath({
       categorySlug: "tech",

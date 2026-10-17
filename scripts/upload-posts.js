@@ -24,6 +24,7 @@ function loadArticles() {
 
   const slugs = new Set();
   const imageUrls = new Set();
+  const categoryCounts = new Map();
   for (const article of articles) {
     if (!article.title || !article.slug || !article.content || !article.description) {
       throw new Error('يوجد مقال ينقصه العنوان أو الرابط أو المحتوى أو الوصف.');
@@ -31,10 +32,19 @@ function loadArticles() {
     if (!allowedCategories.has(article.category) || !article.subcategory) {
       throw new Error(`تصنيف غير معروف للمقال: ${article.title}`);
     }
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug)) {
+      throw new Error(`رابط المقال غير منسق: ${article.slug}`);
+    }
+    if (article.description.length > 160 || !article.focusKeyword || !article.description.includes(article.focusKeyword)) {
+      throw new Error(`وصف SEO غير صالح للمقال: ${article.title}`);
+    }
     if (!article.image_url?.startsWith('https://images.unsplash.com/')) {
       throw new Error(`رابط صورة غير صالح للمقال: ${article.title}`);
     }
-    if (!article.content.includes('<h1>') || !article.content.includes('<h2>') || !article.content.includes('<h3>')) {
+    if (!article.image_alt?.trim()) {
+      throw new Error(`النص البديل للصورة غير موجود: ${article.title}`);
+    }
+    if (!article.content.includes('<h2>') || !article.content.includes('<h3>') || !article.content.includes('<ul>') || !article.content.includes('<a href="/articles/')) {
       throw new Error(`محتوى المقال لا يتضمن بنية العناوين المطلوبة: ${article.title}`);
     }
     if (slugs.has(article.slug) || imageUrls.has(article.image_url)) {
@@ -42,6 +52,11 @@ function loadArticles() {
     }
     slugs.add(article.slug);
     imageUrls.add(article.image_url);
+    categoryCounts.set(article.category, (categoryCounts.get(article.category) ?? 0) + 1);
+  }
+
+  if (categoryCounts.size !== 4 || [...categoryCounts.values()].some((count) => count !== 2)) {
+    throw new Error('يجب توزيع المقالات بالتساوي على الأقسام الأربعة.');
   }
 
   return articles;

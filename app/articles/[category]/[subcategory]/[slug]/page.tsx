@@ -41,20 +41,30 @@ interface ArticlePageProps {
   }>;
 }
 
+function getMetaDescription(description: string, title: string) {
+  const normalized = (description || title).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  if (normalized.length <= 160) return normalized;
+
+  const excerpt = normalized.slice(0, 157);
+  const lastSpace = excerpt.lastIndexOf(" ");
+  return `${excerpt.slice(0, lastSpace > 120 ? lastSpace : excerpt.length).trimEnd()}...`;
+}
+
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { category, subcategory, slug } = await params;
   try {
     const article = await articlesService.getBySlug(category, subcategory, slug);
     if (!article) return { title: "المقال غير موجود | مكاسب رقمية" };
+    const description = getMetaDescription(article.description, article.title);
 
     return {
       title: `${article.title} | مكاسب رقمية`,
-      description: article.description,
+      description,
       alternates: { canonical: `/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}` },
       openGraph: {
         type: "article",
         title: article.title,
-        description: article.description,
+        description,
         images: [{ url: article.coverImage, alt: article.coverImageAlt }],
       },
     };
