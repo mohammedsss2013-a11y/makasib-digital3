@@ -8,6 +8,7 @@ import { generateArticleContent } from "@/utils/generatedArticleContent";
 import { selectRelatedArticles } from "@/components/articles/RelatedArticles";
 import type { Article } from "@/services/articles.service";
 import { prepareArticleHeadings } from "@/lib/articleHeadings";
+import { cleanArticleSpeechText, splitSpeechText } from "@/utils/articleSpeechText";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -85,6 +86,39 @@ describe("Article heading extraction", () => {
     expect(content).toContain('<h2 id="article-heading-مقدمة-أهداف">');
     expect(content).toContain('<h2 id="article-heading-مقدمة-أهداف-2">');
     expect(content).toContain("<h4>تجاهل</h4>");
+  });
+});
+
+describe("Article speech text", () => {
+  it("cleans HTML and Markdown while excluding code, images, and formatting", () => {
+    const text = cleanArticleSpeechText(
+      "# **مرحباً** بالعالم\n\n<p>نص عربي مع &amp; ترميز.</p>\n\n`inline code` ![صورة](https://example.com/image.png)\n\n```ts\nconst secret = true;\n```\n\n[رابط مفيد](https://example.com)",
+    );
+
+    expect(text).toContain("مرحباً بالعالم");
+    expect(text).toContain("نص عربي مع & ترميز.");
+    expect(text).toContain("رابط مفيد");
+    expect(text).not.toContain("inline code");
+    expect(text).not.toContain("secret");
+    expect(text).not.toContain("example.com");
+    expect(text).not.toContain("صورة");
+  });
+
+  it("splits long text into speech-friendly chunks with source offsets", () => {
+    const text = "أ".repeat(140) + " كلمة. " + "ب".repeat(140);
+    const chunks = splitSpeechText(text, 160);
+
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0].start).toBe(0);
+    expect(chunks[1].start).toBeGreaterThan(0);
+    expect(chunks.every((chunk) => chunk.text.length <= 160)).toBe(true);
+  });
+
+  it("hard-splits words longer than the maximum chunk length", () => {
+    const chunks = splitSpeechText("ك".repeat(25), 10);
+
+    expect(chunks.map((chunk) => chunk.text.length)).toEqual([10, 10, 5]);
+    expect(chunks.map((chunk) => chunk.start)).toEqual([0, 10, 20]);
   });
 });
 

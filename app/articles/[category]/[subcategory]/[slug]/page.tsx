@@ -17,6 +17,7 @@ import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
 import { generateArticleContent } from "@/utils/generatedArticleContent";
 import { prepareArticleHeadings } from "@/lib/articleHeadings";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
+import { cleanArticleSpeechText } from "@/utils/articleSpeechText";
 
 // تمكين إعادة التحقق التزايدي الذكي (ISR) كل ساعة
 export const revalidate = 3600;
@@ -111,7 +112,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     isMarkdown(articleContent) ? markdownToHtml(articleContent) : articleContent,
   );
   const { content: processedContent, headings } = prepareArticleHeadings(renderedContent);
-  const speechText = processedContent.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const speechText = cleanArticleSpeechText(processedContent);
 
   return (
     <>
@@ -201,7 +202,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
             </div>
 
-            <ArticleSpeechControls text={speechText} />
+            <ArticleSpeechControls key={article.id} text={speechText} />
           </div>
 
           {/* Immersive Cover Image */}
