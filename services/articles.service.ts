@@ -15,6 +15,7 @@ export interface Article {
   author: string;
   publishedAt: string;
   readTime: string;
+  viewsCount: number;
   coverImage: string;
   coverImageAlt: string;
   content: string;
@@ -26,7 +27,7 @@ export interface ArticleSlugPath {
   slug: string;
 }
 
-const articleFields = "id, title, content, category, subcategory, topic, image_url, slug, description, image_alt, created_at";
+const articleFields = "id, title, content, category, subcategory, topic, image_url, slug, description, image_alt, created_at, views_count";
 
 type ArticleRouteRow = {
   id: number | string;
@@ -166,6 +167,7 @@ export const articlesService = {
         author: "فريق تحرير مكاسب",
         publishedAt: post.created_at || new Date().toISOString(),
         readTime: "5 دقائق",
+        viewsCount: post.views_count ?? 0,
         coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
         coverImageAlt: post.image_alt?.trim() || post.title,
         content,
@@ -207,6 +209,7 @@ export const articlesService = {
           author: "فريق تحرير مكاسب",
           publishedAt: post.created_at || new Date().toISOString(),
           readTime: "5 دقائق",
+          viewsCount: post.views_count ?? 0,
           coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
           coverImageAlt: post.image_alt?.trim() || post.title,
           content,

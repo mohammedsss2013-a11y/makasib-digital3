@@ -65,6 +65,7 @@ export async function RelatedArticles({ currentArticle }: RelatedArticlesProps) 
             coverImage={article.coverImage}
             coverImageAlt={article.coverImageAlt}
             readTime={article.readTime}
+            viewsCount={article.viewsCount}
           />
         ))}
       </div>

@@ -6,6 +6,7 @@ import { articlesService } from "@/services/articles.service";
 import { redirect } from "next/navigation";
 import { toSubcategorySlug } from "@/lib/articlePaths";
 import { Badge } from "@/components/ui/Badge";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 interface SubcategoryPageProps {
   params: Promise<{
@@ -165,6 +166,7 @@ export default async function SubcategoryPage({ params, searchParams }: Subcateg
                       <Clock className="h-3 w-3" />
                       {article.readTime}
                     </span>
+                    <ArticleViewsCount initialCount={article.viewsCount} className="text-[11px]" />
                     <span>•</span>
                     <time dateTime={article.publishedAt}>
                       {new Date(article.publishedAt).toLocaleDateString("ar-EG")}

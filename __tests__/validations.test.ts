@@ -127,6 +127,7 @@ describe("Related articles", () => {
     author: "",
     publishedAt,
     readTime: "5 دقائق",
+    viewsCount: 0,
     coverImage: "",
     coverImageAlt: "",
     content: "",

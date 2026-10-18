@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/Badge";
 import AppImage from "@/components/ui/AppImage";
 import { articlesService } from "@/services/articles.service";
 import { getArticlePath } from "@/lib/articlePaths";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -113,6 +114,7 @@ export default async function HomePage() {
                       <Clock className="h-3.5 w-3.5" />
                       {featuredArticle.readTime}
                     </span>
+                    <ArticleViewsCount initialCount={featuredArticle.viewsCount} className="text-[11px]" />
                   </div>
 
                   <h1
@@ -242,6 +244,7 @@ export default async function HomePage() {
                         <Clock className="h-3 w-3" />
                         {article.readTime}
                       </span>
+                      <ArticleViewsCount initialCount={article.viewsCount} className="text-[11px]" />
                       <span>•</span>
                       <time dateTime={article.publishedAt}>
                         {new Date(article.publishedAt).toLocaleDateString("ar-EG")}

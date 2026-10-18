@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Clock3 } from "lucide-react";
 import AppImage from "@/components/ui/AppImage";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 interface RelatedArticleCardProps {
   href: string;
@@ -11,6 +12,7 @@ interface RelatedArticleCardProps {
   coverImage: string;
   coverImageAlt: string;
   readTime: string;
+  viewsCount: number;
 }
 
 export function RelatedArticleCard({
@@ -20,6 +22,7 @@ export function RelatedArticleCard({
   coverImage,
   coverImageAlt,
   readTime,
+  viewsCount,
 }: RelatedArticleCardProps) {
   return (
     <Link
@@ -48,9 +51,12 @@ export function RelatedArticleCard({
             {title}
           </h3>
 
-          <div className="flex items-center gap-2 border-t border-[var(--border-main)]/60 pt-3 text-xs text-[var(--text-muted)]">
-            <Clock3 className="h-3.5 w-3.5 text-[var(--accent-primary)]" aria-hidden="true" />
-            <span>وقت القراءة: {readTime}</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-main)]/60 pt-3 text-xs text-[var(--text-muted)]">
+            <span className="inline-flex items-center gap-1">
+              <Clock3 className="h-3.5 w-3.5 text-[var(--accent-primary)]" aria-hidden="true" />
+              <span>وقت القراءة: {readTime}</span>
+            </span>
+            <ArticleViewsCount initialCount={viewsCount} />
           </div>
         </div>
       </article>

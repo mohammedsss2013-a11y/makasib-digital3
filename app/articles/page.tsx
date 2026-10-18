@@ -5,6 +5,7 @@ import AppImage from "@/components/ui/AppImage";
 import { articlesService } from "@/services/articles.service";
 import { getArticlePath } from "@/lib/articlePaths";
 import { Badge } from "@/components/ui/Badge";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 export const revalidate = 3600;
 
@@ -133,6 +134,7 @@ export default async function ArticlesIndexPage() {
                         <Clock className="h-3 w-3" />
                         {article.readTime}
                       </span>
+                      <ArticleViewsCount initialCount={article.viewsCount} className="text-[11px]" />
                       <span className="font-bold text-[var(--accent-primary)] transition-transform group-hover:-translate-x-1 flex items-center gap-1">
                         قراءة <ArrowLeft className="h-3 w-3" />
                       </span>

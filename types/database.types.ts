@@ -331,6 +331,7 @@ export type Database = {
           tool_slug: string | null
           topic: string | null
           updated_at: string
+          views_count: number
         }
         Insert: {
           article_type?: string
@@ -351,6 +352,7 @@ export type Database = {
           tool_slug?: string | null
           topic?: string | null
           updated_at?: string
+          views_count?: number
         }
         Update: {
           article_type?: string
@@ -371,6 +373,7 @@ export type Database = {
           tool_slug?: string | null
           topic?: string | null
           updated_at?: string
+          views_count?: number
         }
         Relationships: []
       }
@@ -639,6 +642,13 @@ export type Database = {
       }
     }
     Functions: {
+      increment_article_views: {
+        Args: {
+          p_article_id: number
+          p_article_slug: string
+        }
+        Returns: number
+      }
       assign_admin_role_by_id: {
         Args: { target_user_id: string }
         Returns: undefined

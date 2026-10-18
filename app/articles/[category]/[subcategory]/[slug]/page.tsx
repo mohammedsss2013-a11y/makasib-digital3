@@ -10,6 +10,7 @@ import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractive
 import { ArticleTableOfContents } from "@/components/articles/ArticleTableOfContents";
 import { ReadingProgress } from "@/components/articles/ReadingProgress";
 import { ArticleSpeechControls } from "@/components/articles/ArticleSpeechControls";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Badge } from "@/components/ui/Badge";
 import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
@@ -163,6 +164,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     <Clock3 className="h-3 w-3 text-[var(--accent-primary)]" />
                     وقت القراءة: {article.readTime}
                   </span>
+                  <span>•</span>
+                  <ArticleViewsCount
+                    articleId={article.id}
+                    articleSlug={article.slug}
+                    initialCount={article.viewsCount}
+                    className="font-medium"
+                  />
                   <span>•</span>
                   <time dateTime={article.publishedAt} className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />

@@ -15,6 +15,7 @@ import {
 import InstantReportCard from "@/components/sections/InstantReportCard";
 import { articlesService } from "@/services/articles.service";
 import { getCanonicalArticlePath } from "@/lib/articlePaths";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 type FinancePost = {
   id: string | number;
@@ -25,6 +26,7 @@ type FinancePost = {
   slug?: string | null;
   created_at?: string;
   description?: string;
+  viewsCount: number;
   href: string;
 };
 
@@ -234,10 +236,13 @@ function FinanceSectorPageContent({ posts, activeSub }: { posts: FinancePost[]; 
                     </p>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
-                    <time dateTime={post.created_at ?? undefined}>
-                      {post.created_at ? new Date(post.created_at).toLocaleDateString("ar-EG") : "حديث"}
-                    </time>
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
+                    <span className="flex flex-wrap items-center gap-3">
+                      <time dateTime={post.created_at ?? undefined}>
+                        {post.created_at ? new Date(post.created_at).toLocaleDateString("ar-EG") : "حديث"}
+                      </time>
+                      <ArticleViewsCount initialCount={post.viewsCount} />
+                    </span>
                     <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200">
                       قراءة المقال <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                     </Link>
@@ -285,6 +290,7 @@ export default async function FinanceSectorPage({ searchParams }: { searchParams
       slug: article.slug,
       created_at: article.publishedAt,
       description: article.description,
+      viewsCount: article.viewsCount,
       href: getCanonicalArticlePath(article),
     }));
 

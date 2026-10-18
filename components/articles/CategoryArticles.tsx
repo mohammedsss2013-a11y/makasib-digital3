@@ -6,6 +6,7 @@ import { getHtmlExcerpt } from "@/utils/sanitizeHtml";
 import { SubcategoryLinks } from "@/components/articles/SubcategoryLinks";
 import { getArticlePath } from "@/lib/articlePaths";
 import { getPostsService } from "@/services/posts.service";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 interface CategoryArticlesProps {
   category: string;
@@ -79,8 +80,11 @@ export async function CategoryArticles({ category, categoryLabel, description, a
                 </h2>
                 <p className="mt-3 line-clamp-3 text-sm leading-7 text-[var(--text-muted)]">{getHtmlExcerpt(post.content)}</p>
               </div>
-              <div className="mt-6 flex items-center justify-between border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
-                <time dateTime={post.created_at || undefined}>{post.created_at ? new Date(post.created_at).toLocaleDateString("ar-EG") : ""}</time>
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-main)] pt-4 text-xs text-[var(--text-subtle)]">
+                <span className="flex flex-wrap items-center gap-3">
+                  <time dateTime={post.created_at || undefined}>{post.created_at ? new Date(post.created_at).toLocaleDateString("ar-EG") : ""}</time>
+                  <ArticleViewsCount initialCount={post.views_count} />
+                </span>
                 <Link href={getArticlePath(post)} className="inline-flex items-center gap-2 font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200">قراءة المقال <ArrowLeft className="h-4 w-4" /></Link>
               </div>
             </article>

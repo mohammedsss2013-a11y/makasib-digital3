@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, BookOpen, Sparkles } from "lucide-react";
 import { articlesService } from "@/services/articles.service";
+import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 
 interface SubcategoryArticlesFeedProps {
   category: string;
@@ -109,10 +110,13 @@ export async function SubcategoryArticlesFeed({
                   <p className="mt-3 line-clamp-3 text-sm leading-7 text-slate-400">{article.description}</p>
                 </div>
 
-                <div className="mt-5 flex items-center justify-between border-t border-slate-800 pt-4 text-xs text-slate-500">
-                  <time dateTime={article.publishedAt}>
-                    {new Date(article.publishedAt).toLocaleDateString("ar-EG")}
-                  </time>
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 pt-4 text-xs text-slate-500">
+                  <span className="flex flex-wrap items-center gap-3">
+                    <time dateTime={article.publishedAt}>
+                      {new Date(article.publishedAt).toLocaleDateString("ar-EG")}
+                    </time>
+                    <ArticleViewsCount initialCount={article.viewsCount} />
+                  </span>
                   <Link
                     href={`/articles/${article.categorySlug}/${article.subcategorySlug}/${article.slug}`}
                     className="inline-flex items-center gap-2 font-bold text-emerald-300 hover:text-emerald-200"
