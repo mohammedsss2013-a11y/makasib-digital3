@@ -7,6 +7,10 @@ type GeneratedArticleInput = {
   topicLabel: string;
 };
 
+type ArticleContentInput = GeneratedArticleInput & {
+  content: string;
+};
+
 const categoryGuides: Record<string, { context: string; framework: string; actions: string[]; risks: string; measure: string }> = {
   finance: {
     context: "تتغير النتائج المالية بحسب جودة القرار وتوقيته، لا بحسب حجم رأس المال وحده. لذلك يجدر النظر إلى هذا الموضوع بوصفه سلسلة اختيارات مترابطة تبدأ بفهم التدفق النقدي وتنتهي بقياس العائد بعد احتساب الوقت والمخاطر والتكاليف.",
@@ -79,4 +83,20 @@ export function generateArticleContent(article: GeneratedArticleInput): string {
     `## كيف تقيس التقدم وتطور القرار؟\n\n${guide.measure}\n\nاجعل المراجعة دورية ومحددة بموعد، ولا تغيّر عدة عناصر في الوقت نفسه إذا كنت تريد معرفة سبب التحسن أو التراجع. سجّل ما تعلمته، وميّز بين النتيجة التي جاءت من التجربة والظروف الخارجية التي لا تتحكم بها. التقدم الجيد ليس خطاً مستقيماً؛ إنه قدرة متزايدة على اتخاذ قرار أوضح في الجولة التالية.`,
     `## خلاصة\n\nيقدم «${article.title}» مدخلاً عملياً للتعامل مع ${subject}: ابدأ بهدف محدد، افهم السياق، جرّب على نطاق يمكن التحكم فيه، ثم قيّم الأثر قبل التوسع. لا توجد وصفة واحدة تناسب الجميع، لكن وضوح الافتراضات وحماية الموارد ومراجعة النتائج تمنحك أساساً أقوى لاختيار الخطوة التالية.`,
   ].join("\n\n");
+}
+
+export function isArticleContentRich(content: string): boolean {
+  if (!content) return false;
+  const stripped = content
+    .replace(/<[^>]*>/g, " ")
+    .replace(/[#*_`>~\[\]]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return stripped.length > 1200;
+}
+
+export function getArticleDisplayContent(article: ArticleContentInput): string {
+  return isArticleContentRich(article.content)
+    ? article.content
+    : generateArticleContent(article);
 }

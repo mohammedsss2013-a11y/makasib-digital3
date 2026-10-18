@@ -4,11 +4,20 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import { getUserRoleDisplayName } from "@/utils/dashboard";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 import { getCanonicalArticlePath, toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
-import { generateArticleContent } from "@/utils/generatedArticleContent";
+import {
+  generateArticleContent,
+  getArticleDisplayContent,
+} from "@/utils/generatedArticleContent";
 import { selectRelatedArticles } from "@/components/articles/RelatedArticles";
 import type { Article } from "@/services/articles.service";
 import { prepareArticleHeadings } from "@/lib/articleHeadings";
 import { cleanArticleSpeechText, splitSpeechText } from "@/utils/articleSpeechText";
+import {
+  formatArticleReadingTime,
+  getArticleReadingMinutes,
+  getArticleReadingTime,
+  WORDS_PER_READING_MINUTE,
+} from "@/utils/articleReadingTime";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -119,6 +128,45 @@ describe("Article speech text", () => {
 
     expect(chunks.map((chunk) => chunk.text.length)).toEqual([10, 10, 5]);
     expect(chunks.map((chunk) => chunk.start)).toEqual([0, 10, 20]);
+  });
+});
+
+describe("Article reading time", () => {
+  it("calculates minutes from cleaned article words with a one-minute minimum", () => {
+    expect(getArticleReadingMinutes("<p>كلمة&nbsp; أخرى</p>")).toBe(1);
+    expect(getArticleReadingMinutes("كلمة ".repeat(220))).toBe(1);
+    expect(getArticleReadingMinutes("كلمة ".repeat(221))).toBe(2);
+    expect(getArticleReadingMinutes("")).toBe(1);
+  });
+
+  it("formats Arabic minute quantities consistently", () => {
+    expect(formatArticleReadingTime(1)).toBe("دقيقة واحدة");
+    expect(formatArticleReadingTime(2)).toBe("دقيقتان");
+    expect(formatArticleReadingTime(5)).toBe("5 دقائق");
+    expect(formatArticleReadingTime(11)).toBe("11 دقيقة");
+    expect(getArticleReadingTime("كلمة ".repeat(221))).toBe("دقيقتان");
+  });
+
+  it("uses the same generated draft content as the article page for short source content", () => {
+    const article = {
+      title: "دليل عملي",
+      description: "ملخص قصير",
+      categorySlug: "tech",
+      categoryLabel: "التكنولوجيا",
+      subcategoryLabel: "الابتكار",
+      topicLabel: "الأدوات",
+      content: "ملخص قصير",
+    };
+    const displayContent = getArticleDisplayContent(article);
+    const displayWordCount = cleanArticleSpeechText(displayContent).match(/\S+/g)?.length ?? 0;
+
+    expect(displayContent).toBe(generateArticleContent(article));
+    expect(getArticleReadingMinutes(displayContent)).toBe(
+      Math.max(1, Math.ceil(displayWordCount / WORDS_PER_READING_MINUTE)),
+    );
+    expect(getArticleReadingMinutes(displayContent)).toBeGreaterThan(
+      getArticleReadingMinutes(article.content),
+    );
   });
 });
 

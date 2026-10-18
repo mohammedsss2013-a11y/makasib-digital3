@@ -1,5 +1,7 @@
 import { createPublicClient } from "@/lib/supabase/public";
 import { toCategorySlug, toSubcategorySlug, toTopicSlug } from "@/lib/articlePaths";
+import { getArticleReadingTime } from "@/utils/articleReadingTime";
+import { getArticleDisplayContent } from "@/utils/generatedArticleContent";
 
 export interface Article {
   id: string;
@@ -153,7 +155,7 @@ export const articlesService = {
       const content = typeof post.content === "string" ? post.content : "";
       const description = post.description || `${content.slice(0, 150).replace(/<[^>]*>/g, "").trim()}...`;
 
-      return {
+      const article = {
         id: String(post.id),
         slug: resolvedRouteSlug || post.slug || `post-${post.id}`,
         title: post.title,
@@ -166,11 +168,15 @@ export const articlesService = {
         topicLabel: post.topic || "",
         author: "فريق تحرير مكاسب",
         publishedAt: post.created_at || new Date().toISOString(),
-        readTime: "5 دقائق",
         viewsCount: post.views_count ?? 0,
         coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
         coverImageAlt: post.image_alt?.trim() || post.title,
         content,
+      };
+
+      return {
+        ...article,
+        readTime: getArticleReadingTime(getArticleDisplayContent(article)),
       };
     } catch (error) {
       console.error("تعذر جلب المقال من قاعدة البيانات:", error);
@@ -195,7 +201,7 @@ export const articlesService = {
       return posts.map((post, index) => {
         const content = typeof post.content === "string" ? post.content : "";
 
-        return {
+        const article = {
           id: String(post.id),
           slug: routeSlugs[index],
           title: post.title,
@@ -208,11 +214,15 @@ export const articlesService = {
           topicLabel: post.topic || "",
           author: "فريق تحرير مكاسب",
           publishedAt: post.created_at || new Date().toISOString(),
-          readTime: "5 دقائق",
           viewsCount: post.views_count ?? 0,
           coverImage: post.image_url || "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=85",
           coverImageAlt: post.image_alt?.trim() || post.title,
           content,
+        };
+
+        return {
+          ...article,
+          readTime: getArticleReadingTime(getArticleDisplayContent(article)),
         };
       });
     } catch {

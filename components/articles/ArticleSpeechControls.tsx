@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Square, Volume2 } from "lucide-react";
 import { splitSpeechText } from "@/utils/articleSpeechText";
+import { getArticleReadingTime } from "@/utils/articleReadingTime";
 
 type PlaybackState = "idle" | "speaking" | "paused";
 
@@ -115,7 +116,7 @@ export function ArticleSpeechControls({ text }: { text: string }) {
     setMessage("");
   }
 
-  const estimatedMinutes = Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 130));
+  const estimatedReadingTime = getArticleReadingTime(text);
 
   return (
     <div
@@ -159,7 +160,7 @@ export function ArticleSpeechControls({ text }: { text: string }) {
           <Square className="h-4 w-4" aria-hidden="true" />
         </button>
         <span className="mr-auto px-2 text-[11px] text-[var(--text-muted)]">
-          {state === "speaking" ? "جارٍ القراءة" : state === "paused" ? "متوقف مؤقتاً" : `حوالي ${estimatedMinutes} د`}
+          {state === "speaking" ? "جارٍ القراءة" : state === "paused" ? "متوقف مؤقتاً" : `وقت القراءة ${estimatedReadingTime}`}
         </span>
       </div>
 

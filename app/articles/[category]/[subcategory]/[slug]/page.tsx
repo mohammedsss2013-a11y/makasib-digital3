@@ -14,7 +14,7 @@ import { ArticleViewsCount } from "@/components/articles/ArticleViewsCount";
 import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Badge } from "@/components/ui/Badge";
 import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
-import { generateArticleContent } from "@/utils/generatedArticleContent";
+import { getArticleDisplayContent, isArticleContentRich } from "@/utils/generatedArticleContent";
 import { prepareArticleHeadings } from "@/lib/articleHeadings";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { cleanArticleSpeechText } from "@/utils/articleSpeechText";
@@ -79,14 +79,6 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
 }
 
-/** Short seeded summaries are not complete article bodies. */
-function isContentRich(content: string): boolean {
-  if (!content) return false;
-  // Strip HTML tags
-  const stripped = content.replace(/<[^>]*>/g, " ").replace(/[#*_`>~\[\]]/g, " ").replace(/\s+/g, " ").trim();
-  return stripped.length > 1200;
-}
-
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { category, subcategory, slug } = await params;
   let article;
@@ -104,10 +96,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   // Pre-process content: convert Markdown → HTML for both TOC and renderer
-  const hasRichContent = isContentRich(article.content);
-  const articleContent = hasRichContent
-    ? article.content
-    : generateArticleContent(article);
+  const hasRichContent = isArticleContentRich(article.content);
+  const articleContent = getArticleDisplayContent(article);
   const renderedContent = sanitizeHtml(
     isMarkdown(articleContent) ? markdownToHtml(articleContent) : articleContent,
   );
