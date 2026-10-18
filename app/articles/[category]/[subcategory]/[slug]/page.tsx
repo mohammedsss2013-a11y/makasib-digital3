@@ -15,6 +15,8 @@ import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Badge } from "@/components/ui/Badge";
 import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
 import { generateArticleContent } from "@/utils/generatedArticleContent";
+import { prepareArticleHeadings } from "@/lib/articleHeadings";
+import { sanitizeHtml } from "@/utils/sanitizeHtml";
 
 // تمكين إعادة التحقق التزايدي الذكي (ISR) كل ساعة
 export const revalidate = 3600;
@@ -105,7 +107,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const articleContent = hasRichContent
     ? article.content
     : generateArticleContent(article);
-  const processedContent = isMarkdown(articleContent) ? markdownToHtml(articleContent) : articleContent;
+  const renderedContent = sanitizeHtml(
+    isMarkdown(articleContent) ? markdownToHtml(articleContent) : articleContent,
+  );
+  const { content: processedContent, headings } = prepareArticleHeadings(renderedContent);
   const speechText = processedContent.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
   return (
@@ -113,8 +118,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       {/* ── Fixed Reading Progress Bar ── */}
       <ReadingProgress />
 
-      {/* ── Single-Column Optimized Reading Container (65-75 chars per line) ── */}
-      <article className="mx-auto max-w-3xl px-4 sm:px-6 py-8 dir-rtl space-y-10" dir="rtl">
+      <div
+        className={`mx-auto max-w-7xl px-4 py-8 sm:px-6 dir-rtl ${
+          headings.length > 0 ? "lg:grid lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-12" : ""
+        }`}
+        dir="rtl"
+      >
+        {headings.length > 0 && (
+          <aside className="mb-8 lg:sticky lg:top-24 lg:mb-0" aria-label="التنقل في محتوى المقال">
+            <ArticleTableOfContents headings={headings} />
+          </aside>
+        )}
+
+        {/* Single-column optimized reading container (65-75 chars per line). */}
+        <article className="mx-auto w-full max-w-3xl space-y-10 dir-rtl" dir="rtl">
         {/* Breadcrumb Navigation */}
         <nav aria-label="مسار المقال" className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">
@@ -209,8 +226,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </aside>
         )}
 
-        <ArticleTableOfContents content={processedContent} />
-
         <div className="prose prose-lg dark:prose-invert prose-emerald max-w-none text-[var(--text-main)] prose-headings:font-black prose-headings:tracking-tight prose-p:leading-loose prose-p:text-[var(--text-muted)] prose-li:leading-relaxed prose-img:rounded-2xl">
           <ArticleInteractiveBoundary>
             <ArticleToolEmbedder content={processedContent} />
@@ -242,7 +257,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             تصفح جميع المقالات ←
           </Link>
         </footer>
-      </article>
+        </article>
+      </div>
 
       <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
         <RelatedArticles currentArticle={article} />

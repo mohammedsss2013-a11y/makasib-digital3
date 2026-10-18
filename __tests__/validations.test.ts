@@ -7,6 +7,7 @@ import { getCanonicalArticlePath, toCategorySlug, toSubcategorySlug } from "@/li
 import { generateArticleContent } from "@/utils/generatedArticleContent";
 import { selectRelatedArticles } from "@/components/articles/RelatedArticles";
 import type { Article } from "@/services/articles.service";
+import { prepareArticleHeadings } from "@/lib/articleHeadings";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -60,6 +61,30 @@ describe("HTML sanitization", () => {
 
   it("rejects unsafe URL protocols", () => {
     expect(sanitizeHtml('<a href="javascript:alert(1)">رابط</a>')).not.toContain("javascript:");
+  });
+
+  it("preserves safe generated heading IDs through HTML sanitization", () => {
+    expect(sanitizeHtml('<h2 id="article-heading-section-1">Section</h2>')).toContain(
+      '<h2 id="article-heading-section-1">Section</h2>',
+    );
+    expect(sanitizeHtml('<h2 id="bad id">Section</h2>')).not.toContain('id="bad id"');
+  });
+});
+
+describe("Article heading extraction", () => {
+  it("adds unique IDs to H2 and H3 headings and returns their text and hierarchy", () => {
+    const { content, headings } = prepareArticleHeadings(
+      "<h2>مقدمة &amp; أهداف</h2><h3>خطوة أولى</h3><h2 id=\"existing\">مقدمة &amp; أهداف</h2><h4>تجاهل</h4>",
+    );
+
+    expect(headings).toEqual([
+      { id: "article-heading-مقدمة-أهداف", text: "مقدمة & أهداف", level: 2 },
+      { id: "article-heading-خطوة-أولى", text: "خطوة أولى", level: 3 },
+      { id: "article-heading-مقدمة-أهداف-2", text: "مقدمة & أهداف", level: 2 },
+    ]);
+    expect(content).toContain('<h2 id="article-heading-مقدمة-أهداف">');
+    expect(content).toContain('<h2 id="article-heading-مقدمة-أهداف-2">');
+    expect(content).toContain("<h4>تجاهل</h4>");
   });
 });
 

@@ -52,6 +52,10 @@ function sanitizeAttributes(tagName: string, rawAttributes: string, imageIndex?:
       attributes.push(`${name}="${escapeAttribute(value)}"`);
     }
 
+    if (name === "id" && /^[\p{L}\p{N}_:-]+$/u.test(value)) {
+      attributes.push(`id="${escapeAttribute(value)}"`);
+    }
+
     if ((name === "width" || name === "height") && /^\d+$/.test(value)) {
       attributes.push(`${name}="${value}"`);
     }
