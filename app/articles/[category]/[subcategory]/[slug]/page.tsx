@@ -10,6 +10,7 @@ import ArticleInteractiveBoundary from "@/components/articles/ArticleInteractive
 import { ArticleTableOfContents } from "@/components/articles/ArticleTableOfContents";
 import { ReadingProgress } from "@/components/articles/ReadingProgress";
 import { ArticleSpeechControls } from "@/components/articles/ArticleSpeechControls";
+import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Badge } from "@/components/ui/Badge";
 import { isMarkdown, markdownToHtml } from "@/utils/markdownToHtml";
 import { generateArticleContent } from "@/utils/generatedArticleContent";
@@ -234,6 +235,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </Link>
         </footer>
       </article>
+
+      <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+        <RelatedArticles currentArticle={article} />
+      </div>
     </>
   );
 }

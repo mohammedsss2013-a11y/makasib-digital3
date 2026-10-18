@@ -5,6 +5,8 @@ import { getUserRoleDisplayName } from "@/utils/dashboard";
 import { ARTICLE_SECTORS } from "@/lib/constants/sectors";
 import { getCanonicalArticlePath, toCategorySlug, toSubcategorySlug } from "@/lib/articlePaths";
 import { generateArticleContent } from "@/utils/generatedArticleContent";
+import { selectRelatedArticles } from "@/components/articles/RelatedArticles";
+import type { Article } from "@/services/articles.service";
 
 const validPost = {
   title: "عنوان مقال تجريبي مفيد",
@@ -102,6 +104,59 @@ describe("Article taxonomy", () => {
       subcategorySlug: "artificial-intelligence",
       slug: "active-article",
     })).toBe("/articles/tech/artificial-intelligence/active-article");
+  });
+});
+
+describe("Related articles", () => {
+  const makeArticle = (
+    id: string,
+    categorySlug: string,
+    subcategorySlug: string,
+    publishedAt: string,
+  ): Article => ({
+    id,
+    slug: `article-${id}`,
+    title: `Article ${id}`,
+    description: "",
+    categorySlug,
+    subcategorySlug,
+    topicSlug: "",
+    categoryLabel: categorySlug,
+    subcategoryLabel: subcategorySlug,
+    topicLabel: "",
+    author: "",
+    publishedAt,
+    readTime: "5 دقائق",
+    coverImage: "",
+    coverImageAlt: "",
+    content: "",
+  });
+
+  it("prioritizes the same normalized subcategory, excludes the current article, then fills from other categories", () => {
+    const current = makeArticle("current", "finance", "ecommerce", "2026-10-18");
+    const articles = [
+      current,
+      makeArticle("fallback", "media", "gaming", "2026-10-17"),
+      makeArticle("same-category", "finance", "investment", "2026-10-16"),
+      makeArticle("same-subcategory", "finance", "ecommerce", "2026-10-15"),
+      makeArticle("same-both-newer", "finance", "ecommerce", "2026-10-16"),
+      makeArticle("newer-fallback", "tech", "cybersecurity", "2026-10-18"),
+    ];
+
+    expect(selectRelatedArticles(current, articles).map((article) => article.id)).toEqual([
+      "same-both-newer",
+      "same-subcategory",
+      "same-category",
+    ]);
+
+    expect(
+      selectRelatedArticles(current, [
+        current,
+        articles[1],
+        articles[3],
+        articles[5],
+      ]).map((article) => article.id),
+    ).toEqual(["same-subcategory", "newer-fallback", "fallback"]);
   });
 });
 
