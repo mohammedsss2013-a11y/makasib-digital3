@@ -1,3 +1,4 @@
+﻿/* DEV-ONLY: هذا السكربت مخصص للتطوير المحلي فقط ولا يجوز تشغيله في بيئة الإنتاج. */
 /* eslint-disable */
 require('dotenv').config({ path: '.env.local' });
 const { createClient } = require('@supabase/supabase-js');

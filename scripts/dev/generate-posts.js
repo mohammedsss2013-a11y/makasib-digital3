@@ -1,3 +1,4 @@
+﻿/* DEV-ONLY: هذا السكربت مخصص للتطوير المحلي فقط ولا يجوز تشغيله في بيئة الإنتاج. */
 const fs = require('node:fs');
 const path = require('node:path');
 

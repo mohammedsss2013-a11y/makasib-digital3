@@ -1,3 +1,4 @@
+﻿/* DEV-ONLY: هذا السكربت مخصص للتطوير المحلي فقط ولا يجوز تشغيله في بيئة الإنتاج. */
 require('dotenv').config({ path: require('node:path').join(__dirname, '..', '.env.local') });
 const { Client } = require('pg');
 
