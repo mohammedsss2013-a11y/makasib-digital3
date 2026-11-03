@@ -229,8 +229,14 @@ const articles: SeedArticle[] = [
   }),
 ];
 
-const imageUrls = articles.map((item) => item.image_url);
-if (new Set(imageUrls).size !== imageUrls.length) {
+const imagePaths = articles.map((item) => {
+  const imageUrl = new URL(item.image_url);
+  if (imageUrl.hostname !== "images.unsplash.com") {
+    throw new Error(`رابط صورة غلاف غير معتمد: ${item.image_url}`);
+  }
+  return imageUrl.pathname;
+});
+if (new Set(imagePaths).size !== imagePaths.length) {
   throw new Error("توجد صور غلاف مكررة في بيانات المقالات التجريبية.");
 }
 
