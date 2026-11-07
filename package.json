@@ -14,7 +14,8 @@
     "check-all": "npm run type-check && npm run lint",
     "seed": "tsx scripts/seed-articles.ts",
     "seed:tools": "tsx scripts/seed-tools.ts",
-    "seed:verify": "tsx scripts/verify-seeded-articles.ts"
+    "seed:verify": "tsx scripts/verify-seeded-articles.ts",
+    "images:repair": "node scripts/apply-image-fixes.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

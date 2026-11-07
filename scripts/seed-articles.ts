@@ -230,8 +230,12 @@ const articles: SeedArticle[] = [
 ];
 
 const imagePaths = articles.map((item) => {
+  if (!item.image_url.trim()) {
+    throw new Error(`مقال البذر بلا صورة غلاف: ${item.slug}`);
+  }
+
   const imageUrl = new URL(item.image_url);
-  if (imageUrl.hostname !== "images.unsplash.com") {
+  if (imageUrl.protocol !== "https:" || imageUrl.hostname !== "images.unsplash.com") {
     throw new Error(`رابط صورة غلاف غير معتمد: ${item.image_url}`);
   }
   return imageUrl.pathname;

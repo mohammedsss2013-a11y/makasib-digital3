@@ -13,6 +13,19 @@
 			"problemMatcher": [
 				"$tsc"
 			]
+		},
+		{
+			"label": "Inspect SQL execution options",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"supabase",
+				"db",
+				"query",
+				"--help"
+			],
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

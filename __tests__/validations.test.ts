@@ -25,6 +25,7 @@ const validPost = {
   content: "هذا نص محتوى تجريبي يتجاوز الخمسين حرفًا لضمان نجاح التحقق من بيانات المقال بشكل صحيح.",
   category: "finance",
   status: "published" as const,
+  image_url: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c",
 };
 
 describe("Post validation", () => {
@@ -42,6 +43,16 @@ describe("Post validation", () => {
     expect(result.success).toBe(false);
   });
 
+  it("requires a secure cover image when creating a post", () => {
+    expect(createPostSchema.safeParse({ ...validPost, image_url: undefined }).success).toBe(false);
+    expect(createPostSchema.safeParse({ ...validPost, image_url: "http://example.com/cover.jpg" }).success).toBe(false);
+  });
+
+  it("requires a cover image when publishing an existing post", () => {
+    expect(updatePostSchema.safeParse({ id: 12, status: "published" }).success).toBe(false);
+    expect(updatePostSchema.safeParse({ id: 12, status: "archived" }).success).toBe(true);
+  });
+
   it("allows partial updates with the numeric post id", () => {
     const result = updatePostSchema.safeParse({ id: 12, status: "archived" });
     expect(result.success).toBe(true);
@@ -53,6 +64,7 @@ describe("Post validation", () => {
     formData.set("content", validPost.content);
     formData.set("category", "finance");
     formData.set("status", "draft");
+    formData.set("image_url", validPost.image_url);
 
     const result = parsePostFormData(formData);
     expect(result.slug).toBe("testing-post-title");

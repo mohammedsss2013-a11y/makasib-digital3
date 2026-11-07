@@ -5,6 +5,17 @@ export const PostStatusEnum = z.enum(["draft", "published", "archived"]);
 const optionalText = (max: number) =>
   z.string().trim().max(max).optional().nullable();
 
+const coverImageUrl = z.string()
+  .trim()
+  .url("رابط الصورة غير صالح")
+  .refine((value) => {
+    try {
+      return new URL(value).protocol === "https:";
+    } catch {
+      return false;
+    }
+  }, "يجب أن يستخدم رابط الصورة اتصالًا آمنًا");
+
 export const createPostSchema = z.object({
   title: z.string().trim().min(5, "عنوان المقال يجب أن يكون 5 أحرف على الأقل").max(180, "عنوان المقال لا يتجاوز 180 حرفًا"),
   slug: z.string().trim().min(3, "الرابط اللطيف قصير جدًا").regex(/^[a-z0-9-]+$/, "الرابط اللطيف يجب أن يحتوي على أحرف إنجليزية صغيرة ورقم وشرطات فقط"),
@@ -13,7 +24,7 @@ export const createPostSchema = z.object({
   subcategory: optionalText(100),
   topic: optionalText(100),
   description: optionalText(300),
-  image_url: z.string().url("رابط الصورة غير صالح").optional().nullable(),
+  image_url: coverImageUrl,
   image_alt: optionalText(180),
   article_type: z.string().trim().min(1).max(50).default("guide"),
   tool_slug: optionalText(100),
@@ -22,6 +33,14 @@ export const createPostSchema = z.object({
 
 export const updatePostSchema = createPostSchema.partial().extend({
   id: z.coerce.number().int().positive("معرف المقال غير صالح"),
+}).superRefine((post, context) => {
+  if (post.status === "published" && !post.image_url) {
+    context.addIssue({
+      code: "custom",
+      path: ["image_url"],
+      message: "أضف صورة غلاف قبل نشر المقال",
+    });
+  }
 });
 
 export type CreatePostInput = z.infer<typeof createPostSchema>;
